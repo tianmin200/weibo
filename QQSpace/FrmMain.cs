@@ -64,6 +64,7 @@ namespace QQSpace
                     string[] qq = qqstr.Split(',');
                     string qqhaoma = qq[0];
                     string password = qq[1];
+                    string nickname = qq[2];
                     AppenSpaceCmd(qqhaoma + "发布");
                     string cookiepath = "cookie/" + qqhaoma + ".txt";
                     string token = "";
@@ -81,13 +82,13 @@ namespace QQSpace
                             AppenSpaceCmd("登录失败，放弃!");
                             break;
                         }
-                        AppenSpaceCmd(qqhaoma + "未登录，正在第" + logintime.ToString() + "次尝试登录!");
+                        AppenSpaceCmd(nickname+"["+qqhaoma + "]未登录，正在第" + logintime.ToString() + "次尝试登录!");
                         spacecc = QQSpaceHelper.Login(qqhaoma, password);
                         CookieHelper.SaveCookie(cookiepath, spacecc);
                         token = QQSpaceHelper.GetToken(spacecc, qqhaoma);
                     }
                     if (token == "") continue;
-                    AppenSpaceCmd(qqhaoma + "已登录");
+                    AppenSpaceCmd(nickname + "[" + qqhaoma + "]已登录");
                     string g_tk = QQSpaceHelper.Getgtk(spacecc.GetCookieHeader(new Uri("http://qzone.qq.com")).ToString());
 
                     QQHao qqhao = new QQHao();
@@ -98,7 +99,7 @@ namespace QQSpace
                     #endregion
                     DirectoryInfo TheFolder = new DirectoryInfo("待发布");
                     DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
-                    AppenSpaceCmd(qqhaoma+"发布正文：" + nextFolder.Name);
+                    AppenSpaceCmd(nickname + "[" + qqhaoma + "]发布正文：" + nextFolder.Name);
                     ArrayList imgs = new ArrayList();
                     foreach (FileInfo NextFile in nextFolder.GetFiles())
                     {
@@ -111,7 +112,7 @@ namespace QQSpace
                     }
                     QQSpaceHelper.SendShuoshuoWithPic(nextFolder.Name, imgs, spacecc, qqhao);
                     Directory.Move(nextFolder.FullName, "已发布/" + nextFolder.Name);
-                    AppenSpaceCmd(qqhaoma + "发布完成");
+                    AppenSpaceCmd(nickname + "[" + qqhaoma + "]发布完成");
                 }
                 int jiange = Convert.ToInt32(this.nud_spacejiange.Value);
                 AppenSpaceCmd("此次发布完毕，等待" + jiange.ToString() + "分钟");
@@ -171,9 +172,11 @@ namespace QQSpace
                                 foreach (Pic pic in mblog.Pics)
                                 {
                                     AppenColCmd("下载图" + picnum.ToString());
-                                    string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + ".jpg";
-                                    string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + ".jpg";
-                                    HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpg", weibocc);
+                                    string[] strs = pic.Url.Split('.');
+                                    string houzhui = strs[strs.Length - 1];
+                                    string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + "." + houzhui;
+                                    string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + "." + houzhui;
+                                    HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + "." + houzhui, weibocc);
                                     picnum++;
                                 }
                                 Directory.Move("temp/" + dirname, "待发布/" + dirname);
@@ -259,7 +262,7 @@ namespace QQSpace
             {
                 colThread.Abort();
                 SetColeButtonStatus(false);
-                AppenColCmd("用户停止抓取任务...");
+                AppenColCmd("用户停止抓取任务!!!");
             }
         }
 
@@ -267,9 +270,9 @@ namespace QQSpace
         {
             if (spaceThread != null && spaceThread.IsAlive)
             {
-                colThread.Abort();
+                spaceThread.Abort();
                 SetSpaceeButtonStatus(false);
-                AppenSpaceCmd("用户停止发布任务...");
+                AppenSpaceCmd("用户停止发布任务!!!");
             }
         }
     }

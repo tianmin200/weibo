@@ -48,16 +48,7 @@
             this.txt_SingelWeibo = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.label11 = new System.Windows.Forms.Label();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.button5 = new System.Windows.Forms.Button();
             this.btn_SearchShop = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -77,16 +68,10 @@
             this.btnAddweibo = new System.Windows.Forms.Button();
             this.btnLogin_weibo = new System.Windows.Forms.Button();
             this.btn_StartWeibo = new System.Windows.Forms.Button();
-            this.lvwWeiboAccountList = new LogAnalytics.SortableListView();
-            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btn_StopWeibo = new System.Windows.Forms.Button();
+            this.btn_sendTuwen = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btn_ConfigLoginAlimama = new System.Windows.Forms.Button();
@@ -96,13 +81,17 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timer_KeepAlimamaAlive = new System.Windows.Forms.Timer(this.components);
+            this.lvwWeiboAccountList = new LogAnalytics.SortableListView();
+            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_alimamajiange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Pages)).BeginInit();
             this.tabPage2.SuspendLayout();
@@ -302,11 +291,11 @@
             // panel4
             // 
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Controls.Add(this.panel5);
             this.panel4.Controls.Add(this.btn_SearchShop);
             this.panel4.Controls.Add(this.label7);
             this.panel4.Controls.Add(this.label6);
             this.panel4.Controls.Add(this.nud_alimamajiange);
+            this.panel4.Controls.Add(this.button5);
             this.panel4.Controls.Add(this.btn_NanzhuangCol);
             this.panel4.Controls.Add(this.label5);
             this.panel4.Controls.Add(this.radioButton1);
@@ -317,112 +306,15 @@
             this.panel4.Size = new System.Drawing.Size(304, 199);
             this.panel4.TabIndex = 8;
             // 
-            // panel5
+            // button5
             // 
-            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Controls.Add(this.button3);
-            this.panel5.Controls.Add(this.label8);
-            this.panel5.Controls.Add(this.label9);
-            this.panel5.Controls.Add(this.numericUpDown1);
-            this.panel5.Controls.Add(this.button4);
-            this.panel5.Controls.Add(this.label10);
-            this.panel5.Controls.Add(this.radioButton2);
-            this.panel5.Controls.Add(this.label11);
-            this.panel5.Controls.Add(this.numericUpDown2);
-            this.panel5.Location = new System.Drawing.Point(-1, -1);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(304, 199);
-            this.panel5.TabIndex = 21;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(103, 134);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(122, 23);
-            this.button3.TabIndex = 20;
-            this.button3.Text = "店铺搜索抓取";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.btn_KeywordSearchTest_Click);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(34, 112);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(29, 12);
-            this.label8.TabIndex = 18;
-            this.label8.Text = "间隔";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(36, 168);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(29, 12);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "分钟";
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(31, 136);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(36, 21);
-            this.numericUpDown1.TabIndex = 17;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(103, 168);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 12;
-            this.button4.Text = "男装抓取";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.btn_NanzhuangCol_Click);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(77, 77);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(17, 12);
-            this.label10.TabIndex = 15;
-            this.label10.Text = "页";
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(28, 33);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(47, 16);
-            this.radioButton2.TabIndex = 9;
-            this.radioButton2.Text = "自动";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(13, 77);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(17, 12);
-            this.label11.TabIndex = 14;
-            this.label11.Text = "前";
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Location = new System.Drawing.Point(36, 73);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(36, 21);
-            this.numericUpDown2.TabIndex = 13;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+            this.button5.Location = new System.Drawing.Point(190, 168);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 12;
+            this.button5.Text = "纯图文抓取";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // btn_SearchShop
             // 
@@ -567,6 +459,11 @@
             // nud_weiboJiange
             // 
             this.nud_weiboJiange.Location = new System.Drawing.Point(181, 32);
+            this.nud_weiboJiange.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nud_weiboJiange.Name = "nud_weiboJiange";
             this.nud_weiboJiange.Size = new System.Drawing.Size(34, 21);
             this.nud_weiboJiange.TabIndex = 14;
@@ -624,59 +521,11 @@
             // 
             this.btn_StartWeibo.Location = new System.Drawing.Point(256, 16);
             this.btn_StartWeibo.Name = "btn_StartWeibo";
-            this.btn_StartWeibo.Size = new System.Drawing.Size(162, 23);
+            this.btn_StartWeibo.Size = new System.Drawing.Size(93, 23);
             this.btn_StartWeibo.TabIndex = 7;
-            this.btn_StartWeibo.Text = "开始发布微博任务";
+            this.btn_StartWeibo.Text = "发布淘客微博";
             this.btn_StartWeibo.UseVisualStyleBackColor = true;
             this.btn_StartWeibo.Click += new System.EventHandler(this.btn_StartWeibo_Click);
-            // 
-            // lvwWeiboAccountList
-            // 
-            this.lvwWeiboAccountList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader11,
-            this.columnHeader12,
-            this.columnHeader13,
-            this.columnHeader14,
-            this.columnHeader15,
-            this.columnHeader16});
-            this.lvwWeiboAccountList.FullRowSelect = true;
-            this.lvwWeiboAccountList.GridLines = true;
-            this.lvwWeiboAccountList.HideSelection = false;
-            this.lvwWeiboAccountList.Location = new System.Drawing.Point(3, 81);
-            this.lvwWeiboAccountList.Name = "lvwWeiboAccountList";
-            this.lvwWeiboAccountList.Size = new System.Drawing.Size(703, 197);
-            this.lvwWeiboAccountList.SortingOrder = System.Windows.Forms.SortOrder.None;
-            this.lvwWeiboAccountList.TabIndex = 4;
-            this.lvwWeiboAccountList.UseCompatibleStateImageBehavior = false;
-            this.lvwWeiboAccountList.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader11
-            // 
-            this.columnHeader11.Text = "序号";
-            this.columnHeader11.Width = 70;
-            // 
-            // columnHeader12
-            // 
-            this.columnHeader12.Text = "微博昵称";
-            this.columnHeader12.Width = 110;
-            // 
-            // columnHeader13
-            // 
-            this.columnHeader13.Text = "登录状态";
-            this.columnHeader13.Width = 124;
-            // 
-            // columnHeader14
-            // 
-            this.columnHeader14.Text = "发布状态";
-            this.columnHeader14.Width = 109;
-            // 
-            // columnHeader15
-            // 
-            this.columnHeader15.Text = "";
-            // 
-            // columnHeader16
-            // 
-            this.columnHeader16.Text = "";
             // 
             // panel2
             // 
@@ -688,9 +537,10 @@
             // panel3
             // 
             this.panel3.Controls.Add(this.btn_StopWeibo);
+            this.panel3.Controls.Add(this.btn_sendTuwen);
             this.panel3.Location = new System.Drawing.Point(142, 6);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(296, 69);
+            this.panel3.Size = new System.Drawing.Size(315, 69);
             this.panel3.TabIndex = 19;
             // 
             // btn_StopWeibo
@@ -703,6 +553,16 @@
             this.btn_StopWeibo.Text = "停止";
             this.btn_StopWeibo.UseVisualStyleBackColor = true;
             this.btn_StopWeibo.Click += new System.EventHandler(this.btn_StopWeibo_Click);
+            // 
+            // btn_sendTuwen
+            // 
+            this.btn_sendTuwen.Location = new System.Drawing.Point(213, 10);
+            this.btn_sendTuwen.Name = "btn_sendTuwen";
+            this.btn_sendTuwen.Size = new System.Drawing.Size(93, 23);
+            this.btn_sendTuwen.TabIndex = 7;
+            this.btn_sendTuwen.Text = "发布图文微博";
+            this.btn_sendTuwen.UseVisualStyleBackColor = true;
+            this.btn_sendTuwen.Click += new System.EventHandler(this.btn_sendTuwen_Click);
             // 
             // tabPage3
             // 
@@ -762,6 +622,54 @@
             this.timer_KeepAlimamaAlive.Interval = 900000;
             this.timer_KeepAlimamaAlive.Tick += new System.EventHandler(this.timer_KeepAlimamaAlive_Tick);
             // 
+            // lvwWeiboAccountList
+            // 
+            this.lvwWeiboAccountList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader11,
+            this.columnHeader12,
+            this.columnHeader13,
+            this.columnHeader14,
+            this.columnHeader15,
+            this.columnHeader16});
+            this.lvwWeiboAccountList.FullRowSelect = true;
+            this.lvwWeiboAccountList.GridLines = true;
+            this.lvwWeiboAccountList.HideSelection = false;
+            this.lvwWeiboAccountList.Location = new System.Drawing.Point(3, 81);
+            this.lvwWeiboAccountList.Name = "lvwWeiboAccountList";
+            this.lvwWeiboAccountList.Size = new System.Drawing.Size(703, 197);
+            this.lvwWeiboAccountList.SortingOrder = System.Windows.Forms.SortOrder.None;
+            this.lvwWeiboAccountList.TabIndex = 4;
+            this.lvwWeiboAccountList.UseCompatibleStateImageBehavior = false;
+            this.lvwWeiboAccountList.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Text = "序号";
+            this.columnHeader11.Width = 70;
+            // 
+            // columnHeader12
+            // 
+            this.columnHeader12.Text = "微博昵称";
+            this.columnHeader12.Width = 110;
+            // 
+            // columnHeader13
+            // 
+            this.columnHeader13.Text = "登录状态";
+            this.columnHeader13.Width = 124;
+            // 
+            // columnHeader14
+            // 
+            this.columnHeader14.Text = "发布状态";
+            this.columnHeader14.Width = 109;
+            // 
+            // columnHeader15
+            // 
+            this.columnHeader15.Text = "";
+            // 
+            // columnHeader16
+            // 
+            this.columnHeader16.Text = "";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -781,10 +689,6 @@
             this.panel6.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_alimamajiange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Pages)).EndInit();
             this.tabPage2.ResumeLayout(false);
@@ -852,17 +756,9 @@
         private System.Windows.Forms.Button bnt_ColSingelWeibo;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox txt_SingelWeibo;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.RichTextBox txtAlimamaCmd;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btn_sendTuwen;
     }
 }
 

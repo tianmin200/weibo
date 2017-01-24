@@ -10,13 +10,11 @@ using System.Threading.Tasks;
 using System.Web;
 using Weibo;
 using Weibo.Common;
-
-using static Weibo.FrmVcode;
-using Newtonsoft.Json;
-using Weibo.Core;
 using Weibo.Models;
 using System.Net;
 using System.Threading;
+using Weibo.Core;
+using Newtonsoft.Json;
 
 namespace Weibo.Common
 {
@@ -547,9 +545,20 @@ namespace Weibo.Common
             if (result.Contains("100000")) return true;
             return false;
         }
+
+        public static SignalWeiboData GetSignalWeibo(string weibourl)
+        {
+            SignalWeiboData weibo = new SignalWeiboData();
+            CookieContainer weibocc = new CookieContainer();
+            string result = HttpHelper1.SendDataByGET(weibourl,ref weibocc);
+            string weibojson = "";
+            HttpHelper1.GetStringInTwoKeyword(result, ref weibojson, "$render_data = [", "][0] || {};", 0);
+            weibo = Newtonsoft.Json.JsonConvert.DeserializeObject<SignalWeiboData>(weibojson);
+            return weibo;
+        }
     }
 
-    class MsMultiPartFormData
+    public class MsMultiPartFormData
     {
         private List<byte> formData;
         public String Boundary = "----------cH2cH2gL6GI3ae0Ef1ae0ae0ae0cH2";

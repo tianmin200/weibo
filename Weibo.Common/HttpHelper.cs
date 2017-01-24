@@ -25,6 +25,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
 using System.Threading;
+using Weibo.Core;
 
 namespace Weibo.Common
 {
@@ -446,7 +447,33 @@ namespace Weibo.Common
 
 
     }
+    /// <summary>  
+    /// 带 Cookie 的 WebClient  
+    /// </summary>  
+    public class CookieWebClient : WebClient
+    {
+        // Cookie 容器  
+        public CookieContainer Cookies;
 
+        /// <summary>  
+        /// 创建一个新的 CookieWebClient 实例。  
+        /// </summary>  
+        public CookieWebClient()
+        {
+            this.Cookies = new CookieContainer();
+        }
+
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            WebRequest request = base.GetWebRequest(address);
+            if (request is HttpWebRequest)
+            {
+                HttpWebRequest httpRequest = request as HttpWebRequest;
+                httpRequest.CookieContainer = Cookies;
+            }
+            return request;
+        }
+    }
     public static class HttpHelper1
     {
         /// <summary>
@@ -596,7 +623,7 @@ namespace Weibo.Common
 
             request.Method = "GET";
             request.ContentType = "text/html;charset=UTF-8";
-
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream myResponseStream = response.GetResponseStream();
             StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
@@ -712,6 +739,34 @@ namespace Weibo.Common
             return retString;
         }
         #endregion
+
+        public static string NoHTML(string Htmlstring)  //替换HTML标记
+        {
+            //删除脚本
+            Htmlstring = Regex.Replace(Htmlstring, @"<script[^>]*?>.*?</script>", "", RegexOptions.IgnoreCase);
+
+            //删除HTML
+            Htmlstring = Regex.Replace(Htmlstring, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"-->", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"<!--.*", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(nbsp|#160);", " ", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&#(\d+);", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"<img[^>]*>;", "", RegexOptions.IgnoreCase);
+            Htmlstring.Replace("<", "");
+            Htmlstring.Replace(">", "");
+            Htmlstring.Replace("\r\n", "");
+            //Htmlstring = HttpUtility.UrlEncode(Htmlstring).Trim();
+            return Htmlstring;
+        }
         /// <summary>
         /// Http下载文件
         /// </summary>
@@ -741,11 +796,11 @@ namespace Weibo.Common
                 }
                 stream.Close();
                 responseStream.Close();
+                request.Abort();
                 return path;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
                 return null;
             }
 
@@ -788,42 +843,7 @@ namespace Weibo.Common
 
         }
 
-        public static string AutoGetVcode(Image img)
-        {
-            string m_softKey = "365bd32d7ca2b5f07bc8328520542d9c";
-            string m_userName = "tianmin200";
-            string m_password = "tianmin200";
-            //打码平台自动获取验证码
-            string imgPath = "pincode/" + Guid.NewGuid().ToString() + "loginpincode.png";
-            img.Save(imgPath);
-            FileInfo fi = new FileInfo(imgPath);
-            FileStream fs = new FileStream(imgPath, FileMode.Open);
-            byte[] ba = new byte[fi.Length];
-            int nRet = fs.Read(ba, 0, (int)fi.Length);
-            if (nRet == 0)
-            {
-                return "";
-            }
 
-            //请求答题
-            StringBuilder VCodeText = new StringBuilder(100);
-            int ret = Dama2.D2Buf(
-                m_softKey, //softawre key (software id)
-                m_userName,    //user name
-                m_password,     //password
-                ba,         //图片数据，图片数据不可大于4M
-                (uint)nRet, //图片数据长度
-                60,         //超时时间，单位为秒，更换为实际需要的超时时间
-                200,        //验证码类型ID，参见 http://wiki.dama2.com/index.php?n=ApiDoc.GetSoftIDandKEY
-                VCodeText); //成功时返回验证码文本（答案）
-            if (ret > 0)
-            {
-                uint ulVCodeID = (uint)ret;
-                return VCodeText.ToString(); ;
-            }
-            return VCodeText.ToString();
-
-        }
     }
 
     #region public calss

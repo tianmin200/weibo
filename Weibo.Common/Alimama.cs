@@ -138,7 +138,7 @@ namespace Weibo
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        internal static TbkItemGetResponse GetItemsWithQuery(string query)
+        public static TbkItemGetResponse GetItemsWithQuery(string query)
         {
             string url = "http://gw.api.taobao.com/router/rest";
             ITopClient client = new DefaultTopClient(url, appkey, secret);
@@ -270,21 +270,13 @@ namespace Weibo
             if (IsCampaignExits(itemid, tbtoken, pv_id, alimamacc,ref keeperid)) return false;//如果申请过定向计划，退出
 
             string[] campains = campaignstrs.Split(',');
-            double bili = 0;
-            string applaycampaignid = "";//需要申请的最高佣金计划
             foreach (string campain in campains)
             {
                 string[] campainpro = campain.Split(':');
                 string campaignid = campainpro[0].Replace("{","").Replace("\"","");
                 string campaignbili = campainpro[1].Replace("\"","").Replace("}", "");
-                double tempbili = Convert.ToDouble(campaignbili);
-                if (tempbili > bili)
-                {
-                    bili = tempbili;
-                    applaycampaignid = campaignid;
-                }
+                bool isSuc = ApplyCampaign(campaignid, keeperid,pv_id,refer, alimamacc);
             }
-            bool isSuc = ApplyCampaign(applaycampaignid, keeperid, pv_id, refer, alimamacc);
             return true;
         }
         public static bool ApplyCampaign(AlimamaSearchData alimama_searchdata)

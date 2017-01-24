@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-namespace Weibo
+namespace Weibo.Core
 {
     /// <summary>  
     /// 类  名：JSONConvert  

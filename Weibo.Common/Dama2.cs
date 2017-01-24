@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Drawing;
+using System.IO;
 
 namespace Weibo.Common
 {
-    struct RECT
+    public struct RECT
     {
         public long left;
         public long top;
@@ -14,7 +16,7 @@ namespace Weibo.Common
         public long bottom;
     }
 
-    class Dama2
+    public class Dama2
     {
         //************************************
         //			error code
@@ -475,5 +477,43 @@ namespace Weibo.Common
             string pszUserName,
             string pszUswrPassword,
             ref uint pulBalance);
+
+        public static string GetVcode(Image img)
+        {
+            string m_softKey = "365bd32d7ca2b5f07bc8328520542d9c";
+            string m_userName = "tianmin200";
+            string m_password = "tianmin200";
+            //打码平台自动获取验证码
+            string imgPath = Guid.NewGuid().ToString() + "loginpincode.png";
+            img.Save(imgPath);
+            FileInfo fi = new FileInfo(imgPath);
+            FileStream fs = new FileStream(imgPath, FileMode.Open);
+            byte[] ba = new byte[fi.Length];
+            int nRet = fs.Read(ba, 0, (int)fi.Length);
+            if (nRet == 0)
+            {
+                return "";
+            }
+
+            //请求答题
+            StringBuilder VCodeText = new StringBuilder(100);
+            int ret = Dama2.D2Buf(
+                m_softKey, //softawre key (software id)
+                m_userName,    //user name
+                m_password,     //password
+                ba,         //图片数据，图片数据不可大于4M
+                (uint)nRet, //图片数据长度
+                60,         //超时时间，单位为秒，更换为实际需要的超时时间
+                200,        //验证码类型ID，参见 http://wiki.dama2.com/index.php?n=ApiDoc.GetSoftIDandKEY
+                VCodeText); //成功时返回验证码文本（答案）
+            if (ret > 0)
+            {
+                uint ulVCodeID = (uint)ret;
+                return VCodeText.ToString(); ;
+            }
+            File.Delete(imgPath);
+            return VCodeText.ToString();
+
+        }
     }
 }

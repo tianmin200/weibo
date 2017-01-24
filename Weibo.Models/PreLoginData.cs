@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using Weibo.Core;
 
-
 namespace Weibo.Models
 {
     public struct PreLoginData

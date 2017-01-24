@@ -35,33 +35,7 @@ namespace Weibo
            
         }
 
-        /// <summary>  
-        /// 带 Cookie 的 WebClient  
-        /// </summary>  
-        public class CookieWebClient : WebClient
-        {
-            // Cookie 容器  
-            public CookieContainer Cookies;
 
-            /// <summary>  
-            /// 创建一个新的 CookieWebClient 实例。  
-            /// </summary>  
-            public CookieWebClient()
-            {
-                this.Cookies = new CookieContainer();
-            }
-
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                WebRequest request = base.GetWebRequest(address);
-                if (request is HttpWebRequest)
-                {
-                    HttpWebRequest httpRequest = request as HttpWebRequest;
-                    httpRequest.CookieContainer = Cookies;
-                }
-                return request;
-            }
-        }
         private void FrmVcode_Load(object sender, EventArgs e)
         {
             this.Focus();

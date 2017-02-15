@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9F922B73-F059-41D3-A63B-DBF976E4145F}</ProjectGuid>
+    <ProjectGuid>{0A9A7E9B-71B7-46BB-903C-A1556D748C00}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QQSpace</RootNamespace>
-    <AssemblyName>QQSpace</AssemblyName>
+    <RootNamespace>WeiboManager</RootNamespace>
+    <AssemblyName>WeiboManager</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,9 +32,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>腾讯qq图标下载1 %281%29.ico</ApplicationIcon>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
@@ -56,20 +53,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.MSScriptControl">
-      <HintPath>C:\Users\Administrator\Desktop\QQ空间登录\WindowsFormsApplication2\obj\Release\Interop.MSScriptControl.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Weibo\bin\x86\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Weibo\bin\x86\Debug\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -80,20 +69,35 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TopSdk">
+      <HintPath>..\Weibo\bin\x86\Debug\TopSdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Weibo.Core">
+      <HintPath>..\Weibo.Core\bin\Debug\Weibo.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Weibo.Models">
+      <HintPath>..\Weibo.Models\bin\Debug\Weibo.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>C:\Users\Administrator\Desktop\dockpanelsuite-master\dockpanelsuite-master\WinFormsUI\bin\Release\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmColTask.cs" />
+    <Compile Include="FrmColTask.Designer.cs">
+      <DependentUpon>FrmColTask.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="NHPicData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QQHao.cs" />
-    <Compile Include="QQSpaceHelper.cs" />
-    <Compile Include="UploadImageData.cs" />
+    <EmbeddedResource Include="FrmColTask.resx">
+      <DependentUpon>FrmColTask.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -105,7 +109,6 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -122,21 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Weibo.Common\Weibo.Common.csproj">
-      <Project>{f1347e3b-ebbd-4ceb-88a5-6b0c1630f8af}</Project>
+      <Project>{F1347E3B-EBBD-4CEB-88A5-6B0C1630F8AF}</Project>
       <Name>Weibo.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Weibo.Core\Weibo.Core.csproj">
-      <Project>{221b7c12-7237-4d1a-89b8-a02f364851ee}</Project>
-      <Name>Weibo.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Weibo.Models\Weibo.Models.csproj">
-      <Project>{caf5f3c7-16e9-4228-965b-37e109d0e374}</Project>
-      <Name>Weibo.Models</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\a.js" />
-    <Content Include="腾讯qq图标下载1 %281%29.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

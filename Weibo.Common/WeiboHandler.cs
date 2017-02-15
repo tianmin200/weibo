@@ -32,6 +32,31 @@ namespace Weibo.Common
             return shorturl;
         }
 
+        public static string SendWeiboFromM(string weibotext,string picids,string refer,DEWeiboAccount deweiboaccount,CookieContainer weibocc)
+        {
+            string url = "http://m.weibo.cn/mblogDeal/addAMblog";
+            picids = picids.Replace("%20","%2C");
+            refer = "http://m.weibo.cn/mblog";
+            CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
+            CookieCollection newccl = ccl;
+            for (int i = 0; i < newccl.Count; i++)
+            {
+                newccl[i].Domain = "weibo.cn";
+            }
+            CookieContainer newcc = new CookieContainer();
+            weibocc.Add(new Uri("http://weibo.cn"), newccl);
+            
+            
+
+            string poststr = "content="+HttpUtility.UrlEncode(weibotext)+"&picId="+picids+"&annotations=&st="+ deweiboaccount.St;
+            string result = HttpHelper1.SendDataByPost(url,poststr,refer,ref weibocc);
+            for (int i = 0; i < newccl.Count; i++)
+            {
+                newccl[i].Domain = "weibo.com";
+            }
+            weibocc.Add(newccl);
+            return result;
+        }
         /// <summary>
         /// 获取新浪微博打码图片
         /// </summary>
@@ -96,6 +121,17 @@ namespace Weibo.Common
             }
             return true;
         }
+        public static bool TestLogin(CookieContainer cc,WebProxy proxy)
+        {
+            string url = "http://www.weibo.com/";
+            string strresult = HttpHelper1.SendDataByGET(url, ref cc,proxy);
+            if (strresult.Contains("尝试自动重定向的次数太多。")) return false;
+            if (!strresult.Contains("我的首页"))
+            {
+                return false;
+            }
+            return true;
+        }
 
         public static bool TestLogin(string username)
         {
@@ -145,6 +181,16 @@ namespace Weibo.Common
         {
             if (!File.Exists("weibocookie/" + AccountUsername + ".txt")) return null;
             string cookiestr = File.ReadAllText("weibocookie/" + AccountUsername + ".txt");
+            CookieCollection ccl = CookieHelper.GetCookieCollectionByString(cookiestr, "weibo.com");
+            CookieContainer weibocc = new CookieContainer();
+            weibocc.MaxCookieSize = 100000;
+            weibocc.Add(ccl);
+            return weibocc;
+        }
+        public static CookieContainer InitWeiboCookie(string AccountUsername,string path,int type)
+        {
+            if (!File.Exists(path+"/weibocookie/" + AccountUsername + ".txt")) return null;
+            string cookiestr = File.ReadAllText(path+"/weibocookie/" + AccountUsername + ".txt");
             CookieCollection ccl = CookieHelper.GetCookieCollectionByString(cookiestr, "weibo.com");
             CookieContainer weibocc = new CookieContainer();
             weibocc.MaxCookieSize = 100000;
@@ -382,18 +428,93 @@ namespace Weibo.Common
             { }
             return null;
         }
+        public static LoginResponseData Login(PreLoginResponseData data, string username, string password, string code, WebProxy proxy)
+        {
+            try
+            {
+                string userNameBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(HttpUtility.UrlEncode(username)));
+                password = EncryptPassword(data, password);
+                string url = "http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)&_=" + DateTime.Now.TimeStamp();
+                PostHelper post = new PostHelper(url);
+                post.Type = PostTypeEnum.Post;
+                post.Cookies = new CookieContainer();
+                post.Cookies.SetCookies(new Uri("http://weibo.com"), data.cookies);
+                post.Proxy = proxy;
+                post.PostItems = LoginData.Create(data, userNameBase64, password, code);
+                string result = post.Post();
+                var responseData = JsonConvert.DeserializeObject<LoginResponseData>(result);
+                if (responseData != null)
+                {
+                    responseData.cookies = PostHelper.GetAllCookies(post.Cookies);
+                    return responseData;
+                }
+            }
+            catch(Exception ex)
+            { }
+            return null;
+        }
 
+        /// <summary>
+        /// 微博登录
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public static CookieContainer Login(string username, string password)
         {
             var preData = WeiboHandler.PreLogin(username);
             CookieContainer weibocc = new CookieContainer();
             if (preData != null)
             {
-                string code = null;
+                string code = "";
                 var img = WeiboHandler.GetLoginCodePic(preData.pcid);
+                while (code == "" || code == "IERROR" || code == "ERROR")
+                {
+                    code = Dama2.GetVcode(img);
+                }
+                //string code = null;
+                //var img = WeiboHandler.GetLoginCodePic(preData.pcid);
                 var loginData = WeiboHandler.Login(preData, username, password, code);
                 weibocc = WeiboHandler.InitWeiboCookie(username, loginData.cookies);
-                bool isLogin = WeiboHandler.TestLogin(weibocc);
+                string testloginresult = "";
+                bool isLogin = WeiboHandler.TestLogin(weibocc,ref testloginresult);
+                
+                if (isLogin)
+                {
+                    //登录成功保存Cookie
+                    File.AppendAllText("weibocookie/" + username + ".txt", loginData.cookies);
+                    return weibocc;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+
+                return null;
+            }
+
+        }
+        public static CookieContainer Login(string username, string password,WebProxy proxy)
+        {
+            var preData = WeiboHandler.PreLogin(username);
+            CookieContainer weibocc = new CookieContainer();
+            if (preData != null)
+            {
+                string code = "";
+                var img = WeiboHandler.GetLoginCodePic(preData.pcid);
+                while (code == "" || code == "IERROR" || code == "ERROR" || code == null)
+                {
+                    code = Dama2.GetVcode(img);
+                }
+                //string code = null;
+                //var img = WeiboHandler.GetLoginCodePic(preData.pcid);
+                var loginData = WeiboHandler.Login(preData, username, password, code,proxy);
+                if (loginData == null) return null;
+                weibocc = WeiboHandler.InitWeiboCookie(username, loginData.cookies);
+                bool isLogin = WeiboHandler.TestLogin(weibocc,proxy);
                 if (isLogin)
                 {
                     //登录成功保存Cookie
@@ -456,6 +577,41 @@ namespace Weibo.Common
             }
             return commentresult;
         }
+        public static string Comment(string mid, string ouid, string commentstr, string refer, CookieContainer weibocc,WebProxy proxy)
+        {
+            string commenturl = "http://weibo.com/aj/v6/comment/add?ajwvr=6&__rnd=" + HttpHelper1.GetTicks();
+            commentstr = System.Web.HttpUtility.UrlEncode(commentstr.Trim());
+            commentstr = commentstr.Trim().Replace("+", "%20");
+
+            string commentpoststr = "act=post&mid=" + mid + "&uid=" + ouid + "&forward=0&isroot=0&content=" + commentstr + "&location=&module=scommlist&group_source=&pdetail=&_t=0";
+            string commentresult = HttpHelper1.SendDataByPost(commenturl, commentpoststr, refer, ref weibocc,proxy);
+            if (commentresult.Contains("{\"code\":\"100001\""))
+            {
+                //Thread.Sleep(10 * 60 * 1000);//如果第一次评论就提示发布相同内容，则将线程停顿10分钟
+                return commentresult;//如果第一次评论就报错，一般认为是mid为空，直接返回不处理
+            }
+
+            if (commentresult.Contains("{\"code\":\"100027\""))
+            {
+                //需要输入验证码
+                string retcode = "";
+                string vcode = "";
+
+                while (retcode == "")
+                {
+                    while (vcode == "" || vcode == "IERROR" || vcode == "ERROR")
+                    {
+                        vcode = HttpHelper1.AutoGetVcode(weibocc);
+                    }
+                    retcode = WeiboHandler.GetVcodeRetcode(vcode, refer, weibocc);
+                    if (retcode == "") vcode = "";
+                }//拿到验证码，并验证通过，通不过死循环
+
+                commentpoststr = commentpoststr + "&retcode=" + retcode;
+                commentresult = HttpHelper1.SendDataByPost(commenturl, commentpoststr, refer, ref weibocc,proxy);//再次发送评论
+            }
+            return commentresult;
+        }
         public static WeiboComment GetComment(string mid, CookieContainer cc)
         {
             try
@@ -465,7 +621,7 @@ namespace Weibo.Common
                 WeiboComment comment = Newtonsoft.Json.JsonConvert.DeserializeObject<WeiboComment>(result);
                 return comment;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 return null;
@@ -514,7 +670,7 @@ namespace Weibo.Common
         public static DEWeiboAccount GetOneAccount()
         {
             DEWeiboAccount deweiboAccount = new DEWeiboAccount();
-            string[] weiboAccounts = File.ReadAllLines("weiboAccounts.txt");
+            string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
             string[] weiboAccount = weiboAccounts[0].Split(',');
             string username = weiboAccount[0];
             string password = weiboAccount[1];

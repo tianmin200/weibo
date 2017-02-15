@@ -55,6 +55,17 @@ namespace QQSpace
             return token;
         }
 
+        public static string GetUserInfo(QQHao qqhao, CookieContainer spacecc)
+        {
+            string url = "http://s.web2.qq.com/api/get_self_info2?t="+HttpHelper1.GetTicks();
+            string refer = "http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1";
+            string loginurl = "http://ptlogin4.web2.qq.com/check_sig?pttype=1&uin=3213257524&service=ptqrlogin&nodirect=0&ptsigx=iVBORw0KGgoAAAANSUhEUgAAAKUAAAClAQAAAAAVUAB3AAAACXBIWXMAAAsTAAALEwEAmpwYAAABnUlEQVRIib2XQY6EMAwEjTjkyBP4CXwMiZHmY/ATnsAxBzS93U5W2t17L4eZoXJI3LHbngg+cww3v9Z7v8rBHyVctADPXBctLdMz4wRgpEdsM47p4d7T+8J5x2ymjFjBkpb/oAs/6oA/ZzBQ6Vtwb3P5TK9fqhto5g7j3PrHj4wyUOjhReJixC8dSe8uqmCzJBBK1xoxpg4eCgiseZHABYocsFEmqdKGNZ+nKafWfZTbgzU/ZsRRVx3ER7m9VM1SHIEjRiddb21PVYtshiLT1Hx0kKpH7MpQmprC9tHMHUUczWH06qOMeOtLSzrM3fW10KxxSSuH2XkGFb6NshCyBT3tV8169NGDVlY+sV+skNccrS5ctIV4ZltXulLf9DMP5fYjejPnelXssFH07sOOLvcsPXdcVJbS9ZXDIG/TRfMOWRc5ifE2o/uZh3732LQyVki2BxttM20wYiq9o+vrojkbQe5J46TSaJnqopr7WroOXO/6Wmld1foyd5S4btpv832l3Eba/4uwD2kI43qb+zy05Y46qy7yygmwuOgXSeSL4v+A80wAAAAASUVORK5CYII=&s_url=http%3A%2F%2Fw.qq.com%2Fproxy.html%3Flogin2qq%3D1%26webqq_type%3D10&f_url=&ptlang=2052&ptredirect=100&aid=501004106&daid=164&j_later=0&low_login_hour=0&regmaster=0&pt_login_type=3&pt_aid=0&pt_aaid=16&pt_light=0&pt_3rd_aid=0";
+            CookieContainer newcc = new CookieContainer();
+            string resultstr = HttpHelper1.SendDataByGET(loginurl,ref newcc);
+
+            string result = HttpHelper1.SendDataByGET(url,refer, ref newcc);
+            return result;
+        }
         internal static void SendShuoshuoWithPic(string content, ArrayList imgs, CookieContainer spacecc, QQHao qqhao)
         {
             string richval = "";

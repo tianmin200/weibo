@@ -610,28 +610,72 @@ namespace Weibo.Common
         /// <returns></returns>
         public static string SendDataByGET(string Url, ref CookieContainer cookie)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
-            if (cookie.Count == 0)
+            try
             {
-                request.CookieContainer = new CookieContainer();
-                cookie = request.CookieContainer;
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+                if (cookie.Count == 0)
+                {
+                    request.CookieContainer = new CookieContainer();
+                    cookie = request.CookieContainer;
+                }
+                else
+                {
+                    request.CookieContainer = cookie;
+                }
+
+                request.Method = "GET";
+                request.ContentType = "text/html;charset=UTF-8";
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream myResponseStream = response.GetResponseStream();
+                StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+                string retString = myStreamReader.ReadToEnd();
+                myStreamReader.Close();
+                myResponseStream.Close();
+
+                return retString;
             }
-            else
+            catch (Exception ex)
             {
-                request.CookieContainer = cookie;
+
+                return ex.Message;
             }
+            
+        }
+        public static string SendDataByGET(string Url, ref CookieContainer cookie,WebProxy proxy)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+                if (cookie.Count == 0)
+                {
+                    request.CookieContainer = new CookieContainer();
+                    cookie = request.CookieContainer;
+                }
+                else
+                {
+                    request.CookieContainer = cookie;
+                }
 
-            request.Method = "GET";
-            request.ContentType = "text/html;charset=UTF-8";
-            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream myResponseStream = response.GetResponseStream();
-            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
-            string retString = myStreamReader.ReadToEnd();
-            myStreamReader.Close();
-            myResponseStream.Close();
+                request.Method = "GET";
+                request.ContentType = "text/html;charset=UTF-8";
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
+                request.Proxy = proxy;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream myResponseStream = response.GetResponseStream();
+                StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+                string retString = myStreamReader.ReadToEnd();
+                myStreamReader.Close();
+                myResponseStream.Close();
 
-            return retString;
+                return retString;
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+            
         }
 
         public static string GetBdShortUrl(string url)
@@ -724,6 +768,46 @@ namespace Weibo.Common
             request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36 QIHU 360SE";
             request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
             request.ContentLength = postDataStr.Length;
+            Stream myRequestStream = request.GetRequestStream();
+            StreamWriter myStreamWriter = new StreamWriter(myRequestStream, Encoding.GetEncoding("gb2312"));
+            myStreamWriter.Write(postDataStr);
+            myStreamWriter.Close();
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream myResponseStream = response.GetResponseStream();
+            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+            string retString = myStreamReader.ReadToEnd();
+            myStreamReader.Close();
+            myResponseStream.Close();
+            response.Close();
+            return retString;
+        }
+        public static string SendDataByPost(string Url, string postDataStr, string refer, ref CookieContainer cookie,WebProxy proxy)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+            if (cookie.Count == 0)
+            {
+                request.CookieContainer = new CookieContainer();
+                cookie = request.CookieContainer;
+            }
+            else
+            {
+                request.CookieContainer = cookie;
+            }
+
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            //request.Headers.Add("Accept:", "*/*");
+            //request.Headers.Add("Accept - Encoding", "gzip, deflate");
+            //request.Headers.Add("Accept - Language", "zh - CN,zh; q = 0.8");
+            //request.Headers.Add("X - Requested - With", "XMLHttpRequest");
+            //request.Headers.Add("Origin", "http://weibo.com");
+            request.Accept = "*/*";
+            request.Referer = refer;
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36 QIHU 360SE";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
+            request.ContentLength = postDataStr.Length;
+            request.Proxy = proxy;
             Stream myRequestStream = request.GetRequestStream();
             StreamWriter myStreamWriter = new StreamWriter(myRequestStream, Encoding.GetEncoding("gb2312"));
             myStreamWriter.Write(postDataStr);

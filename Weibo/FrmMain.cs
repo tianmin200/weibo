@@ -229,7 +229,7 @@ namespace Weibo
                     string groupid = obj_xuanpinku["id"].ToString();//选品库ID
                     string groupName = obj_xuanpinku["title"].ToString();//选品库title
                     DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
-                    string fileDownLoadUrl = "http://pub.alimama.com/favorites/item/export.json?adzoneId="+ deweiboaccount .Adzoneid+ "&siteId="+deweiboaccount.Siteid+"&groupId=" + groupid;//选品库Excel文件下载
+                    string fileDownLoadUrl = "http://pub.alimama.com/favorites/item/export.json?adzoneId=" + deweiboaccount.Adzoneid + "&siteId=" + deweiboaccount.Siteid + "&groupId=" + groupid;//选品库Excel文件下载
                     if (Directory.Exists("待发布/"))
                         Directory.CreateDirectory("待发布");
                     string fileSaveName = "待发布/" + groupName + "/" + groupName + ".xls";//保存文件名
@@ -306,12 +306,12 @@ namespace Weibo
         public void StartSendWeibo(object parmsobj)
         {
             SetStartWeiboBtnStatus(true);
-            string[] weiboAccounts = File.ReadAllLines("weiboAccounts.txt");
-            
+            string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
+
             while (true)
             {
                 int accountnum = 0;
-                
+                if (DEWeiboAccounts == null) InitWeiboAccounts();
                 foreach (DEWeiboAccount deweiboaccount in DEWeiboAccounts)
                 {
                     #region 初始定义
@@ -320,6 +320,11 @@ namespace Weibo
                     string ouid = "";
                     #endregion
                     DirectoryInfo TheFolder = new DirectoryInfo("待发布");
+                    while (TheFolder.GetDirectories().Length == 0)
+                    {
+                        AppenWeiboCmd("没有找到发布素材，等待10分钟！");
+                        Thread.Sleep(10 * 60 * 1000);
+                    }
                     DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
                     try
                     {
@@ -411,7 +416,7 @@ namespace Weibo
                         #endregion
                         #region 发布微博
                         AppenWeiboCmd("发布微博，正文：" + weibotext);
-                        
+
                         string result = WeiboHandler.SendWeibo(weibotext, picids, refer, weibocc);
 
                         if (result.Contains("{\"code\":\"100000\""))
@@ -420,10 +425,19 @@ namespace Weibo
                             HttpHelper1.GetStringInTwoKeyword(result, ref ouid, "ouid=", "\\\"", 0);
                             HttpHelper1.GetStringInTwoKeyword(result, ref mid, "action-data=\\\"mid=", "&from", 0);
                         }
-                        else
+                        else if (result.Contains("{\"code\":\"100004\""))
                         {
-                            AppenWeiboCmd("微博发布失败，返回：result=" + result);
-                            continue;
+                            //提示100004，重试发布
+                            result = WeiboHandler.SendWeiboFromM(weibotext, picids, refer, deweiboaccount, weibocc);
+                            if (result.Contains("ok\":1"))
+                            {
+                                AppenWeiboCmd("微博发布成功");
+                            }
+                            else
+                            {
+                                AppenWeiboCmd("微博发布失败，返回：result=" + result);
+                                continue;
+                            }
                         }
                         #endregion
                         #region 添加评论
@@ -535,11 +549,11 @@ namespace Weibo
                     //string newdir = nextFolder.FullName.Replace("待发布", "已发布");
                     //nextFolder.MoveTo(newdir);//移动文件夹至“已发布”
                     nextFolder.Delete(true);
-                    if (isSendSuc && mid !="") WeiboHandler.DeleteWeibo(mid, weibocc);
+                    if (!isSendSuc && mid != "") WeiboHandler.DeleteWeibo(mid, weibocc);
                     accountnum++;
                     if (accountnum == DEWeiboAccounts.Count) continue;//如果是最后一个账号，则不间隔
 
-                    AppenWeiboCmd("发布完成!账号间 间隔2分钟");
+                    AppenWeiboCmd("[" + deweiboaccount.Nickname + "]发布完成!账号间 间隔2分钟");
                     Thread.Sleep(2 * 60 * 1000);//账号间间隔3分钟
                     #endregion
 
@@ -656,7 +670,7 @@ namespace Weibo
         public void InitWeiboAccounts()
         {
             this.lvwWeiboAccountList.Items.Clear();
-            string[] weiboAccounts = File.ReadAllLines("weiboAccounts.txt");
+            string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
             DEWeiboAccounts = new ArrayList();
             int rownum = 1;
             foreach (string strs in weiboAccounts)
@@ -742,10 +756,11 @@ namespace Weibo
 
         private void btn_StopAlimama_Click(object sender, EventArgs e)
         {
+            SetStartAlimamaBtnStatus(false);
             if (alimamaThread != null && alimamaThread.IsAlive)
             {
                 alimamaThread.Abort();
-                SetStartAlimamaBtnStatus(false);
+                //SetStartAlimamaBtnStatus(false);
                 AppenAlimamaCmd("用户停止读取选品库任务...");
             }
         }
@@ -785,6 +800,7 @@ namespace Weibo
             while (true)
             {
                 SetStartAlimamaBtnStatus(true);
+                Mblog mblog = null;
                 try
                 {
                     int pagenum = Convert.ToInt32(this.nud_Pages.Value);
@@ -792,19 +808,20 @@ namespace Weibo
                     {
                         AppenAlimamaCmd("开始抓取第" + i.ToString() + "页微博内容");
 
-                        string[] weiboAccounts = File.ReadAllLines("weiboAccounts.txt");
+                        string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
 
                         weibocc = WeiboHandler.InitWeiboCookie(weiboAccounts[0].Split(',')[0]);
 
                         CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
 
 
-                        string[] urls = File.ReadAllLines(("colweibo.txt"));
+                        string[] urls = File.ReadAllLines(("config/colweibo.txt"));
                         foreach (string urltemp in urls)
                         {
                             string url = urltemp + i.ToString();
                             string ss = "";
-                            string html = HttpHelper1.GetHttpsHtml(url, "", ref ss);
+                            //string html = HttpHelper1.GetHttpsHtml(url, "", ref ss);
+                            string html = HttpHelper1.SendDataByGET(url,ref weibocc);
                             if (html.Contains(""))
                             {
                                 html = html.Replace("page\":null", "page\":1");
@@ -813,7 +830,7 @@ namespace Weibo
                             foreach (Card card in mbloglist.Cards)
                             {
                                 if (card.Mblog == null) continue;
-                                Mblog mblog = card.Mblog;
+                                mblog = card.Mblog;
                                 string mid = card.Mblog.Id;
 
                                 int isHave = Convert.ToInt32(SQLiteHelper.ExecuteScalar("select count(*) from mblog where id=" + mid));
@@ -895,9 +912,11 @@ namespace Weibo
 
                                         //throw;
                                     }
-
+                                    int linknum = 1;
                                     foreach (Match m in mc)
                                     {
+                                        AppenAlimamaCmd("转换链接" + linknum.ToString());
+                                        linknum++;
                                         string weiboshortlink = m.Value.Replace("\"", "");
                                         if (!weiboshortlink.StartsWith("http://t.cn")) continue;
                                         links = links + weiboshortlink + ",";
@@ -1016,6 +1035,7 @@ namespace Weibo
                                         int picnum = 1;
                                         foreach (Pic pic in mblog.Pics)
                                         {
+                                            AppenAlimamaCmd("下载图" + picnum.ToString());
                                             string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + ".jpg";
                                             string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + ".jpg";
                                             HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpgtemp", alimamacc);
@@ -1138,6 +1158,28 @@ namespace Weibo
                     AppenAlimamaCmd(ex.Message);
 
                 }
+                finally
+                {
+                    if (mblog != null)
+                    {
+                        try
+                        {
+                            int statu = SQLiteHelper.ExecuteNonQuery("insert into mblog(id,Source,Text,CreateAt,TbkLinks)values(@id,@Source,@Text,@CreateAt,@TbkLinks)", new[] {
+                            mblog.Id,
+                            mblog.Source,
+                            mblog.Text,
+                            mblog.CreatedAt,
+                            ""
+                            });//选品库下载完成后，保存微博数据到数据库
+                        }
+                        catch (Exception)
+                        {
+
+
+                        }
+
+                    }
+                }
             }
 
         }
@@ -1172,31 +1214,31 @@ namespace Weibo
 
         private void btn_ConfigLoginAlimama_Click(object sender, EventArgs e)
         {
-            ////获取Cookie
-            //CookieContainer myCookieContainer = new CookieContainer();
-            //string cookieStr = CookieReader.GetGlobalCookies(webBrowser_alimama.Document.Url.AbsoluteUri);
-            //string domain = "alimama.com";
+            //获取Cookie
+            CookieContainer myCookieContainer = new CookieContainer();
+            string cookieStr = CookieReader.GetGlobalCookies(webBrowser_alimama.Document.Url.AbsoluteUri);
+            string domain = "alimama.com";
 
-            ////string domian = "alimama.com";
-            ////File.AppendAllText("cookie.txt", UserName + "\t" + cookieStr + "\r\n");//记录异常账号，下一次不再重复访问
-            //if (File.Exists("alimamacookie.txt"))
-            //    File.Delete("alimamacookie.txt");
-            //File.AppendAllText("alimamacookie.txt", cookieStr);//1.8 修改只记录阿里妈妈登陆cookie
-            //CookieCollection ccl = CookieHelper.GetCookieCollectionByString(cookieStr, domain);
-            //myCookieContainer.Add(ccl);
-            //alimamacc = myCookieContainer;
-            string zhuanhuanstr = "";
-            int linknum = 1;
-            string[] links = this.richTextBox1.Text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string link in links)
-            {
-                DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
-                string shortutl = GetWeiboShortUrlByTbItem(link, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);
-                zhuanhuanstr += "图" + linknum.ToString() + ":" + shortutl + " ";
-                linknum++;
-            }
+            //string domian = "alimama.com";
+            //File.AppendAllText("cookie.txt", UserName + "\t" + cookieStr + "\r\n");//记录异常账号，下一次不再重复访问
+            if (File.Exists("config/alimamacookie.txt"))
+                File.Delete("config/alimamacookie.txt");
+            File.AppendAllText("config/alimamacookie.txt", cookieStr);//1.8 修改只记录阿里妈妈登陆cookie
+            CookieCollection ccl = CookieHelper.GetCookieCollectionByString(cookieStr, domain);
+            myCookieContainer.Add(ccl);
+            alimamacc = myCookieContainer;
+            //string zhuanhuanstr = "";
+            //int linknum = 1;
+            //string[] links = this.richTextBox1.Text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //foreach (string link in links)
+            //{
+            //    DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
+            //    string shortutl = GetWeiboShortUrlByTbItem(link, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);
+            //    zhuanhuanstr += "图" + linknum.ToString() + ":" + shortutl + " ";
+            //    linknum++;
+            //}
 
-            this.richTextBox1.Text = zhuanhuanstr;
+            //this.richTextBox1.Text = zhuanhuanstr;
         }
 
         private void txtWeiboCmd_TextChanged(object sender, EventArgs e)
@@ -1370,12 +1412,12 @@ namespace Weibo
             SetStartAlimamaBtnStatus(true);
             while (true)
             {
-                if (!File.Exists("shop.txt"))
+                if (!File.Exists("config/shop.txt"))
                 {
                     AppenAlimamaCmd("没有找到【shop.txt】店铺列表文件");
                     return;
                 }
-                string[] shops = File.ReadAllLines("shop.txt");
+                string[] shops = File.ReadAllLines("config/shop.txt");
                 AppenAlimamaCmd("开始抓取店铺热销单品作为选品库，此次共需处理" + shops.Length.ToString() + "个店铺");
                 int[] randomNums = GetRandomNum(shops.Length, 0, shops.Length);
                 foreach (int randomNum in randomNums)
@@ -1413,7 +1455,7 @@ namespace Weibo
             string dirname = "temp/" + nickname;
             if (!Directory.Exists(dirname))
                 Directory.CreateDirectory(dirname);
-            
+
         }
         /// <summary>
         /// 获取店铺热销商品列表
@@ -1508,7 +1550,7 @@ namespace Weibo
         }
 
 
-        
+
 
         private void btn_LoginTest_Click(object sender, EventArgs e)
         {
@@ -1543,14 +1585,14 @@ namespace Weibo
                     {
                         AppenAlimamaCmd("开始抓取第" + i.ToString() + "页微博内容");
 
-                        string[] weiboAccounts = File.ReadAllLines("weiboAccounts.txt");
+                        string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
 
                         weibocc = WeiboHandler.InitWeiboCookie(weiboAccounts[0].Split(',')[0]);
 
                         CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
 
 
-                        string[] urls = File.ReadAllLines(("colweibo.txt"));
+                        string[] urls = File.ReadAllLines(("config/colweibo.txt"));
                         foreach (string urltemp in urls)
                         {
                             string url = urltemp + i.ToString();
@@ -1743,7 +1785,7 @@ namespace Weibo
             SignalWeiboData weibodata = WeiboHandler.GetSignalWeibo(url);
 
             string dirname = "temp/" + NoHTML(weibodata.status.text);
-            
+
             if (!Directory.Exists(dirname))
                 Directory.CreateDirectory(dirname);
             int picnum = 1;
@@ -1753,6 +1795,10 @@ namespace Weibo
                 HttpHelper1.HttpDownloadFile(picurl, dirname + "/" + picnum.ToString() + ".jpg", weibocc);
                 picnum++;
             }
+            WeiboComment comment = WeiboHandler.GetComment(weibodata.status.mid, weibocc);
+
+            Directory.Move(dirname, dirname.Replace("temp/", "待发布/"));
+            //Directory.Delete(dirname, true);
 
         }
         public string NoHTML(string Htmlstring)  //替换HTML标记
@@ -1802,10 +1848,10 @@ namespace Weibo
                 {
                     AppenAlimamaCmd("开始抓取第" + i.ToString() + "页微博内容");
 
-                    //string[] weiboAccounts = File.ReadAllLines("weiboAccounts.txt");
+                    //string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
 
                     CookieContainer weibocc = new CookieContainer();
-                    string[] urls = File.ReadAllLines(("colweibo.txt"));
+                    string[] urls = File.ReadAllLines(("config/colweibo.txt"));
                     foreach (string urltemp in urls)
                     {
                         string url = urltemp + i.ToString();
@@ -1819,7 +1865,27 @@ namespace Weibo
                         foreach (Card card in mbloglist.Cards)
                         {
                             if (card.Mblog == null) continue;
+
                             Mblog mblog = card.Mblog;
+                            if (mblog.Text.Contains("想瘦")) continue;
+                            if (mblog.Text.Contains("瘦")) continue;
+                            if (mblog.Text.Contains("祛痘")) continue;
+                            if (mblog.Text.Contains("减肥")) continue;
+                            if (mblog.Text.Contains("关注")) continue;
+                            bool isfilter = false;
+                            if (File.Exists("config/filter.txt"))
+                            {
+                                string[] filterstrs = File.ReadAllLines("config/filter.txt");
+                                foreach (string filterstr in filterstrs)
+                                {
+                                    if (mblog.Text.Contains(filterstr))
+                                    {
+                                        isfilter = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (isfilter) continue;
                             string mid = card.Mblog.Id;
                             string dirname = HttpHelper1.NoHTML(mblog.Text).Trim();//截取选品文件夹名称
                             try
@@ -1828,7 +1894,7 @@ namespace Weibo
                                 if (isHave > 0)
                                     continue;//如果数据已存在，则跳过
 
-                                
+
                                 int picnum = 1;
 
                                 dirname = dirname.Replace("\"", "");
@@ -1838,10 +1904,10 @@ namespace Weibo
                                 {
                                     AppenAlimamaCmd("下载图" + picnum.ToString());
                                     string[] strs = pic.Url.Split('.');
-                                    string houzhui = strs[strs.Length -1];
-                                    string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + "."+houzhui;
-                                    string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + "."+houzhui;
-                                    HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + "."+houzhui, weibocc);
+                                    string houzhui = strs[strs.Length - 1];
+                                    string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + "." + houzhui;
+                                    string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + "." + houzhui;
+                                    HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + "." + houzhui, weibocc);
                                     picnum++;
                                 }
                                 Directory.Move("temp/" + dirname, "待发布/" + dirname);
@@ -1865,7 +1931,7 @@ namespace Weibo
                                                  });
                                 AppenAlimamaCmd(ex.Message);
                                 if (Directory.Exists("temp/" + dirname))
-                                    Directory.Delete("temp/" + dirname);
+                                    Directory.Delete("temp/" + dirname, true);
                             }
                         }
                     }
@@ -1890,13 +1956,17 @@ namespace Weibo
         /// <param name="parmsobj"></param>
         public void StartSendTuwen(object parmsobj)
         {
+            int yanchi = (Int32)this.nud_yanchi.Value;
+            AppenWeiboCmd("延迟" + yanchi.ToString() + "分钟启动发布");
+            Thread.Sleep(yanchi * 60 * 1000);
+
             SetStartWeiboBtnStatus(true);
-            string[] weiboAccounts = File.ReadAllLines("weiboAccounts.txt");
+            string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
 
             while (true)
             {
                 int accountnum = 0;
-
+                if (DEWeiboAccounts == null) InitWeiboAccounts();
                 foreach (DEWeiboAccount deweiboaccount in DEWeiboAccounts)
                 {
                     #region 初始定义
@@ -1905,6 +1975,11 @@ namespace Weibo
                     string ouid = "";
                     #endregion
                     DirectoryInfo TheFolder = new DirectoryInfo("待发布");
+                    while (TheFolder.GetDirectories().Length == 0)
+                    {
+                        AppenWeiboCmd("没有找到发布素材，等待10分钟！");
+                        Thread.Sleep(10 * 60 * 1000);
+                    }
                     DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
                     try
                     {
@@ -1940,11 +2015,11 @@ namespace Weibo
                         #region 上传图片文件并获取图片picid
                         //遍历选品库文件夹
 
-                        AppenWeiboCmd("共找到待发布选品库 " + TheFolder.GetDirectories().Length.ToString() + "个");
+                        AppenWeiboCmd("共找到待发布素材 " + TheFolder.GetDirectories().Length.ToString() + "个");
                         //遍历文件夹，上传九图，组成图片ID参数
                         while (TheFolder.GetDirectories().Length == 0)
                         {
-                            AppenWeiboCmd("暂时没有待发布选品库，等待10分钟");
+                            AppenWeiboCmd("暂时没有待发布素材，等待10分钟");
                             Thread.Sleep(10 * 60 * 1000);
 
                             TheFolder = new DirectoryInfo("待发布");
@@ -1952,58 +2027,56 @@ namespace Weibo
 
 
                         string picids = "";
-                        string comment = "";//链接评论内容
-                        string couponcomment = "";//优惠券评论内容
                         ArrayList commentlist = new ArrayList();
                         string weibotext = nextFolder.Name;//微博正文
                         int picnum = 0;
 
-                       
+
                         foreach (FileInfo NextFile in nextFolder.GetFiles())
                         {
 
-                            if (NextFile.Extension == ".jpg")
+                            if (NextFile.Extension == ".jpg" || NextFile.Extension == ".gif")
                             {
                                 picnum++;
                                 AppenWeiboCmd("上传图片" + picnum.ToString());
                                 string picpath = NextFile.FullName;
                                 string uploadresult = WeiboHandler.uploadWeiboImage(picpath, deweiboaccount.Nickname, weibocc);
                                 string picid = "";
-                                HttpHelper1.GetStringInTwoKeyword(uploadresult, ref picid, "pid\":\"", "\"}}}}", 0);
+                                HttpHelper1.GetStringInTwoKeyword(uploadresult, ref picid, "pid\":\"", "\"", 0);
                                 picids = picids + picid + " ";
                             }
-                            else if (NextFile.Name == "comment.txt")
-                            {
-                                comment = File.ReadAllText(NextFile.FullName);
-                                commentlist.Add(comment);
-                            }
-                            else if (NextFile.Name == "coupon.txt")
-                            {
-                                couponcomment = File.ReadAllText(NextFile.FullName);
-                                commentlist.Add(couponcomment);
-                            }
-
                         }
                         picids = picids.Trim().Replace(" ", "%20");
                         #endregion
                         #region 发布微博
                         AppenWeiboCmd("发布微博，正文：" + weibotext);
 
+
+                        //string result = WeiboHandler.SendWeiboFromM(weibotext, picids, refer, deweiboaccount, weibocc);
                         string result = WeiboHandler.SendWeibo(weibotext, picids, refer, weibocc);
 
                         if (result.Contains("{\"code\":\"100000\""))
+                        //if (result.Contains("ok\":1"))
                         {
                             AppenWeiboCmd("微博发布成功");
-                            HttpHelper1.GetStringInTwoKeyword(result, ref ouid, "ouid=", "\\\"", 0);
-                            HttpHelper1.GetStringInTwoKeyword(result, ref mid, "action-data=\\\"mid=", "&from", 0);
+                            //HttpHelper1.GetStringInTwoKeyword(result, ref ouid, "ouid=", "\\\"", 0);
+                            //HttpHelper1.GetStringInTwoKeyword(result, ref mid, "action-data=\\\"mid=", "&from", 0);
                         }
-                        else
+                        else if (result.Contains("{\"code\":\"100004\""))
                         {
-                            AppenWeiboCmd("微博发布失败，返回：result=" + result);
-                            continue;
+                            //提示100004，重试发布
+                            result = WeiboHandler.SendWeiboFromM(weibotext, picids, refer, deweiboaccount, weibocc);
+                            if (result.Contains("ok\":1"))
+                            {
+                                AppenWeiboCmd("微博发布成功");
+                            }
+                            else
+                            {
+                                AppenWeiboCmd("微博发布失败，返回：result=" + result);
+                                continue;
+                            }
                         }
                         #endregion
-
                         isSendSuc = true;
                     }
                     catch (Exception ex)
@@ -2014,27 +2087,279 @@ namespace Weibo
                         isSendSuc = false;
                         Thread.Sleep(jiangeshij * 60 * 1000);
                     }
-
                     #region 微博发布后处理
                     //string newdir = nextFolder.FullName.Replace("待发布", "已发布");
                     //nextFolder.MoveTo(newdir);//移动文件夹至“已发布”
                     nextFolder.Delete(true);
-                    if (isSendSuc && mid != "") WeiboHandler.DeleteWeibo(mid, weibocc);
+                    if (!isSendSuc && mid != "") WeiboHandler.DeleteWeibo(mid, weibocc);
                     accountnum++;
                     if (accountnum == DEWeiboAccounts.Count) continue;//如果是最后一个账号，则不间隔
 
-                    AppenWeiboCmd("发布完成!账号间 间隔2分钟");
+                    AppenWeiboCmd("[" + deweiboaccount.Nickname + "]发布完成!账号间 间隔2分钟");
                     Thread.Sleep(2 * 60 * 1000);//账号间间隔3分钟
                     #endregion
-
                 }//foreach账号
                 int jiange = Convert.ToInt32(this.nud_weiboJiange.Value);
                 AppenWeiboCmd("全部微博账号发布完成，间隔" + jiange.ToString() + "分钟！！！");
                 Thread.Sleep(jiange * 60 * 1000);
-
-
-
             }//while
+        }
+
+        private void btn_SignelWeibo_Click(object sender, EventArgs e)
+        {
+            this.folderBrowserDialog1.SelectedPath = Directory.GetCurrentDirectory() + "\\待发布";
+            this.folderBrowserDialog1.ShowDialog();
+            
+            string nextFolderPath = this.folderBrowserDialog1.SelectedPath;
+            bool iscomment = false;
+            string commentstr = "";
+            
+            string[] weiboAccounts = File.ReadAllLines("config/weiboAccounts.txt");
+
+
+            int accountnum = 0;
+            if (DEWeiboAccounts == null) InitWeiboAccounts();
+            foreach (DEWeiboAccount deweiboaccount in DEWeiboAccounts)
+            {
+                string curweibo = this.lvwWeiboAccountList.SelectedItems[0].SubItems[1].Text;
+                if (deweiboaccount.Nickname != curweibo) continue;
+                #region 初始定义
+                bool isSendSuc = false;//是否发布成功
+                string mid = "";
+                string ouid = "";
+                #endregion
+                DirectoryInfo TheFolder = new DirectoryInfo("待发布");
+                while (TheFolder.GetDirectories().Length == 0)
+                {
+                    AppenWeiboCmd("没有找到发布素材，等待10分钟！");
+                    Thread.Sleep(10 * 60 * 1000);
+                }
+                //DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
+                DirectoryInfo nextFolder = new DirectoryInfo(nextFolderPath);
+                try
+                {
+                    #region 初始化微博账号
+                    string username = deweiboaccount.Username;
+                    string password = deweiboaccount.Password;
+                    string nickname = deweiboaccount.Nickname;
+                    AppenWeiboCmd("[" + nickname + "]开始发布微博");
+                    #endregion
+                    #region 验证登陆并获取refer
+                    string strresult = "";
+                    CookieContainer weibocc = WeiboHandler.InitWeiboCookie(deweiboaccount.Username);
+                    if (!WeiboHandler.TestLogin(weibocc, ref strresult))
+                    {
+                        //如果账号未登录，先自动登录
+                        AppenWeiboCmd("账号:[" + nickname + "]未登录，开始登录！！！");
+                        weibocc = WeiboHandler.Login(username, password);
+                        if (weibocc == null)
+                        {
+                            AppenWeiboCmd("账号:[" + nickname + "]登录失败,跳过");
+                            continue;
+                        }
+                        InitWeiboAccounts();//登录之后初始化账号
+                    }
+
+                    string userid = "";
+                    HttpHelper1.GetStringInTwoKeyword(strresult, ref userid, "$CONFIG['watermark']='", "$CONFIG['domain']", 0);
+                    userid = userid.Replace("';", "").Trim();
+                    string refer = "http://www.weibo.com/" + userid + "/home?wvr=5";
+                    deweiboaccount.Userid = userid.Replace("u/", "");
+
+                    #endregion
+                    #region 上传图片文件并获取图片picid
+                    //遍历选品库文件夹
+
+                    AppenWeiboCmd("共找到待发布素材 " + TheFolder.GetDirectories().Length.ToString() + "个");
+                    //遍历文件夹，上传九图，组成图片ID参数
+                    while (TheFolder.GetDirectories().Length == 0)
+                    {
+                        AppenWeiboCmd("暂时没有待发布素材，等待10分钟");
+                        Thread.Sleep(10 * 60 * 1000);
+
+                        TheFolder = new DirectoryInfo("待发布");
+                    }
+
+
+                    string picids = "";
+                    ArrayList commentlist = new ArrayList();
+                    string weibotext = nextFolder.Name;//微博正文
+                    int picnum = 0;
+
+
+                    foreach (FileInfo NextFile in nextFolder.GetFiles())
+                    {
+
+                        if (NextFile.Extension == ".jpg" || NextFile.Extension == ".gif")
+                        {
+                            picnum++;
+                            AppenWeiboCmd("上传图片" + picnum.ToString());
+                            string picpath = NextFile.FullName;
+                            string uploadresult = WeiboHandler.uploadWeiboImage(picpath, deweiboaccount.Nickname, weibocc);
+                            string picid = "";
+                            HttpHelper1.GetStringInTwoKeyword(uploadresult, ref picid, "pid\":\"", "\"", 0);
+                            picids = picids + picid + " ";
+                        }
+                        else if (NextFile.Name.Contains("comment.txt"))
+                        {
+                            iscomment = true;
+                            commentstr = File.ReadAllText(NextFile.FullName);
+                            commentlist.Add(commentstr);
+                        }
+                    }
+                    picids = picids.Trim().Replace(" ", "%20");
+                    #endregion
+                    #region 发布微博
+                    AppenWeiboCmd("发布微博，正文：" + weibotext);
+
+
+                    //string result = WeiboHandler.SendWeiboFromM(weibotext, picids, refer, deweiboaccount, weibocc);
+                    string result = WeiboHandler.SendWeibo(weibotext, picids, refer, weibocc);
+
+                    if (result.Contains("{\"code\":\"100000\""))
+                    //if (result.Contains("ok\":1"))
+                    {
+                        AppenWeiboCmd("微博发布成功");
+                        HttpHelper1.GetStringInTwoKeyword(result, ref ouid, "ouid=", "\\\"", 0);
+                        HttpHelper1.GetStringInTwoKeyword(result, ref mid, "action-data=\\\"mid=", "&from", 0);
+                    }
+                    else if (result.Contains("{\"code\":\"100004\""))
+                    {
+                        //提示100004，重试发布
+                        result = WeiboHandler.SendWeiboFromM(weibotext, picids, refer, deweiboaccount, weibocc);
+                        if (result.Contains("ok\":1"))
+                        {
+                            AppenWeiboCmd("微博发布成功");
+                        }
+                        else
+                        {
+                            AppenWeiboCmd("微博发布失败，返回：result=" + result);
+                            continue;
+                        }
+                    }
+                    #endregion
+                    #region 添加评论
+                    if (!iscomment)
+                    {
+                        AppenWeiboCmd("无需发布评论");
+                    }
+                    else
+                    {
+                        AppenWeiboCmd("发布评论");
+                        while (mid == "")
+                        {
+                            //http://m.weibo.cn/container/getIndex?type=uid&value=5249378691&containerid=1005055249378691
+                            string quanbuweibourl = "http://m.weibo.cn/container/getIndex?uid=" + deweiboaccount.Userid + "&luicode=10000011&lfid=100103type%3D3%26q%3D" + HttpUtility.UrlEncode(deweiboaccount.Nickname) + "&type=uid&value=" + deweiboaccount.Userid;
+                            string containerid = "";
+                            string result1 = HttpHelper1.SendDataByGET(quanbuweibourl, ref weibocc);
+                            HttpHelper1.GetStringInTwoKeyword(result1, ref containerid, "weibo\",\"containerid\":\"", "\",", 0);
+                            containerid = containerid.Replace(",\"containerid\":\"", "").Replace("\",", "");
+                            quanbuweibourl = quanbuweibourl + "&containerid=" + containerid;
+                            string result2 = HttpHelper1.SendDataByGET(quanbuweibourl, ref weibocc);
+                            MblogData mbloglist1 = Newtonsoft.Json.JsonConvert.DeserializeObject<MblogData>(result2);
+                            foreach (Card card in mbloglist1.Cards)
+                            {
+                                Mblog mblog1 = card.Mblog;
+                                if (mblog1.Mblogtype != 0)
+                                    continue;
+                                if (picids.StartsWith(mblog1.Pics[0].Pid))
+                                    mid = mblog1.Id;
+                                break;
+                            }
+                            //如果Mid为空，直接读取微博第一条Mid
+                        }
+
+
+
+                        //if (commentstr.StartsWith("图1") || commentstr.Contains("粉丝优惠购"))
+                        //{
+                        //    //牺牲发布效率，把每个微博的渠道数据进行监控，找出不那么赚钱的渠道
+                        //    Regex reg = new Regex(@"[a-zA-z]+://[^\s]*");
+                        //    MatchCollection mc = reg.Matches(commentstr);
+                        //    foreach (Match m in mc)
+                        //    {
+                        //        string weiboshortlink = m.Value;
+                        //        string tbrealitem = "";
+                        //        Alimama.GetItemResultWithWeiboShortUrl(weiboshortlink, alimamacc, ref tbrealitem);
+                        //        string targetweibourl = GetWeiboShortUrlByTbItem(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);
+                        //        if (targetweibourl != "")
+                        //        {
+                        //            commentstr = commentstr.Replace(m.Value, targetweibourl);
+                        //        }
+                        //    }
+                        //}
+                        string commentresult = WeiboHandler.Comment(mid, ouid, commentstr, refer, weibocc);
+                        string decode_commentresult = Regex.Unescape(commentresult);
+                        if (!decode_commentresult.Contains("抱歉"))
+                        {
+                            if (!commentresult.Contains("{\"code\":\"100000\""))
+                            {
+                                //评论失败之后，再次评论
+                                commentresult = WeiboHandler.Comment(mid, ouid, "地址 " + commentstr, refer, weibocc);
+                            }
+                            if (!commentresult.Contains("{\"code\":\"100000\""))
+                            {
+                                //第二次评论尝试
+                                commentresult = WeiboHandler.Comment(mid, ouid, "链接 " + commentstr, refer, weibocc);
+                            }
+                            if (!commentresult.Contains("{\"code\":\"100000\""))
+                            {
+                                //第三次评论尝试
+                                commentresult = WeiboHandler.Comment(mid, ouid, "购 " + commentstr, refer, weibocc);
+                            }
+                            //else
+                            //{
+                            //    //评论发布失败
+                            //    string code = "";
+                            //    HttpHelper1.GetStringInTwoKeyword(commentresult, ref code, "{\"code\":\"", "\"", 0);
+                            //    AppenWeiboCmd("评论发布失败，code:" + code);
+                            //}
+                        }
+                        if (commentresult.Contains("{\"code\":\"100000\""))
+                            AppenWeiboCmd("评论发布成功");
+                        else
+                        {
+                            AppenWeiboCmd("评论发布失败，返回值：" + commentresult);
+                            int insertcomment_result = SQLiteHelper.ExecuteNonQuery("insert into MissComment(mid,ouid,uid,text)values(@mid,@ouid,@uid,@text)", new[] {
+                            mid,
+                            ouid,
+                            username,
+                            commentstr
+                            });
+
+                        }
+                    }
+
+                    #endregion
+                    isSendSuc = true;
+                }
+                catch (Exception ex)
+                {
+                    int jiangeshij = Convert.ToInt32(this.nud_weiboJiange.Value);
+                    AppenWeiboCmd("发布微博出错，错误信息：" + ex.Message);
+
+                    isSendSuc = false;
+
+                }
+                #region 微博发布后处理
+                //string newdir = nextFolder.FullName.Replace("待发布", "已发布");
+                //nextFolder.MoveTo(newdir);//移动文件夹至“已发布”
+                //nextFolder.Delete(true);
+                if (!isSendSuc && mid != "") WeiboHandler.DeleteWeibo(mid, weibocc);
+                accountnum++;
+                
+
+                AppenWeiboCmd("[" + deweiboaccount.Nickname + "]发布完成!");
+
+                #endregion
+            }//foreach账号
+
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

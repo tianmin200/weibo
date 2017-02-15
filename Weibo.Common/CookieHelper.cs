@@ -129,7 +129,7 @@ namespace Weibo.Common
     /// <summary>
     /// WinInet.dll wrapper
     /// </summary>
-    internal static class CookieReader
+    public static class CookieReader
     {
 
 

@@ -447,7 +447,12 @@ namespace Weibo.Core
                         parm.Value = (int)paramList[j];
                         coll.Add(parm);
                         break;
-
+                    case ("System.Int64"):
+                        parm.DbType = DbType.Int64;
+                        parm.ParameterName = paramNames[j];
+                        parm.Value = Convert.ToInt64(paramList[j]);
+                        coll.Add(parm);
+                        break;
                     case ("System.Boolean"):
                         parm.DbType = DbType.Boolean;
                         parm.ParameterName = paramNames[j];

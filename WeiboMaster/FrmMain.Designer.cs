@@ -29,36 +29,72 @@
         private void InitializeComponent()
         {
             this.btn_test = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.txtCmd = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // btn_test
             // 
-            this.btn_test.Location = new System.Drawing.Point(324, 27);
+            this.btn_test.Location = new System.Drawing.Point(262, 24);
             this.btn_test.Name = "btn_test";
             this.btn_test.Size = new System.Drawing.Size(75, 23);
             this.btn_test.TabIndex = 0;
-            this.btn_test.Text = "button1";
+            this.btn_test.Text = "评论测试";
             this.btn_test.UseVisualStyleBackColor = true;
             this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
             // 
-            // richTextBox1
+            // listView1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(12, 12);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(291, 235);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.listView1.Location = new System.Drawing.Point(12, 12);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(191, 217);
+            this.listView1.TabIndex = 2;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "账号";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "状态";
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "评论数";
+            // 
+            // txtCmd
+            // 
+            this.txtCmd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCmd.BackColor = System.Drawing.SystemColors.ControlText;
+            this.txtCmd.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCmd.ForeColor = System.Drawing.Color.SpringGreen;
+            this.txtCmd.Location = new System.Drawing.Point(0, 255);
+            this.txtCmd.Name = "txtCmd";
+            this.txtCmd.ReadOnly = true;
+            this.txtCmd.Size = new System.Drawing.Size(577, 150);
+            this.txtCmd.TabIndex = 14;
+            this.txtCmd.Text = "";
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 342);
-            this.Controls.Add(this.richTextBox1);
+            this.ClientSize = new System.Drawing.Size(576, 405);
+            this.Controls.Add(this.txtCmd);
+            this.Controls.Add(this.listView1);
             this.Controls.Add(this.btn_test);
             this.Name = "FrmMain";
-            this.Text = "Form1";
+            this.Text = "监测评论";
             this.ResumeLayout(false);
 
         }
@@ -66,7 +102,11 @@
         #endregion
 
         private System.Windows.Forms.Button btn_test;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.RichTextBox txtCmd;
     }
 }
 

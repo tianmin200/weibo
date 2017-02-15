@@ -484,7 +484,10 @@ namespace Weibo.Common
             string m_userName = "tianmin200";
             string m_password = "tianmin200";
             //打码平台自动获取验证码
-            string imgPath = Guid.NewGuid().ToString() + "loginpincode.png";
+            string randomname = Guid.NewGuid().ToString();
+            if (!Directory.Exists("pincode"))
+                Directory.CreateDirectory("pincode");
+            string imgPath = "pincode/" + randomname + "login.png";
             img.Save(imgPath);
             FileInfo fi = new FileInfo(imgPath);
             FileStream fs = new FileStream(imgPath, FileMode.Open);

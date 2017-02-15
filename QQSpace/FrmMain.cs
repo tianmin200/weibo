@@ -24,6 +24,7 @@ namespace QQSpace
         public CookieContainer spacecc;
         public Thread colThread;
         public Thread spaceThread;
+        public Thread nhThread;
         public ArrayList qqhaos;
         public FrmMain()
         {
@@ -96,6 +97,8 @@ namespace QQSpace
                     qqhao.Password = password;
                     qqhao.G_tk = g_tk;
                     qqhao.Token = token;
+
+                    string result = QQSpaceHelper.GetUserInfo(qqhao, spacecc);
                     #endregion
                     DirectoryInfo TheFolder = new DirectoryInfo("待发布");
                     DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
@@ -103,14 +106,16 @@ namespace QQSpace
                     ArrayList imgs = new ArrayList();
                     foreach (FileInfo NextFile in nextFolder.GetFiles())
                     {
-                        if (NextFile.Extension == ".jpg")
+                        if (NextFile.Extension == ".jpg" || NextFile.Extension == ".gif")
                         {
                             AppenSpaceCmd("上传图片");
                             UploadImageData imagedata = QQSpaceHelper.UploadPic(NextFile.FullName, spacecc, qqhao);
                             imgs.Add(imagedata);
                         }
                     }
-                    QQSpaceHelper.SendShuoshuoWithPic(nextFolder.Name, imgs, spacecc, qqhao);
+                    string content = " ";
+                    if (!IsGuidByReg(nextFolder.Name)) content = nextFolder.Name;
+                    QQSpaceHelper.SendShuoshuoWithPic(content, imgs, spacecc, qqhao);
                     Directory.Move(nextFolder.FullName, "已发布/" + nextFolder.Name);
                     AppenSpaceCmd(nickname + "[" + qqhaoma + "]发布完成");
                 }
@@ -118,6 +123,24 @@ namespace QQSpace
                 AppenSpaceCmd("此次发布完毕，等待" + jiange.ToString() + "分钟");
                 Thread.Sleep(jiange * 60 * 1000);
             }
+        }
+        static bool IsGuidByReg(string strSrc)
+        {
+            try
+            {
+                Guid guid = new Guid(strSrc);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            //Regex reg = new Regex("^[A-F0-9]{8}(-[A-F0-9]{4}){3}-[A-F0-9]{12}$", RegexOptions.Compiled);
+            //bool c = reg.IsMatch(strSrc);
+            //log.Error("------------------------");
+            //log.Error(c);
+            //log.Error("------------------------");
+            //return  c;
         }
         private void btn_col_Click(object sender, EventArgs e)
         {
@@ -169,6 +192,8 @@ namespace QQSpace
                                 dirname = dirname.Replace("\"", "");
                                 if (!Directory.Exists("temp/" + dirname))
                                     Directory.CreateDirectory("temp/" + dirname);
+                                else
+                                    continue;
                                 foreach (Pic pic in mblog.Pics)
                                 {
                                     AppenColCmd("下载图" + picnum.ToString());
@@ -247,13 +272,18 @@ namespace QQSpace
 
         private void SetColeButtonStatus(bool isexe)
         {
-            this.btn_col.Enabled = !isexe;
+            this.btn_colweibo.Enabled = !isexe;
             this.btn_colStop.Enabled = isexe;
         }
         private void SetSpaceeButtonStatus(bool isexe)
         {
             this.btn_test.Enabled = !isexe;
             this.btn_spaceStop.Enabled = isexe;
+        }
+        private void SetNHButtonStatus(bool isexe)
+        {
+            this.btn_colnh.Enabled = !isexe;
+            this.btn_nhStop.Enabled = isexe;
         }
 
         private void btn_colStop_Click(object sender, EventArgs e)
@@ -273,6 +303,88 @@ namespace QQSpace
                 spaceThread.Abort();
                 SetSpaceeButtonStatus(false);
                 AppenSpaceCmd("用户停止发布任务!!!");
+            }
+        }
+
+        private void btn_colnh_Click(object sender, EventArgs e)
+        {
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(startColNH));
+            ArrayList parms = new ArrayList();
+            parms.Add("");
+            parms.Add(1);
+            nhThread = new Thread(new ParameterizedThreadStart(startColNH));
+            nhThread.Start(parms);
+        }
+
+        /// <summary>
+        /// 抓取内涵段子gif图片
+        /// </summary>
+        /// <param name="obj"></param>
+        public void startColNH(object obj)
+        {
+            while (true)
+            {
+                SetNHButtonStatus(true);
+                AppenColCmd("开始抓取内涵段子GIF图片");
+                string url = "http://neihanshequ.com/pic/?is_json=1&app_name=neihanshequ_web&max_time=" + HttpHelper1.GetTicks() + ".0";
+                CookieContainer cc = new CookieContainer();
+                string resulthtml = HttpHelper1.SendDataByGET(url, ref cc);
+                string jsonstr = "";
+                HttpHelper1.GetStringInTwoKeyword(resulthtml, ref jsonstr, "\"data\": [", "], \"max_time\"", 0);
+                jsonstr = jsonstr.Replace("360p", "s360p");
+                jsonstr = jsonstr.Replace("480p", "s480p");
+                jsonstr = jsonstr.Replace("720p", "s720p");
+                jsonstr = "{\"data\": [" + jsonstr + "],\"max_time\": 1485232534}";
+                NHPicData nhpicdata = Newtonsoft.Json.JsonConvert.DeserializeObject<NHPicData>(jsonstr);
+                int picnum = 1;
+                foreach (NHPicData.Datum datum in nhpicdata.data)
+                {
+                    int isHave = Convert.ToInt32(SQLiteHelper.ExecuteScalar("select count(*) from mblog where id=" + datum.group.group_id));
+                    if (isHave > 0)
+                        continue;//如果数据已存在，则跳过
+                    if (datum.group.is_gif != null && datum.group.is_gif == 1)
+                    {
+                       
+                        AppenColCmd("抓取正文："+ datum.group.text);
+                        string dirname = "temp/" + datum.group.text;
+                        if (datum.group.text == "") dirname = "temp/" + Guid.NewGuid().ToString();
+                        if (!Directory.Exists(dirname))
+                            Directory.CreateDirectory(dirname);
+                        else
+                            continue;
+                        if(datum.group.gifvideo != null)
+                        {
+                            string mp4file = datum.group.gifvideo.mp4_url;
+                        }
+                        string giffile = "http://p3.pstatp.com/" + datum.group.large_image.uri;
+                        //HttpHelper1.HttpDownloadFile(mp4file, dirname+"/"+picnum+".mp4", cc);
+                        AppenColCmd("下载GIF");
+                        HttpHelper1.HttpDownloadFile(giffile, dirname + "/" + picnum + ".gif", cc);
+                        picnum++;
+                        Directory.Move(dirname, dirname.Replace("temp", "待发布"));
+                    }
+                    int staresult = SQLiteHelper.ExecuteNonQuery("insert into mblog(id,Source,Text,CreateAt,TbkLinks)values(@id,@Source,@Text,@CreateAt,@TbkLinks)", new[] {
+                                                    datum.group.group_id,
+                                                    datum.group.category_name,
+                                                    datum.group.text,
+                                                    datum.group.create_time,
+                                                    ""
+                                                 });
+                }
+                int alimamajiange = Convert.ToInt32(this.nud_coljiange.Value);
+                AppenColCmd("此次抓取完毕，等待" + alimamajiange.ToString() + "分钟");
+                Thread.Sleep(alimamajiange * 60 * 1000);
+            }
+            
+        }
+
+        private void btn_nhStop_Click(object sender, EventArgs e)
+        {
+            if (nhThread != null && nhThread.IsAlive)
+            {
+                nhThread.Abort();
+                SetNHButtonStatus(false);
+                AppenColCmd("用户停止内涵段子抓取任务!!!");
             }
         }
     }

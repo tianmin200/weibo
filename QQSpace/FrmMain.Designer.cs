@@ -31,31 +31,33 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.txtColCmd = new System.Windows.Forms.RichTextBox();
-            this.nud_coljiange = new System.Windows.Forms.NumericUpDown();
-            this.nud_Pages = new System.Windows.Forms.NumericUpDown();
-            this.btn_col = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.txtSpaceCmd = new System.Windows.Forms.RichTextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btn_test = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.nud_spacejiange = new System.Windows.Forms.NumericUpDown();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btn_colStop = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.btn_colweibo = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.nud_coljiange = new System.Windows.Forms.NumericUpDown();
+            this.nud_Pages = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btn_spaceStop = new System.Windows.Forms.Button();
+            this.nud_spacejiange = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btn_test = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtSpaceCmd = new System.Windows.Forms.RichTextBox();
+            this.btn_colnh = new System.Windows.Forms.Button();
+            this.btn_nhStop = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_coljiange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Pages)).BeginInit();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_spacejiange)).BeginInit();
-            this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_spacejiange)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -95,6 +97,71 @@
             this.txtColCmd.Text = "";
             this.txtColCmd.TextChanged += new System.EventHandler(this.txtColCmd_TextChanged);
             // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btn_colnh);
+            this.panel1.Controls.Add(this.btn_nhStop);
+            this.panel1.Controls.Add(this.btn_colStop);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.btn_colweibo);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.nud_coljiange);
+            this.panel1.Controls.Add(this.nud_Pages);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Location = new System.Drawing.Point(6, 6);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(419, 80);
+            this.panel1.TabIndex = 26;
+            // 
+            // btn_colStop
+            // 
+            this.btn_colStop.Location = new System.Drawing.Point(154, 43);
+            this.btn_colStop.Name = "btn_colStop";
+            this.btn_colStop.Size = new System.Drawing.Size(75, 23);
+            this.btn_colStop.TabIndex = 26;
+            this.btn_colStop.Text = "停止";
+            this.btn_colStop.UseVisualStyleBackColor = true;
+            this.btn_colStop.Click += new System.EventHandler(this.btn_colStop_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(101, 50);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(29, 12);
+            this.label6.TabIndex = 25;
+            this.label6.Text = "分钟";
+            // 
+            // btn_colweibo
+            // 
+            this.btn_colweibo.Location = new System.Drawing.Point(154, 14);
+            this.btn_colweibo.Name = "btn_colweibo";
+            this.btn_colweibo.Size = new System.Drawing.Size(75, 23);
+            this.btn_colweibo.TabIndex = 21;
+            this.btn_colweibo.Text = "微博抓取";
+            this.btn_colweibo.UseVisualStyleBackColor = true;
+            this.btn_colweibo.Click += new System.EventHandler(this.btn_col_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(17, 17);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.TabIndex = 25;
+            this.label3.Text = "抓取前";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(29, 50);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(29, 12);
+            this.label5.TabIndex = 25;
+            this.label5.Text = "间隔";
+            // 
             // nud_coljiange
             // 
             this.nud_coljiange.Location = new System.Drawing.Point(64, 46);
@@ -119,15 +186,14 @@
             0,
             0});
             // 
-            // btn_col
+            // label4
             // 
-            this.btn_col.Location = new System.Drawing.Point(154, 14);
-            this.btn_col.Name = "btn_col";
-            this.btn_col.Size = new System.Drawing.Size(75, 23);
-            this.btn_col.TabIndex = 21;
-            this.btn_col.Text = "抓取测试";
-            this.btn_col.UseVisualStyleBackColor = true;
-            this.btn_col.Click += new System.EventHandler(this.btn_col_Click);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(101, 17);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(17, 12);
+            this.label4.TabIndex = 25;
+            this.label4.Text = "页";
             // 
             // tabPage2
             // 
@@ -140,123 +206,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "空间发布";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // txtSpaceCmd
-            // 
-            this.txtSpaceCmd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSpaceCmd.BackColor = System.Drawing.SystemColors.ControlText;
-            this.txtSpaceCmd.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtSpaceCmd.ForeColor = System.Drawing.Color.SpringGreen;
-            this.txtSpaceCmd.Location = new System.Drawing.Point(0, 276);
-            this.txtSpaceCmd.Name = "txtSpaceCmd";
-            this.txtSpaceCmd.ReadOnly = true;
-            this.txtSpaceCmd.Size = new System.Drawing.Size(486, 164);
-            this.txtSpaceCmd.TabIndex = 25;
-            this.txtSpaceCmd.Text = "";
-            this.txtSpaceCmd.TextChanged += new System.EventHandler(this.txtSpaceCmd_TextChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(87, 19);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 12);
-            this.label2.TabIndex = 23;
-            this.label2.Text = "分钟";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
-            this.label1.TabIndex = 22;
-            this.label1.Text = "间隔";
-            // 
-            // btn_test
-            // 
-            this.btn_test.Location = new System.Drawing.Point(154, 14);
-            this.btn_test.Name = "btn_test";
-            this.btn_test.Size = new System.Drawing.Size(75, 23);
-            this.btn_test.TabIndex = 21;
-            this.btn_test.Text = "发布测试";
-            this.btn_test.UseVisualStyleBackColor = true;
-            this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 17);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
-            this.label3.TabIndex = 25;
-            this.label3.Text = "抓取前";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(101, 17);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(17, 12);
-            this.label4.TabIndex = 25;
-            this.label4.Text = "页";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(29, 50);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(29, 12);
-            this.label5.TabIndex = 25;
-            this.label5.Text = "间隔";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(101, 50);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(29, 12);
-            this.label6.TabIndex = 25;
-            this.label6.Text = "分钟";
-            // 
-            // nud_spacejiange
-            // 
-            this.nud_spacejiange.Location = new System.Drawing.Point(50, 16);
-            this.nud_spacejiange.Name = "nud_spacejiange";
-            this.nud_spacejiange.Size = new System.Drawing.Size(31, 21);
-            this.nud_spacejiange.TabIndex = 26;
-            this.nud_spacejiange.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // panel1
-            // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.btn_colStop);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.btn_col);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.nud_coljiange);
-            this.panel1.Controls.Add(this.nud_Pages);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Location = new System.Drawing.Point(6, 6);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(258, 80);
-            this.panel1.TabIndex = 26;
-            // 
-            // btn_colStop
-            // 
-            this.btn_colStop.Location = new System.Drawing.Point(154, 43);
-            this.btn_colStop.Name = "btn_colStop";
-            this.btn_colStop.Size = new System.Drawing.Size(75, 23);
-            this.btn_colStop.TabIndex = 26;
-            this.btn_colStop.Text = "停止";
-            this.btn_colStop.UseVisualStyleBackColor = true;
-            this.btn_colStop.Click += new System.EventHandler(this.btn_colStop_Click);
             // 
             // panel2
             // 
@@ -281,6 +230,81 @@
             this.btn_spaceStop.UseVisualStyleBackColor = true;
             this.btn_spaceStop.Click += new System.EventHandler(this.btn_spaceStop_Click);
             // 
+            // nud_spacejiange
+            // 
+            this.nud_spacejiange.Location = new System.Drawing.Point(50, 16);
+            this.nud_spacejiange.Name = "nud_spacejiange";
+            this.nud_spacejiange.Size = new System.Drawing.Size(31, 21);
+            this.nud_spacejiange.TabIndex = 26;
+            this.nud_spacejiange.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(87, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.TabIndex = 23;
+            this.label2.Text = "分钟";
+            // 
+            // btn_test
+            // 
+            this.btn_test.Location = new System.Drawing.Point(154, 14);
+            this.btn_test.Name = "btn_test";
+            this.btn_test.Size = new System.Drawing.Size(75, 23);
+            this.btn_test.TabIndex = 21;
+            this.btn_test.Text = "发布测试";
+            this.btn_test.UseVisualStyleBackColor = true;
+            this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(29, 12);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "间隔";
+            // 
+            // txtSpaceCmd
+            // 
+            this.txtSpaceCmd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSpaceCmd.BackColor = System.Drawing.SystemColors.ControlText;
+            this.txtSpaceCmd.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtSpaceCmd.ForeColor = System.Drawing.Color.SpringGreen;
+            this.txtSpaceCmd.Location = new System.Drawing.Point(0, 276);
+            this.txtSpaceCmd.Name = "txtSpaceCmd";
+            this.txtSpaceCmd.ReadOnly = true;
+            this.txtSpaceCmd.Size = new System.Drawing.Size(486, 164);
+            this.txtSpaceCmd.TabIndex = 25;
+            this.txtSpaceCmd.Text = "";
+            this.txtSpaceCmd.TextChanged += new System.EventHandler(this.txtSpaceCmd_TextChanged);
+            // 
+            // btn_colnh
+            // 
+            this.btn_colnh.Location = new System.Drawing.Point(247, 14);
+            this.btn_colnh.Name = "btn_colnh";
+            this.btn_colnh.Size = new System.Drawing.Size(111, 23);
+            this.btn_colnh.TabIndex = 27;
+            this.btn_colnh.Text = "内涵段子抓取";
+            this.btn_colnh.UseVisualStyleBackColor = true;
+            this.btn_colnh.Click += new System.EventHandler(this.btn_colnh_Click);
+            // 
+            // btn_nhStop
+            // 
+            this.btn_nhStop.Location = new System.Drawing.Point(247, 43);
+            this.btn_nhStop.Name = "btn_nhStop";
+            this.btn_nhStop.Size = new System.Drawing.Size(75, 23);
+            this.btn_nhStop.TabIndex = 26;
+            this.btn_nhStop.Text = "停止";
+            this.btn_nhStop.UseVisualStyleBackColor = true;
+            this.btn_nhStop.Click += new System.EventHandler(this.btn_nhStop_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -292,14 +316,14 @@
             this.Text = "QQ空间自动发布";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_coljiange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Pages)).EndInit();
             this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.nud_spacejiange)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_spacejiange)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -311,7 +335,7 @@
         private System.Windows.Forms.RichTextBox txtColCmd;
         private System.Windows.Forms.NumericUpDown nud_coljiange;
         private System.Windows.Forms.NumericUpDown nud_Pages;
-        private System.Windows.Forms.Button btn_col;
+        private System.Windows.Forms.Button btn_colweibo;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.RichTextBox txtSpaceCmd;
         private System.Windows.Forms.Label label2;
@@ -326,6 +350,8 @@
         private System.Windows.Forms.Button btn_colStop;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button btn_spaceStop;
+        private System.Windows.Forms.Button btn_colnh;
+        private System.Windows.Forms.Button btn_nhStop;
     }
 }
 

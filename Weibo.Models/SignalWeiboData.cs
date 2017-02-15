@@ -114,7 +114,7 @@ namespace Weibo.Models
             public bool isLongText { get; set; }
             public int mlevel { get; set; }
             public Visible2 visible { get; set; }
-            public int biz_feature { get; set; }
+            public string biz_feature { get; set; }
             public int hasActionTypeCard { get; set; }
             public object[] darwin_tags { get; set; }
             public object[] hot_weibo_tags { get; set; }
@@ -128,7 +128,7 @@ namespace Weibo.Models
             public Pic[] pics { get; set; }
             public string bid { get; set; }
             public string scheme { get; set; }
-            public bool tipScheme { get; set; }
+            public string tipScheme { get; set; }
         }
     }
 

@@ -48,11 +48,11 @@
             this.txt_SingelWeibo = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button5 = new System.Windows.Forms.Button();
             this.btn_SearchShop = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.nud_alimamajiange = new System.Windows.Forms.NumericUpDown();
+            this.button5 = new System.Windows.Forms.Button();
             this.btn_NanzhuangCol = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
@@ -60,9 +60,6 @@
             this.nud_Pages = new System.Windows.Forms.NumericUpDown();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btn_SendJingXuan = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.nud_weiboJiange = new System.Windows.Forms.NumericUpDown();
             this.txtWeiboCmd = new System.Windows.Forms.RichTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.btnAddweibo = new System.Windows.Forms.Button();
@@ -70,8 +67,15 @@
             this.btn_StartWeibo = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.btn_SignelWeibo = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.nud_yanchi = new System.Windows.Forms.NumericUpDown();
             this.btn_StopWeibo = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.btn_sendTuwen = new System.Windows.Forms.Button();
+            this.nud_weiboJiange = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btn_ConfigLoginAlimama = new System.Windows.Forms.Button();
@@ -81,6 +85,8 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timer_KeepAlimamaAlive = new System.Windows.Forms.Timer(this.components);
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.webBrowser_alimama = new System.Windows.Forms.WebBrowser();
             this.lvwWeiboAccountList = new LogAnalytics.SortableListView();
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -95,8 +101,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_alimamajiange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Pages)).BeginInit();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_weiboJiange)).BeginInit();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_yanchi)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_weiboJiange)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -306,16 +313,6 @@
             this.panel4.Size = new System.Drawing.Size(304, 199);
             this.panel4.TabIndex = 8;
             // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(190, 168);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 12;
-            this.button5.Text = "纯图文抓取";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
             // btn_SearchShop
             // 
             this.btn_SearchShop.Location = new System.Drawing.Point(103, 134);
@@ -355,6 +352,16 @@
             0,
             0,
             0});
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(190, 168);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 12;
+            this.button5.Text = "纯图文抓取";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // btn_NanzhuangCol
             // 
@@ -409,9 +416,6 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.btn_SendJingXuan);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.nud_weiboJiange);
             this.tabPage2.Controls.Add(this.txtWeiboCmd);
             this.tabPage2.Controls.Add(this.button1);
             this.tabPage2.Controls.Add(this.btnAddweibo);
@@ -438,41 +442,6 @@
             this.btn_SendJingXuan.UseVisualStyleBackColor = true;
             this.btn_SendJingXuan.Click += new System.EventHandler(this.btn_SendJingXuan_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(222, 36);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 12);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "分钟";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(148, 36);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 12);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "间隔";
-            // 
-            // nud_weiboJiange
-            // 
-            this.nud_weiboJiange.Location = new System.Drawing.Point(181, 32);
-            this.nud_weiboJiange.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.nud_weiboJiange.Name = "nud_weiboJiange";
-            this.nud_weiboJiange.Size = new System.Drawing.Size(34, 21);
-            this.nud_weiboJiange.TabIndex = 14;
-            this.nud_weiboJiange.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
             // txtWeiboCmd
             // 
             this.txtWeiboCmd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -483,7 +452,7 @@
             this.txtWeiboCmd.Location = new System.Drawing.Point(3, 284);
             this.txtWeiboCmd.Name = "txtWeiboCmd";
             this.txtWeiboCmd.ReadOnly = true;
-            this.txtWeiboCmd.Size = new System.Drawing.Size(699, 150);
+            this.txtWeiboCmd.Size = new System.Drawing.Size(495, 150);
             this.txtWeiboCmd.TabIndex = 13;
             this.txtWeiboCmd.Text = "";
             this.txtWeiboCmd.TextChanged += new System.EventHandler(this.txtWeiboCmd_TextChanged);
@@ -536,23 +505,93 @@
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.btn_SignelWeibo);
+            this.panel3.Controls.Add(this.label8);
+            this.panel3.Controls.Add(this.label9);
+            this.panel3.Controls.Add(this.nud_yanchi);
             this.panel3.Controls.Add(this.btn_StopWeibo);
+            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.btn_sendTuwen);
+            this.panel3.Controls.Add(this.nud_weiboJiange);
             this.panel3.Location = new System.Drawing.Point(142, 6);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(315, 69);
             this.panel3.TabIndex = 19;
+            // 
+            // btn_SignelWeibo
+            // 
+            this.btn_SignelWeibo.Location = new System.Drawing.Point(213, 40);
+            this.btn_SignelWeibo.Name = "btn_SignelWeibo";
+            this.btn_SignelWeibo.Size = new System.Drawing.Size(93, 23);
+            this.btn_SignelWeibo.TabIndex = 20;
+            this.btn_SignelWeibo.Text = "单账号发布";
+            this.btn_SignelWeibo.UseVisualStyleBackColor = true;
+            this.btn_SignelWeibo.Click += new System.EventHandler(this.btn_SignelWeibo_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(79, 10);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(29, 12);
+            this.label8.TabIndex = 19;
+            this.label8.Text = "分钟";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(5, 10);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(29, 12);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "延迟";
+            // 
+            // nud_yanchi
+            // 
+            this.nud_yanchi.Location = new System.Drawing.Point(38, 6);
+            this.nud_yanchi.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nud_yanchi.Name = "nud_yanchi";
+            this.nud_yanchi.Size = new System.Drawing.Size(34, 21);
+            this.nud_yanchi.TabIndex = 17;
+            this.nud_yanchi.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // btn_StopWeibo
             // 
             this.btn_StopWeibo.Enabled = false;
             this.btn_StopWeibo.Location = new System.Drawing.Point(114, 42);
             this.btn_StopWeibo.Name = "btn_StopWeibo";
-            this.btn_StopWeibo.Size = new System.Drawing.Size(162, 23);
+            this.btn_StopWeibo.Size = new System.Drawing.Size(93, 23);
             this.btn_StopWeibo.TabIndex = 8;
             this.btn_StopWeibo.Text = "停止";
             this.btn_StopWeibo.UseVisualStyleBackColor = true;
             this.btn_StopWeibo.Click += new System.EventHandler(this.btn_StopWeibo_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(79, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "分钟";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 42);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "间隔";
             // 
             // btn_sendTuwen
             // 
@@ -564,8 +603,26 @@
             this.btn_sendTuwen.UseVisualStyleBackColor = true;
             this.btn_sendTuwen.Click += new System.EventHandler(this.btn_sendTuwen_Click);
             // 
+            // nud_weiboJiange
+            // 
+            this.nud_weiboJiange.Location = new System.Drawing.Point(38, 38);
+            this.nud_weiboJiange.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nud_weiboJiange.Name = "nud_weiboJiange";
+            this.nud_weiboJiange.Size = new System.Drawing.Size(34, 21);
+            this.nud_weiboJiange.TabIndex = 14;
+            this.nud_weiboJiange.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.webBrowser_alimama);
             this.tabPage3.Controls.Add(this.richTextBox1);
             this.tabPage3.Controls.Add(this.btn_ConfigLoginAlimama);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
@@ -580,9 +637,10 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(36, 37);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(305, 304);
+            this.richTextBox1.Size = new System.Drawing.Size(430, 346);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
+            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // btn_ConfigLoginAlimama
             // 
@@ -622,6 +680,16 @@
             this.timer_KeepAlimamaAlive.Interval = 900000;
             this.timer_KeepAlimamaAlive.Tick += new System.EventHandler(this.timer_KeepAlimamaAlive_Tick);
             // 
+            // webBrowser_alimama
+            // 
+            this.webBrowser_alimama.Location = new System.Drawing.Point(8, 6);
+            this.webBrowser_alimama.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser_alimama.Name = "webBrowser_alimama";
+            this.webBrowser_alimama.ScriptErrorsSuppressed = true;
+            this.webBrowser_alimama.Size = new System.Drawing.Size(437, 364);
+            this.webBrowser_alimama.TabIndex = 3;
+            this.webBrowser_alimama.Url = new System.Uri("http://www.alimama.com", System.UriKind.Absolute);
+            // 
             // lvwWeiboAccountList
             // 
             this.lvwWeiboAccountList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -636,7 +704,7 @@
             this.lvwWeiboAccountList.HideSelection = false;
             this.lvwWeiboAccountList.Location = new System.Drawing.Point(3, 81);
             this.lvwWeiboAccountList.Name = "lvwWeiboAccountList";
-            this.lvwWeiboAccountList.Size = new System.Drawing.Size(703, 197);
+            this.lvwWeiboAccountList.Size = new System.Drawing.Size(499, 197);
             this.lvwWeiboAccountList.SortingOrder = System.Windows.Forms.SortOrder.None;
             this.lvwWeiboAccountList.TabIndex = 4;
             this.lvwWeiboAccountList.UseCompatibleStateImageBehavior = false;
@@ -692,9 +760,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_alimamajiange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Pages)).EndInit();
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_weiboJiange)).EndInit();
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_yanchi)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_weiboJiange)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -759,6 +828,12 @@
         private System.Windows.Forms.RichTextBox txtAlimamaCmd;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button btn_sendTuwen;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown nud_yanchi;
+        private System.Windows.Forms.Button btn_SignelWeibo;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.WebBrowser webBrowser_alimama;
     }
 }
 

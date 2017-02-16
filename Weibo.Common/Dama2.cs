@@ -488,6 +488,7 @@ namespace Weibo.Common
             if (!Directory.Exists("pincode"))
                 Directory.CreateDirectory("pincode");
             string imgPath = "pincode/" + randomname + "login.png";
+            if (img == null) return "";
             img.Save(imgPath);
             FileInfo fi = new FileInfo(imgPath);
             FileStream fs = new FileStream(imgPath, FileMode.Open);

@@ -277,6 +277,7 @@ namespace Weibo.Common
         {
             string url = "http://pub.alimama.com/pubauc/getCommonCampaignByItemId.json?itemId=" + itemid + "&t=" + HttpHelper1.GetTicks() + "&_tb_token_=" + tbtoken + "&pvid=" + pv_id;
             string resulthtml = HttpHelper1.SendDataByGET(url, ref alimamacc);
+            if (resulthtml.Contains("为空")) return null;
             CampainsData campains = Newtonsoft.Json.JsonConvert.DeserializeObject<CampainsData>(resulthtml);
             return campains;
         }
@@ -301,6 +302,7 @@ namespace Weibo.Common
             string tbtoken = ccl["_tb_token_"].Value;
             string refer = "http://pub.alimama.com/promo/search/index.htm?queryType=2&q=" + HttpUtility.UrlEncode(itemurl);
             CampainsData campainsdata = Alimama.GetCampainByTBItemID(itemid,tbtoken,pv_id, alimamacc);
+            if (campainsdata == null) return false;
             //if (IsCampaignExits(campainsdata, alimamacc,ref keeperid)) return false;//如果申请过定向计划，退出
             double maxCommission = 0;
             double maxManualCommission = 0;

@@ -819,74 +819,29 @@ namespace Weibo
                         foreach (string urltemp in urls)
                         {
                             string url = urltemp + i.ToString();
-                            string ss = "";
-                            //string html = HttpHelper1.GetHttpsHtml(url, "", ref ss);
-                            string html = HttpHelper1.SendDataByGET(url,ref weibocc);
-                            if (html.Contains(""))
-                            {
-                                html = html.Replace("page\":null", "page\":1");
-                            }
-                            MblogData mbloglist = Newtonsoft.Json.JsonConvert.DeserializeObject<MblogData>(html);
+                            MblogData mbloglist = WeiboHandler.GetMblogsWithUrl(url,weibocc);
+
                             foreach (Card card in mbloglist.Cards)
                             {
                                 if (card.Mblog == null) continue;
                                 mblog = card.Mblog;
                                 string mid = card.Mblog.Id;
+                                string links = "";//多链接以,分割
+                                int j = 1;
+                                string own_tbklinks = "";
+                                string couponlinks = "粉丝优惠购：";
+                                bool isCoupon = false;
 
                                 int isHave = Convert.ToInt32(SQLiteHelper.ExecuteScalar("select count(*) from mblog where id=" + mid));
                                 if (isHave > 0)
                                     continue;//如果数据已存在，则跳过
 
                                 //先查看评论是否包含链接
-
                                 WeiboComment comment = WeiboHandler.GetComment(mid, weibocc);
                                 if (comment == null) continue;
-                                //string dirname = mblog.Text.Split(' ')[0];//截取选品文件夹名称
-                                string dirname = mblog.Text;//截取选品文件夹名称
-                                string pinyin = Chinese2Spell.Convert(mblog.Text);
-                                try
-                                {
-                                    if (pinyin.Contains("Di"))
-                                    {
-                                        int dizhiindex = pinyin.IndexOf("Di");
-                                        char splitchar = pinyin[dizhiindex - 1];
-                                        dirname = dirname.Split(splitchar)[0].Trim();
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-
-                                    AppenAlimamaCmd("更换dirname出错" + ex.Message);
-                                }
-
-                                dirname = dirname.Split('~')[0];
-                                dirname = dirname.Split('！')[0];
-
-                                dirname = dirname.Split('║')[0];
-                                dirname = dirname.Split('「')[0];
-                                dirname = dirname.Split('〖')[0];
-                                dirname = dirname.Split('〈')[0];
-                                dirname = dirname.Split('「')[0];
-                                dirname = dirname.Split('［')[0];
-                                dirname = dirname.Split('｛')[0];
-                                dirname = dirname.Split('|')[0];
-                                dirname = dirname.Split('↓')[0];
-                                dirname = dirname.Split('（')[0];
-                                dirname = dirname.Split('┆')[0];
-                                dirname = dirname.Split('«')[0];
-                                dirname = dirname.Split('{')[0];
-                                dirname = dirname.Split('／')[0];
-                                dirname = dirname.Split('『')[0];
-                                dirname = dirname.Split('[')[0];
-                                dirname = dirname.Split('┍')[0];
-                                dirname = dirname.Split('╓')[0];
-                                dirname = dirname.Replace("?", ",").Trim();
-                                if (dirname == "") dirname = mblog.Text;
-                                string links = "";//多链接以,分割
-                                int j = 1;
-                                string own_tbklinks = "";
-                                string couponlinks = "粉丝优惠购：";
-                                bool isCoupon = false;
+                                
+                                string dirname = WeiboHandler.GetDirnameByMblogText(mblog.Text);
+                                
                                 #region 九宫格淘宝客处理
                                 if (comment.Data.Html.Contains("图1："))
                                 {
@@ -899,7 +854,7 @@ namespace Weibo
                                     //创建选品文件夹
                                     try
                                     {
-                                        if (Directory.Exists("temp/"))
+                                        if (!Directory.Exists("temp/"))
                                             Directory.CreateDirectory("temp");
                                         if (!Directory.Exists("temp/" + dirname + "/"))
                                             Directory.CreateDirectory("temp/" + dirname + "/");
@@ -920,25 +875,7 @@ namespace Weibo
                                         string weiboshortlink = m.Value.Replace("\"", "");
                                         if (!weiboshortlink.StartsWith("http://t.cn")) continue;
                                         links = links + weiboshortlink + ",";
-                                        //把每个淘宝链接的第一张展示图下载
-
-                                        //HttpItem tbitem = new HttpItem()
-                                        //{
-                                        //    URL = tbklink,
-                                        //    CookieCollection = new CookieCollection(),
-                                        //    ResultCookieType = ResultCookieType.CookieCollection,
-                                        //    Host = host,
-                                        //    Accept = "*/*",
-                                        //    UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36 QIHU 360SE",
-                                        //    ContentType = ContentType,
-                                        //    Method = "GET",
-                                        //    Encoding = Encoding.UTF8,
-                                        //    ProxyIp = "ieproxy"
-                                        //};
-                                        //HttpResult tbtmpresult = httpHelper.GetHtml(tbitem);
-                                        //tbitem.URL = tbtmpresult.RedirectUrl;
-                                        //ServicePointManager.ServerCertificateValidationCallback = ValidateServerCertificate;//验证服务器证书回调自动验证
-
+                                        
                                         string tbrealitem = "";
                                         string result = Alimama.GetItemResultWithWeiboShortUrl(weiboshortlink, alimamacc, ref tbrealitem);
 
@@ -955,8 +892,7 @@ namespace Weibo
                                         }
                                         if (alimamacc == null)
                                             alimamacc = Alimama.GetCookieContainer();
-                                        string siteid = "20116380";
-                                        string adzoneId = "70602305";
+                                        
                                         DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
                                         string own_tbklink = Alimama.GetTbkLink(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);//把淘宝客链接更换为自己链接       
                                         if (own_tbklink == "" || own_tbklink == "链接不支持转化")
@@ -985,6 +921,10 @@ namespace Weibo
                                         }
                                         //string bdshorturl = HttpHelper1.GetBdShortUrl(own_tbklink);
                                         //bdshorturl = bdshorturl.Replace("\\", "");//包装一层百度短网址，防屏蔽  1.16 加一层跳转之后，会被微博反垃圾提示危险网址
+                                        
+                                        string weiboShortlink = WeiboHandler.GetWeiboShorturl(own_tbklink);//微博短地址
+                                        own_tbklinks += "图" + j.ToString() + ":" + weiboShortlink + " ";
+
                                         string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
                                         bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc);//申请定向计划
 
@@ -997,36 +937,7 @@ namespace Weibo
                                             isCoupon = true;
                                         }
 
-                                        string weiboShortlink = WeiboHandler.GetWeiboShorturl(own_tbklink);//微博短地址
-                                        own_tbklinks += "图" + j.ToString() + ":" + weiboShortlink + " ";
-
                                         j++;
-                                        //下载淘宝页面第一张图片
-                                        //string picliststr = "";
-                                        //string firstpic = "";
-                                        //if (result.Contains("-淘宝网"))
-                                        //{
-                                        //    HttpHelper1.GetStringInTwoKeyword(result, ref picliststr, "auctionImages    : [", "]", 0);
-                                        //    string[] piclist = picliststr.Split(',');
-                                        //    if (piclist.Length > 1)
-                                        //        firstpic = "http:" + piclist[0].Replace("\"", "");
-                                        //}
-                                        //else if (result.Contains("-tmall.com天猫"))
-                                        //{
-                                        //    Regex picreg = new Regex(@"//img.alicdn.com/[^\s]*40x40q90.jpg");
-                                        //    MatchCollection picmc = picreg.Matches(result);
-                                        //    if (picmc.Count == 1)
-                                        //    {
-                                        //        picreg = new Regex(@"//img.alicdn.com/[^\s]*60x60q90.jpg");
-                                        //        picmc = picreg.Matches(result);
-                                        //    }
-                                        //    firstpic = "http:" + picmc[0].ToString();
-                                        //    firstpic = firstpic.Replace("40x40", "430x430");
-                                        //    firstpic = firstpic.Replace("60x60", "430x430");
-                                        //}
-                                        //if (firstpic == "") continue;//如果没下载到图片，跳过
-                                        //HttpHelper1.HttpDownloadFile(firstpic, "temp/" + dirname + "/" + j.ToString() + ".jpg", alimamacc);
-                                        //j++;
 
                                     }//单个链接处理完成
                                     if (j == 10)//只有九图才添加comment.txt

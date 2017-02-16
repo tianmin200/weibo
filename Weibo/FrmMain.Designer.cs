@@ -65,6 +65,13 @@
             this.btnAddweibo = new System.Windows.Forms.Button();
             this.btnLogin_weibo = new System.Windows.Forms.Button();
             this.btn_StartWeibo = new System.Windows.Forms.Button();
+            this.lvwWeiboAccountList = new LogAnalytics.SortableListView();
+            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btn_SignelWeibo = new System.Windows.Forms.Button();
@@ -77,6 +84,7 @@
             this.btn_sendTuwen = new System.Windows.Forms.Button();
             this.nud_weiboJiange = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.webBrowser_alimama = new System.Windows.Forms.WebBrowser();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btn_ConfigLoginAlimama = new System.Windows.Forms.Button();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -86,14 +94,6 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timer_KeepAlimamaAlive = new System.Windows.Forms.Timer(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.webBrowser_alimama = new System.Windows.Forms.WebBrowser();
-            this.lvwWeiboAccountList = new LogAnalytics.SortableListView();
-            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -408,7 +408,7 @@
             this.nud_Pages.Size = new System.Drawing.Size(36, 21);
             this.nud_Pages.TabIndex = 13;
             this.nud_Pages.Value = new decimal(new int[] {
-            2,
+            1,
             0,
             0,
             0});
@@ -496,6 +496,54 @@
             this.btn_StartWeibo.UseVisualStyleBackColor = true;
             this.btn_StartWeibo.Click += new System.EventHandler(this.btn_StartWeibo_Click);
             // 
+            // lvwWeiboAccountList
+            // 
+            this.lvwWeiboAccountList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader11,
+            this.columnHeader12,
+            this.columnHeader13,
+            this.columnHeader14,
+            this.columnHeader15,
+            this.columnHeader16});
+            this.lvwWeiboAccountList.FullRowSelect = true;
+            this.lvwWeiboAccountList.GridLines = true;
+            this.lvwWeiboAccountList.HideSelection = false;
+            this.lvwWeiboAccountList.Location = new System.Drawing.Point(3, 81);
+            this.lvwWeiboAccountList.Name = "lvwWeiboAccountList";
+            this.lvwWeiboAccountList.Size = new System.Drawing.Size(499, 197);
+            this.lvwWeiboAccountList.SortingOrder = System.Windows.Forms.SortOrder.None;
+            this.lvwWeiboAccountList.TabIndex = 4;
+            this.lvwWeiboAccountList.UseCompatibleStateImageBehavior = false;
+            this.lvwWeiboAccountList.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Text = "序号";
+            this.columnHeader11.Width = 70;
+            // 
+            // columnHeader12
+            // 
+            this.columnHeader12.Text = "微博昵称";
+            this.columnHeader12.Width = 110;
+            // 
+            // columnHeader13
+            // 
+            this.columnHeader13.Text = "登录状态";
+            this.columnHeader13.Width = 124;
+            // 
+            // columnHeader14
+            // 
+            this.columnHeader14.Text = "发布状态";
+            this.columnHeader14.Width = 109;
+            // 
+            // columnHeader15
+            // 
+            this.columnHeader15.Text = "";
+            // 
+            // columnHeader16
+            // 
+            this.columnHeader16.Text = "";
+            // 
             // panel2
             // 
             this.panel2.Location = new System.Drawing.Point(19, 6);
@@ -558,11 +606,6 @@
             this.nud_yanchi.Name = "nud_yanchi";
             this.nud_yanchi.Size = new System.Drawing.Size(34, 21);
             this.nud_yanchi.TabIndex = 17;
-            this.nud_yanchi.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
             // 
             // btn_StopWeibo
             // 
@@ -633,6 +676,16 @@
             this.tabPage3.Text = "浏览器";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // webBrowser_alimama
+            // 
+            this.webBrowser_alimama.Location = new System.Drawing.Point(8, 6);
+            this.webBrowser_alimama.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser_alimama.Name = "webBrowser_alimama";
+            this.webBrowser_alimama.ScriptErrorsSuppressed = true;
+            this.webBrowser_alimama.Size = new System.Drawing.Size(437, 364);
+            this.webBrowser_alimama.TabIndex = 3;
+            this.webBrowser_alimama.Url = new System.Uri("http://www.alimama.com", System.UriKind.Absolute);
+            // 
             // richTextBox1
             // 
             this.richTextBox1.Location = new System.Drawing.Point(36, 37);
@@ -679,64 +732,6 @@
             // 
             this.timer_KeepAlimamaAlive.Interval = 900000;
             this.timer_KeepAlimamaAlive.Tick += new System.EventHandler(this.timer_KeepAlimamaAlive_Tick);
-            // 
-            // webBrowser_alimama
-            // 
-            this.webBrowser_alimama.Location = new System.Drawing.Point(8, 6);
-            this.webBrowser_alimama.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser_alimama.Name = "webBrowser_alimama";
-            this.webBrowser_alimama.ScriptErrorsSuppressed = true;
-            this.webBrowser_alimama.Size = new System.Drawing.Size(437, 364);
-            this.webBrowser_alimama.TabIndex = 3;
-            this.webBrowser_alimama.Url = new System.Uri("http://www.alimama.com", System.UriKind.Absolute);
-            // 
-            // lvwWeiboAccountList
-            // 
-            this.lvwWeiboAccountList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader11,
-            this.columnHeader12,
-            this.columnHeader13,
-            this.columnHeader14,
-            this.columnHeader15,
-            this.columnHeader16});
-            this.lvwWeiboAccountList.FullRowSelect = true;
-            this.lvwWeiboAccountList.GridLines = true;
-            this.lvwWeiboAccountList.HideSelection = false;
-            this.lvwWeiboAccountList.Location = new System.Drawing.Point(3, 81);
-            this.lvwWeiboAccountList.Name = "lvwWeiboAccountList";
-            this.lvwWeiboAccountList.Size = new System.Drawing.Size(499, 197);
-            this.lvwWeiboAccountList.SortingOrder = System.Windows.Forms.SortOrder.None;
-            this.lvwWeiboAccountList.TabIndex = 4;
-            this.lvwWeiboAccountList.UseCompatibleStateImageBehavior = false;
-            this.lvwWeiboAccountList.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader11
-            // 
-            this.columnHeader11.Text = "序号";
-            this.columnHeader11.Width = 70;
-            // 
-            // columnHeader12
-            // 
-            this.columnHeader12.Text = "微博昵称";
-            this.columnHeader12.Width = 110;
-            // 
-            // columnHeader13
-            // 
-            this.columnHeader13.Text = "登录状态";
-            this.columnHeader13.Width = 124;
-            // 
-            // columnHeader14
-            // 
-            this.columnHeader14.Text = "发布状态";
-            this.columnHeader14.Width = 109;
-            // 
-            // columnHeader15
-            // 
-            this.columnHeader15.Text = "";
-            // 
-            // columnHeader16
-            // 
-            this.columnHeader16.Text = "";
             // 
             // FrmMain
             // 

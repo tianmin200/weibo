@@ -181,7 +181,9 @@ namespace WeiboMaster
                         HttpHelper1.GetStringInTwoKeyword(url, ref uid, "uid=", "&", 0);
                         string refer = "http://www.weibo.com/u/" + uid + "/home?wvr=5";
 
-                        CookieContainer xiaohaocc = WeiboHandler.Login(xiaohaousername, xiaohaopassword);
+                        CookieContainer xiaohaocc = WeiboHandler.InitWeiboCookie(xiaohaousername);
+                        if(!WeiboHandler.TestLogin(xiaohaocc))
+                            xiaohaocc = WeiboHandler.Login(xiaohaousername, xiaohaopassword);
                         while (xiaohaocc == null)
                         {
 
@@ -190,7 +192,9 @@ namespace WeiboMaster
                             xiaohaousername = xiaohao.Split(',')[0];
                             xiaohaopassword = xiaohao.Split(',')[1];
                             //proxy = DailiHelper.GetProxy();
-                            xiaohaocc = WeiboHandler.Login(xiaohaousername, xiaohaopassword);
+                            xiaohaocc = WeiboHandler.InitWeiboCookie(xiaohaousername);
+                            if (!WeiboHandler.TestLogin(xiaohaocc))
+                                xiaohaocc = WeiboHandler.Login(xiaohaousername, xiaohaopassword);
                         }
                         couponlinks = couponlinks.Replace("图","");
                         string commentresult = WeiboHandler.Comment(mblog.Id, uid, couponlinks, refer, xiaohaocc);
@@ -316,6 +320,11 @@ namespace WeiboMaster
                     rownum++;
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

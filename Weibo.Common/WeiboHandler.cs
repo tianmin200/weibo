@@ -629,6 +629,70 @@ namespace Weibo.Common
 
         }
         /// <summary>
+        /// 根据移动端微博地址采集微博数据
+        /// </summary>
+        /// <param name="url">示例：http://m.weibo.cn/container/getIndex?uid=2473373410&luicode=10000011&lfid=100103type%3D3%26q%3D%E5%8D%97%E4%BA%AC%E5%8D%9A%E6%80%BF%E8%87%B4&type=uid&value=2473373410&containerid=1076032473373410&page=</param>
+        /// <param name="weibocc"></param>
+        /// <returns></returns>
+        public static MblogData GetMblogsWithUrl(string url,CookieContainer weibocc)
+        {
+            
+            string ss = "";
+            //string html = HttpHelper1.GetHttpsHtml(url, "", ref ss);
+            string html = HttpHelper1.SendDataByGET(url, ref weibocc);
+            if (html.Contains(""))
+            {
+                html = html.Replace("page\":null", "page\":1");
+            }
+            MblogData mbloglist = Newtonsoft.Json.JsonConvert.DeserializeObject<MblogData>(html);
+            return mbloglist;
+        }
+
+        public static string GetDirnameByMblogText(string mblogtext)
+        {
+            string dirname = mblogtext;//截取选品文件夹名称
+            string pinyin = Chinese2Spell.Convert(mblogtext);
+            try
+            {
+                if (pinyin.Contains("Di"))
+                {
+                    int dizhiindex = pinyin.IndexOf("Di");
+                    char splitchar = pinyin[dizhiindex - 1];
+                    dirname = dirname.Split(splitchar)[0].Trim();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                //AppenAlimamaCmd("更换dirname出错" + ex.Message);
+            }
+
+            dirname = dirname.Split('~')[0];
+            dirname = dirname.Split('！')[0];
+
+            dirname = dirname.Split('║')[0];
+            dirname = dirname.Split('「')[0];
+            dirname = dirname.Split('〖')[0];
+            dirname = dirname.Split('〈')[0];
+            dirname = dirname.Split('「')[0];
+            dirname = dirname.Split('［')[0];
+            dirname = dirname.Split('｛')[0];
+            dirname = dirname.Split('|')[0];
+            dirname = dirname.Split('↓')[0];
+            dirname = dirname.Split('（')[0];
+            dirname = dirname.Split('┆')[0];
+            dirname = dirname.Split('«')[0];
+            dirname = dirname.Split('{')[0];
+            dirname = dirname.Split('／')[0];
+            dirname = dirname.Split('『')[0];
+            dirname = dirname.Split('[')[0];
+            dirname = dirname.Split('┍')[0];
+            dirname = dirname.Split('╓')[0];
+            dirname = dirname.Replace("?", ",").Trim();
+            if (dirname == "") dirname = mblogtext;
+            return dirname;
+        }
+        /// <summary>
         /// 微博密码加密
         /// </summary>
         /// <param name="data"></param>

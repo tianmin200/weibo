@@ -70,6 +70,7 @@
     <Compile Include="DEColTask.cs" />
     <Compile Include="DEPubTask.cs" />
     <Compile Include="DEWeiboAccount.cs" />
+    <Compile Include="ForeardResponseData.cs" />
     <Compile Include="LoginData.cs" />
     <Compile Include="MblogData.cs" />
     <Compile Include="PreLoginData.cs" />

@@ -692,6 +692,78 @@ namespace Weibo.Common
             if (dirname == "") dirname = mblogtext;
             return dirname;
         }
+        public static ForwardResponseData Forward(string url, string message, CookieContainer weibocc)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+            
+            try
+            {
+                PostHelper post = new PostHelper(url);
+                
+                post.Cookies = weibocc;
+                string html = post.Post();
+                //html = HttpHelper1.SendDataByGET(url,ref weibocc);
+                if (!string.IsNullOrEmpty(html))
+                {
+                    Regex rNum = new Regex(@"(\d+)");
+                    Regex r = new Regex(@"mid=(\d+)&");
+                    var mid = rNum.Match(r.Match(html).ToString()).ToString();
+                    r = new Regex(@"\$CONFIG\['domain'\]='(\d+)'");
+                    var domain = rNum.Match(r.Match(html).ToString()).ToString();
+                    r = new Regex(@"uid=(\d+)&");
+                    var uid = rNum.Match(r.Match(html).ToString()).ToString();
+                    r = new Regex(@"\$CONFIG\['location'\]='(.+)'");
+                    var location = r.Match(html).ToString().Replace("$CONFIG['location']=", "").Replace("'", "");
+                    r = new Regex(@"\$CONFIG\['page_id'\]='(\d+)'");
+                    string pdetail = rNum.Match(r.Match(html).ToString()).ToString();
+                    Thread.Sleep(1000);
+                    return Forward(url, message, mid, domain, uid, location, pdetail, weibocc);
+                }
+            }
+            catch
+            { }
+            return null;
+        }
+        public static ForwardResponseData Forward(string url, string message, string mid, string domain, string uid, string location, string pdetail, CookieContainer weibocc)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+            
+            try
+            {
+                var post = new PostHelper(string.Format("http://weibo.com/aj/v6/mblog/forward?ajwvr=6&domain={0}&__rnd={1}", domain, DateTime.Now.TimeStamp()));
+                post.Type = PostTypeEnum.Post;
+
+                post.Referer = url;
+                post.Cookies = weibocc;
+                
+                post.PostItems.Add("pic_src", "");
+                post.PostItems.Add("pic_id", "");
+                post.PostItems.Add("appkey", "");
+                post.PostItems.Add("mid", mid);
+                post.PostItems.Add("style_type", "2");
+                post.PostItems.Add("mark", "");
+                post.PostItems.Add("reason", message);
+                post.PostItems.Add("location", location);
+                post.PostItems.Add("pdetail", pdetail);
+                post.PostItems.Add("module", "");
+                post.PostItems.Add("page_module_id", "");
+                post.PostItems.Add("refer_sort", "");
+                post.PostItems.Add("rank", "0");
+                post.PostItems.Add("rankid", "");
+                post.PostItems.Add("_t", "0");
+                string result = post.Post();
+                return JsonConvert.DeserializeObject<ForwardResponseData>(result);
+            }
+            catch
+            { }
+            return null;
+        }
         /// <summary>
         /// 微博密码加密
         /// </summary>

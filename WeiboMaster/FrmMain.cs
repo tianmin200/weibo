@@ -144,8 +144,9 @@ namespace WeiboMaster
                                 //    }
 
                                 //}
+                                double maxRate = 0;
                                 string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
-                                bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc);//申请定向计划
+                                bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc,ref maxRate);//申请定向计划
 
                                 //获取优惠券信息
                                 if (!searchresult.Contains("couponInfo\":\"无"))
@@ -324,7 +325,14 @@ namespace WeiboMaster
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            DEWeiboAccount weiboaccount = WeiboHandler.GetOneAccount();
+            CookieContainer weibocc = WeiboHandler.InitWeiboCookie(weiboaccount.Username);
+            if (weibocc == null)
+                weibocc = WeiboHandler.Login(weiboaccount.Username, weiboaccount.Password);
+            string url = "http://weibo.com/1638782947/EqbJtjAFV?ref=home&rid=0_0_8_2670091738276960218&type=comment#_rnd1484039529306";
+            var uri = new Uri(url);
+            url = uri.Scheme + "://" + uri.Host + uri.AbsolutePath;
+            var forwardData = WeiboHandler.Forward(url, "123", weibocc);
         }
     }
 }

@@ -39,7 +39,7 @@
             // 
             // btn_test
             // 
-            this.btn_test.Location = new System.Drawing.Point(262, 24);
+            this.btn_test.Location = new System.Drawing.Point(455, 24);
             this.btn_test.Name = "btn_test";
             this.btn_test.Size = new System.Drawing.Size(75, 23);
             this.btn_test.TabIndex = 0;
@@ -55,7 +55,7 @@
             this.columnHeader3});
             this.listView1.Location = new System.Drawing.Point(12, 12);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(191, 217);
+            this.listView1.Size = new System.Drawing.Size(244, 217);
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -88,7 +88,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(262, 92);
+            this.button1.Location = new System.Drawing.Point(455, 101);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 15;

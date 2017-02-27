@@ -27,18 +27,20 @@ namespace Weibo.Common
         {
             string posturl = "https://login.taobao.com/member/login.jhtml?redirectURL=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1";
             string poststr = "TPL_username=tianmin200&TPL_password=tianmin3216779236&ncoSig=&ncoSessionid=&ncoToken=78d7c13a4541bc73502f4890604b1044ad4f67b2&slideCodeShow=false&useMobile=false&lang=zh_CN&loginsite=0&newlogin=&TPL_redirect_url=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1&from=tb&fc=default&style=default&css_style=&keyLogin=false&qrLogin=true&newMini=false&newMini2=false&tid=&loginType=3&minititle=&minipara=&pstrong=&sign=&need_sign=&isIgnore=&full_redirect=&sub_jump=&popid=&callback=&guf=&not_duplite_str=&need_user_id=&poy=&gvfdcname=10&gvfdcre=&from_encoding=&sub=&TPL_password_2=&loginASR=1&loginASRSuc=0&allp=&oslanguage=zh-CN&sr=1366*768&osVer=&naviVer=chrome%7C45.02454101&osACN=Mozilla&osAV=5.0+%28Windows+NT+10.0%3B+WOW64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F45.0.2454.101+Safari%2F537.36&osPF=Win32&miserHardInfo=&appkey=&bind_login=false&bind_token=&nickLoginLink=&mobileLoginLink=https%3A%2F%2Flogin.taobao.com%2Fmember%2Flogin.jhtml%3FredirectURL%3Dhttp%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1%26useMobile%3Dtrue&showAssistantLink=&um_token=HV01PAAZ0b82763e769100dc58a260300005329a&ua=084%23gYE1sl1MXXs1KLXS11111b4oNIsrbFfsCcfXPFseGl7kCwg9bB15NnMySCW9bFcbrg%2BwApxrG1rhUlXJKrPM2bRQXzg3bZLX1XpgCIQ8yHVSSs0SeiPLWqP0iPqHDelX1XtLr9HNfKtwLb7EB3omoD53idWvqjZy3Q48a1E1BkFGVSo12Ny1YslkbdfdU6y8eOEPem6KU4kS1l1QxbuwlmNI4%2FFEvXxCTN6AxTZtsVztrx8AuvLX11pUgfSwB1E1XynUXl2%2F1l1SCnv8PRzxHwNoJyZIWBXzZTIVJkj%2F1l1SCna8PR8jHwNoJy0Dz7XdWkMGJknn1l1kN1sjqeu%2FtDxBDrmTxC32OIH%2BVr71w5Ob2rkL1l1G1x10yJL1VBkjggt1ZqqYhLE1tbvn11XijWFfd%2FqaeIw9%2B4RtOs%2FmPBjH5dkwTk99nDqcRmuyeIw9%2B4RtOE9KjIhWDTMA3NJzkDA3Un5gD8JeLGFiz6QtVOMBc4RcDEW6KTojDc1irpKeaARRC5zwkq7Q0GMGVmvCkDUTMP5%2BV3xzmmkDY%2BfmPqNViGMGVmvYPgG6DxLK3UsRY0GT07JdQqBZ4hqGDEW6yoNXyLE1h1EXfZdpxxyF1lqEmgyOLjsX1n7f%2B6h1L1EXYoNpxxwQ1lqEmgyOLjs71l1s1lwSEFDqL5%2FS1l1BXG4Jc%2FkttLE1BBJSs1XAVqV61zlh78VNKsWEb%2BB6gBiTQRLX11W1XsD3ogmW1l1EeCnwX71X11Vg7ZcLMLE1B%2FRh9iDdkn%2BHu%2Fpc0FHVeF7L%2Bd5vK7tPHMBqTR1X1XbELNcT21XEYVL%2BtWQmQqEVsokCx1E1NI51oriW1EptjR1X11a4LNcT21XEv62L1l1gA%2F10yJL1V1jiq1E1BLLNtgLwjgRkX3SvsZ9UCTemQauiD1rT38YtB1E1XynUXl2%2F1l1SCnv8Pa1PHwNoJy0Dz7XdWkMGJknW1l1EeCnwXQlX1XtLr9HNfgj2Lb7EB3omoD53idWvqjZy3Q48B1E1XynUXl2S1l1QxbuwlmNIUWFEvXxCTN6AxTZtsVztrx8AuDlX1XtLr9HNfgAeLb7EB3omoD53idWvqjZy3Q48a1E1BkFGVSo1BGk1YslkbdfdU6y8eOEPem6KU4kS1l1Qxbuwlm1%2FmsFEvXxCTN6AxTZtsVztrx8AuDlX1XtLr9HNfF3VLb7EB3omoD53idWvqjZy3Q48a1E1BkFGVSo1joC1YslkbdfdU6y8eOEPem6KU4kS1l1QxbuwlmX%2FJxFEvXxCTN6AxTZtsVztrx8AuDlX1XtLr9HNfqLjLb7EB3omoD53idWvqjZy3Q48a1E1BkFGVSo1tyk1YslkbdfdU6y8eOEPem6KU4kS1l1QxbuwlmN%2FL%2FFEvXxCTN6AxTZtsVztrx8AuvfX1XlBXp9crqRktLZ2FL4z%2FDxCXqbJ3VLX11pUgfSwd1E1XmABPUWeaMLX11ZqYzQ84Fc%3D";
+            //string poststr = "TPL_username=13811277391&TPL_password=tianmin3216779236&ncoSig=&ncoSessionid=&ncoToken=b642ddda7d991ecd54929e776b8a2e5341006d8a&slideCodeShow=false&useMobile=false&lang=zh_CN&loginsite=0&newlogin=&TPL_redirect_url=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1&from=alimama&fc=default&style=mini&css_style=&keyLogin=false&qrLogin=true&newMini=false&newMini2=true&tid=&loginType=3&minititle=&minipara=&pstrong=&sign=&need_sign=&isIgnore=&full_redirect=true&sub_jump=&popid=&callback=&guf=&not_duplite_str=&need_user_id=&poy=&gvfdcname=10&gvfdcre=687474703A2F2F7075622E616C696D616D612E636F6D2F3F73706D3D61323139742E373636343535342E613231347472382E372E767753705056&from_encoding=&sub=&TPL_password_2=&loginASR=1&loginASRSuc=0&allp=&oslanguage=zh-CN&sr=1366*768&osVer=&naviVer=chrome%7C45.02454101&osACN=Mozilla&osAV=5.0+%28Windows+NT+10.0%3B+WOW64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F45.0.2454.101+Safari%2F537.36&osPF=Win32&miserHardInfo=&appkey=&bind_login=false&bind_token=&nickLoginLink=&mobileLoginLink=https%3A%2F%2Flogin.taobao.com%2Fmember%2Flogin.jhtml%3Fstyle%3Dmini%26newMini2%3Dtrue%26from%3Dalimama%26redirectURL%3Dhttp%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1%26full_redirect%3Dtrue%26disableQuickLogin%3Dtrue%26useMobile%3Dtrue&showAssistantLink=&um_token=HV01PAAZ0be2fcc8769100dc58abe2630034bd29&ua=086%23vM3XKrXlms3XZrm6XXXXXnN70qbE80hRLkSB0NsL1OUnpSiYiIEw6f6gR7nniPZRCkHFySiYyMA37aKh8rvRg5tgz5iLtsnmXmOsTmfmyvvgH3uVP21SbwmHvE9xT5d9mr3X1WwIyO37XA5qyQGU5O3aoIJQdBDUCa6EVk31X8XOwItTyRyYRMphdoGCyT62MqdHbWqua%2BsTo8fmXmzIwv1TU8scoOsJwp1TukjPe4B9wSaaSQ1Mmr3X1WwIyO37rLbeyQGU5O3aoIJQdBDUCa6EVk31X8XOwItTyRAYI1hhdoGCyT62MqdHbWqua%2BsTo8fmXmzIwv1TUfiidxsJwp1TukjPe4B9wSaaSQ1Mmr3X1WwIyO378ejyyQGU5O3aoIJQdBDUCa6EVk31X8XOwItTyRymkLlhdoGCyT62MqdHbWqua%2BsTo8fmXmzIwv1TUfP%2BLxsJwp1TukjPe4B9wSaaSQ1MXX3XuPVV0GgUXKRLFNlk9GA7eiSm%2FaHsXX3XuPV90GKZWJRLFNeWDsn7%2BEWJ%2FuHsmr3XuWwyyO37BgY%2FyQGU7m6ho4KLw0RUCRSmXXT%2B60BBmr3XuWwByO37B0%2BEyQGU7m6ho4KLw0RUC8fmXmDIBO1TUD53%2FvsJwp8ayePHSgGVwS6tX8X%2BRVRvX40kHPMmae5mQpf2kw8dfzhIGTuVPz%2FXX8X%2FHRhB02Ei7UIB%2BQMWoLclvM78agoqX8X36ceBBGnmXmxFTTomGUMgH3usA21Sbt9fiY4oIsPuP6ySvGnmXmOsTh3mGKbgH3uvMr1SbwmHvE9xT5d9UX3X35db22mMT2mS0xPD3MrrhdIT5M55X8XRLHVmXPOPX1jzy4WR1YmsWMPLPl2mXX8f11myUr3Xmux%2BBBg%2BX8X1f6ACBymIyr3XYXXX2THi6uRTCr3Xm0YzBBoVZ%2BfmXYCpi5QrXXXbF65eAbXXXjdckE0kgXXXFL7pib02XXXB7N5eNBXXXjbWrX3mnAqiH%2FWd8wmXPh4hHRZWnVSXsrcSIunchyXL3zb2PhuIj1yFnjZWnVSXsC4BiVfSuM9xm1rqmtcXX1ckZRxZY6XX%2B%2Fbti9yMa3rpjNXtjtavmNSWWR5fZcIif2blF3rT8tnHu63e6NuR6Nrg169f4LmsJ%2FCq1D%2FeRX4x%2FtWK%2FhOPXhgJWRnD4yZW1Cm9IcXC%2FVQ7hPSOkhaij1VhJRSH4yZW1CuKUu3lmXOt3jaQ6PWMmd8ERLmDs%2FZsJ%2FCGU2xEmmQd3%2F5QhYmvPPyJ%2BAn6ZyIssTc2s3VAhrQ%2BY13ga2CzY6XRsEQOIa81Wrc7O%2Fxe1MQ7%2Fwnw6EcnXNvRIjm4%2B984kTXQFrM9RmSVhzMxDDu36z8WsA7%2BI3v6J3xyia5DOw7SEr3XY9TaBrQkJGNTjwTOQX3X1221nNtIvN4o4zn9TQ%2FJhyVyZVCm96%2FtsL8wTwrmXmUZBW3X43WXfIAT9MIfn3Qw3JIJUX3Xugdbm2mgT2mS2vPDaXnp19o8nC9fXt5kUX3X35dbEXmqT2mSf7PD3MrrhdIT5M5qX8X36ceBBwSmXXT%2B60BBUr3Xmux%2BBBgqX8X36ceBB2fmXmzIwv1TU%2FYPV7sJwp1TukjPe4B9wSaaSQ1Mmr3X1WwIyO378Sj%2FyQGU5O3aoIJQdBDUCa6EVk3XX8X%2FHR6B0MET7UIB%2Bx0DpkAolruTago%3D";
             CookieContainer cc = new CookieContainer();
             string refer = "http://login.taobao.com/member/taobaoke/login.htm/is_login=1";
             string result = HttpHelper1.SendDataByPost(posturl, poststr, refer, ref cc);
             string strurl = "https://www.alimama.com/membersvc/my.htm?domain=taobao&service=user_on_taobao&sign_account=a49f9f62502fc96517a626ea7e685eb4";
+            //string strurl = "https://www.alimama.com/membersvc/my.htm?domain=taobao&service=user_on_taobao&sign_account=63f4941326712960165e9e278c31a7ad";
             string resultstr = HttpHelper1.SendDataByGET(strurl, ref cc);
             bool isLogin = Alimama.TestLogin(cc);
             return cc;
         }
-        public static CookieContainer Login(string username,string password)
+        public static CookieContainer Login(string username, string password)
         {
             string posturl = "https://login.taobao.com/member/login.jhtml?redirectURL=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1";
-            string poststr = "TPL_username="+username+"&TPL_password="+password+"&ncoSig=&ncoSessionid=&ncoToken=8bb84c14acdeac1ea8a25bd93ff9b3e8141bc70e&slideCodeShow=false&useMobile=false&lang=zh_CN&loginsite=0&newlogin=&TPL_redirect_url=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1&from=alimama&fc=default&style=mini&css_style=&keyLogin=false&qrLogin=true&newMini=false&newMini2=true&tid=&loginType=3&minititle=&minipara=&pstrong=&sign=&need_sign=&isIgnore=&full_redirect=true&sub_jump=&popid=&callback=&guf=&not_duplite_str=&need_user_id=&poy=&gvfdcname=&gvfdcre=&from_encoding=&sub=false&TPL_password_2=&loginASR=1&loginASRSuc=0&allp=&oslanguage=&sr=&osVer=&naviVer=&osACN=&osAV=&osPF=&miserHardInfo=&appkey=&bind_login=false&bind_token=&nickLoginLink=&mobileLoginLink=https%3A%2F%2Flogin.taobao.com%2Fmember%2Flogin.jhtml%3Fstyle%3Dmini%26newMini2%3Dtrue%26from%3Dalimama%26redirectURL%3Dhttp%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1%26full_redirect%3Dtrue%26disableQuickLogin%3Dtrue%26useMobile%3Dtrue";
+            string poststr = "TPL_username=" + username + "&TPL_password=" + password + "&ncoSig=&ncoSessionid=&ncoToken=8bb84c14acdeac1ea8a25bd93ff9b3e8141bc70e&slideCodeShow=false&useMobile=false&lang=zh_CN&loginsite=0&newlogin=&TPL_redirect_url=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1&from=alimama&fc=default&style=mini&css_style=&keyLogin=false&qrLogin=true&newMini=false&newMini2=true&tid=&loginType=3&minititle=&minipara=&pstrong=&sign=&need_sign=&isIgnore=&full_redirect=true&sub_jump=&popid=&callback=&guf=&not_duplite_str=&need_user_id=&poy=&gvfdcname=&gvfdcre=&from_encoding=&sub=false&TPL_password_2=&loginASR=1&loginASRSuc=0&allp=&oslanguage=&sr=&osVer=&naviVer=&osACN=&osAV=&osPF=&miserHardInfo=&appkey=&bind_login=false&bind_token=&nickLoginLink=&mobileLoginLink=https%3A%2F%2Flogin.taobao.com%2Fmember%2Flogin.jhtml%3Fstyle%3Dmini%26newMini2%3Dtrue%26from%3Dalimama%26redirectURL%3Dhttp%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1%26full_redirect%3Dtrue%26disableQuickLogin%3Dtrue%26useMobile%3Dtrue";
             CookieContainer cc = new CookieContainer();
             string refer = "http://login.taobao.com/member/taobaoke/login.htm/is_login=1";
             string result = HttpHelper1.SendDataByPost(posturl, poststr, refer, ref cc);
@@ -54,11 +56,11 @@ namespace Weibo.Common
         /// <param name="pv_id"></param>
         /// <param name="alimamacc"></param>
         /// <returns></returns>
-        public static AlimamaSearchShopData GetSearchData(string query,string pv_id, CookieContainer alimamacc)
+        public static AlimamaSearchShopData GetSearchData(string query, string pv_id, CookieContainer alimamacc)
         {
             AlimamaSearchShopData alimamasearchdata = new AlimamaSearchShopData();
             string tbtoken = Alimama.GetTbToken(alimamacc);
-            string url = "http://pub.alimama.com/shopsearch/shopList.json?spm=a2320.7388781.a214tr8.d006.QkMiw1&q="+HttpUtility.UrlEncode(query)+"&toPage=1&perPagesize=40&t="+HttpHelper1.GetTicks()+"&pvid="+pv_id+"&_tb_token_="+tbtoken+"&_input_charset=utf-8";
+            string url = "http://pub.alimama.com/shopsearch/shopList.json?spm=a2320.7388781.a214tr8.d006.QkMiw1&q=" + HttpUtility.UrlEncode(query) + "&toPage=1&perPagesize=40&t=" + HttpHelper1.GetTicks() + "&pvid=" + pv_id + "&_tb_token_=" + tbtoken + "&_input_charset=utf-8";
             string result = HttpHelper1.SendDataByGET(url, ref alimamacc);
             alimamasearchdata = Newtonsoft.Json.JsonConvert.DeserializeObject<AlimamaSearchShopData>(result);
             return alimamasearchdata;
@@ -71,20 +73,20 @@ namespace Weibo.Common
         /// <param name="pv_id"></param>
         /// <param name="alimamacc"></param>
         /// <returns></returns>
-        public static AlimamaShopHotData GetShopHotItem(string oriMemberId,string pv_id, CookieContainer alimamacc)
+        public static AlimamaShopHotData GetShopHotItem(string oriMemberId, string pv_id, CookieContainer alimamacc)
         {
             AlimamaShopHotData alimamashophot = new AlimamaShopHotData();
-            string url = "http://pub.alimama.com/shopdetail/hotProducts.json?sortField=_totalnum&oriMemberId="+ oriMemberId + "&t="+HttpHelper1.GetTicks()+"&pvid="+ pv_id + "&_tb_token_="+GetTbToken(alimamacc)+"&_input_charset=utf-8";
+            string url = "http://pub.alimama.com/shopdetail/hotProducts.json?sortField=_totalnum&oriMemberId=" + oriMemberId + "&t=" + HttpHelper1.GetTicks() + "&pvid=" + pv_id + "&_tb_token_=" + GetTbToken(alimamacc) + "&_input_charset=utf-8";
             string result = HttpHelper1.SendDataByGET(url, ref alimamacc);
             alimamashophot = Newtonsoft.Json.JsonConvert.DeserializeObject<AlimamaShopHotData>(result);
             return alimamashophot;
         }
 
-        
+
         public static TbkUatmFavoritesGetResponse GetXuanpinku()
         {
             string url = "http://gw.api.taobao.com/router/rest";
-            
+
             ITopClient client = new DefaultTopClient(url, Alimama.appkey, Alimama.secret);
             TbkUatmFavoritesGetRequest req = new TbkUatmFavoritesGetRequest();
             req.PageNo = 1L;
@@ -94,7 +96,7 @@ namespace Weibo.Common
             return client.Execute(req);
         }
 
-        public static TbkUatmFavoritesItemGetResponse GetXuanpinkuItem(long AdzonId,long FavoritesId)
+        public static TbkUatmFavoritesItemGetResponse GetXuanpinkuItem(long AdzonId, long FavoritesId)
         {
             string url = "http://gw.api.taobao.com/router/rest";
             ITopClient client = new DefaultTopClient(url, appkey, secret);
@@ -107,7 +109,7 @@ namespace Weibo.Common
             //req.PageNo = 2L;
             req.Fields = "num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick,shop_title,zk_final_price_wap,event_start_time,event_end_time,tk_rate,status,type";
             return client.Execute(req);
-            
+
         }
         /// <summary>
         /// 获取淘宝联盟选品库列表地址
@@ -135,7 +137,7 @@ namespace Weibo.Common
             bool isLogin = false;
             //验证登陆
             string m_url = "http://www.alimama.com/getLogInfo.htm?callback=__jp0";//地址获取淘宝联盟选品库列表
-            string jsonlist = HttpHelper1.SendDataByGET(m_url,"http://www.alimama.com/index.htm", ref cc);
+            string jsonlist = HttpHelper1.SendDataByGET(m_url, "http://www.alimama.com/index.htm", ref cc);
             if (jsonlist.Contains("success\":true"))//未登陆则打开登陆接口
             {
                 isLogin = true;
@@ -180,27 +182,27 @@ namespace Weibo.Common
         /// <param name="adzonid">推广组ID</param>
         /// <param name="alimamacc">Cookie</param>
         /// <returns></returns>
-        public static string GetTbkLink(string itemurl,string siteid,string adzoneid,CookieContainer alimamacc)
+        public static string GetTbkLink(string itemurl, string siteid, string adzoneid, CookieContainer alimamacc)
         {
             string tbkLink = "";
             CookieCollection ccl = alimamacc.GetCookies(new Uri("http://alimama.com"));
             string tbtoken = ccl["_tb_token_"].Value;
-            string url = "http://pub.alimama.com/urltrans/urltrans.json?adzoneid="+ adzoneid + "&promotionURL="+System.Web.HttpUtility.UrlEncode(itemurl);
+            string url = "http://pub.alimama.com/urltrans/urltrans.json?adzoneid=" + adzoneid + "&promotionURL=" + System.Web.HttpUtility.UrlEncode(itemurl);
             TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1);
             string ticks = ts.Ticks.ToString().Substring(0, 13);
-            url = "http://pub.alimama.com/urltrans/urltrans.json?siteid="+siteid+"&adzoneid=" + adzoneid + "&promotionURL=" + System.Web.HttpUtility.UrlEncode(itemurl) +"&t="+ ticks+ "&_tb_token_="+ tbtoken + "&_input_charset=utf-8";
+            url = "http://pub.alimama.com/urltrans/urltrans.json?siteid=" + siteid + "&adzoneid=" + adzoneid + "&promotionURL=" + System.Web.HttpUtility.UrlEncode(itemurl) + "&t=" + ticks + "&_tb_token_=" + tbtoken + "&_input_charset=utf-8";
             string result = HttpHelper1.SendDataByGET(url, ref alimamacc);
             if (result.Contains("链接不支持转化")) return "链接不支持转化";
             if (result.Contains("阿里妈妈")) return "阿里妈妈登录失效";
             if (result.Contains("亲，访问受限了"))
             {
                 Thread.Sleep(1 * 60 * 1000);
-                GetTbkLink(itemurl,siteid, adzoneid, alimamacc);
-                
+                GetTbkLink(itemurl, siteid, adzoneid, alimamacc);
+
                 //访问受限，等待1分钟
             }
             HttpHelper1.GetStringInTwoKeyword(result, ref tbkLink, "shortLinkUrl\":\"", "\"}", 0);
-            
+
             return tbkLink;
         }
 
@@ -218,24 +220,24 @@ namespace Weibo.Common
         /// <param name="itemurl"></param>
         /// <param name="alimamacc"></param>
         /// <returns></returns>
-        public static string SearchItem(string itemurl,CookieContainer alimamacc)
+        public static string SearchItem(string itemurl, CookieContainer alimamacc)
         {
             AlimamaSearchData alimama_searchdata = new AlimamaSearchData();
             CookieCollection ccl = alimamacc.GetCookies(new Uri("http://alimama.com"));
             string tbtoken = ccl["_tb_token_"].Value;
-            string searchurl = "http://pub.alimama.com/items/search.json?queryType=2&q="+HttpUtility.UrlEncode(itemurl)+"&auctionTag=&perPageSize=40&shopTag=&t="+HttpHelper1.GetTicks()+"&_tb_token_="+tbtoken+"&pvid=10_118.145.0.50_464_1484650244904";
+            string searchurl = "http://pub.alimama.com/items/search.json?queryType=2&q=" + HttpUtility.UrlEncode(itemurl) + "&auctionTag=&perPageSize=40&shopTag=&t=" + HttpHelper1.GetTicks() + "&_tb_token_=" + tbtoken + "&pvid=10_118.145.0.50_464_1484650244904";
 
-            
+
             string refer = "http://pub.alimama.com/promo/search/index.htm?queryType=2&q=" + HttpUtility.UrlEncode(itemurl);
-            string resulthtml = HttpHelper1.SendDataByGET(searchurl,refer, ref alimamacc);
+            string resulthtml = HttpHelper1.SendDataByGET(searchurl, refer, ref alimamacc);
             //alimama_searchdata = Newtonsoft.Json.JsonConvert.DeserializeObject<AlimamaSearchData>(resulthtml);
             //string campaignstr = "";
-            
+
             //HttpHelper1.GetStringInTwoKeyword(resulthtml, ref campaignstr, "", "", 0);
-            
+
             return resulthtml;
         }
-        public static bool IsCampaignExits(CampainsData campains,CookieContainer alimamacc,ref string keeperid)
+        public static bool IsCampaignExits(CampainsData campains, CookieContainer alimamacc, ref string keeperid)
         {
             try
             {
@@ -270,10 +272,10 @@ namespace Weibo.Common
             //{
             //    return true;
             //}
-           
+
         }
 
-        public static CampainsData GetCampainByTBItemID(string itemid,string tbtoken,string pv_id,CookieContainer alimamacc)
+        public static CampainsData GetCampainByTBItemID(string itemid, string tbtoken, string pv_id, CookieContainer alimamacc)
         {
             string url = "http://pub.alimama.com/pubauc/getCommonCampaignByItemId.json?itemId=" + itemid + "&t=" + HttpHelper1.GetTicks() + "&_tb_token_=" + tbtoken + "&pvid=" + pv_id;
             string resulthtml = HttpHelper1.SendDataByGET(url, ref alimamacc);
@@ -286,27 +288,27 @@ namespace Weibo.Common
         /// </summary>
         /// <param name="campaignid">定向计划ID</param>
         /// <returns>true:申请成功，false:没有定向计划</returns>
-        public static bool ApplyCampaign(string resulthtml,string itemurl, CookieContainer alimamacc)
+        public static bool ApplyCampaign(string resulthtml, string itemurl, CookieContainer alimamacc,ref double maxRate)
         {
             string campaignstrs = "";
             HttpHelper1.GetStringInTwoKeyword(resulthtml, ref campaignstrs, "tkSpecialCampaignIdRateMap\":", ",\"eventCreatorId", 0);
             if (campaignstrs.StartsWith("null")) return false;//如果没有定向计划，退出
-            
+
             string pv_id = "";
             HttpHelper1.GetStringInTwoKeyword(resulthtml, ref pv_id, "pvid\":\"", "\",\"docsfound", 0);
             string itemid = "";
-            HttpHelper1.GetStringInTwoKeyword(resulthtml, ref itemid, "auctionId\":",",\"", 0);
+            HttpHelper1.GetStringInTwoKeyword(resulthtml, ref itemid, "auctionId\":", ",\"", 0);
             string keeperid = "";
-            
+
             CookieCollection ccl = alimamacc.GetCookies(new Uri("http://alimama.com"));
             string tbtoken = ccl["_tb_token_"].Value;
             string refer = "http://pub.alimama.com/promo/search/index.htm?queryType=2&q=" + HttpUtility.UrlEncode(itemurl);
-            CampainsData campainsdata = Alimama.GetCampainByTBItemID(itemid,tbtoken,pv_id, alimamacc);
+            CampainsData campainsdata = Alimama.GetCampainByTBItemID(itemid, tbtoken, pv_id, alimamacc);
             if (campainsdata == null) return false;
             //if (IsCampaignExits(campainsdata, alimamacc,ref keeperid)) return false;//如果申请过定向计划，退出
             double maxCommission = 0;
             double maxManualCommission = 0;
-            
+
             CampainsData.Datum maxCampaign = new CampainsData.Datum();
             CampainsData.Datum maxManualCampaign = new CampainsData.Datum();
             //挑选出自动审核计划中，佣金最高的一个
@@ -320,10 +322,10 @@ namespace Weibo.Common
                         maxManualCommission = commission;
                         maxManualCampaign = campain;
                     }
-                } 
+                }
                 else
                 {
-                    
+
                     if (commission > maxCommission)
                     {
                         maxCommission = commission;
@@ -331,15 +333,25 @@ namespace Weibo.Common
                     }
                 }
             }
-            bool isSuc = ApplyCampaign(maxCampaign.CampaignID.ToString(), keeperid, pv_id, refer, alimamacc);//自动审核最高分成比例的计划一定要申请
+            if (!maxCampaign.Exist && maxCampaign.CampaignID != 0)
+                ApplyCampaign(maxCampaign.CampaignID.ToString(), keeperid, pv_id, refer, alimamacc);//自动审核最高分成比例的计划一定要申请
+            maxRate = maxCommission;
             if (maxCommission < maxManualCommission)
             {
-                ApplyCampaign(maxManualCampaign.CampaignID.ToString(), keeperid, pv_id, refer, alimamacc);//如果人工审核的计划分成比例要更高，则再申请人工审核计划
-                if(maxManualCampaign.CampaignName.Contains("QQ"))
-                    File.AppendAllText("taobaoke定向计划.txt", "分成比例：" + maxManualCampaign.AvgCommission + " 计划名称：" + maxManualCampaign.CampaignName + "\r\n");
+                if (!maxManualCampaign.Exist)
+                {
+                    ApplyCampaign(maxManualCampaign.CampaignID.ToString(), keeperid, pv_id, refer, alimamacc);//如果人工审核的计划分成比例要更高，则再申请人工审核计划
+                    if (maxManualCampaign.CampaignName.Contains("QQ"))
+                        File.AppendAllText("taobaoke定向计划.txt", "分成比例：" + maxManualCampaign.AvgCommission + " 计划名称：" + maxManualCampaign.CampaignName + "\r\n");
+                }
+                else
+                {
+                    //如果人工审核计划已经通过审核
+                    maxRate = maxManualCommission;
+                }
             }
-            
-            
+
+
             //string[] campains = campaignstrs.Split(',');
             //foreach (string campain in campains)
             //{
@@ -355,32 +367,33 @@ namespace Weibo.Common
             //alimama_searchdata.Data.PageList[0].TkSpecialCampaignIdRateMap
             return true;
         }
-        public static bool ApplyCampaign(string campaignid,string keeperid,string pv_id,string refer,CookieContainer alimamacc)
+        public static bool ApplyCampaign(string campaignid, string keeperid, string pv_id, string refer, CookieContainer alimamacc)
         {
             //alimama_searchdata.Data.PageList[0].TkSpecialCampaignIdRateMap
             string url = "http://pub.alimama.com/pubauc/applyForCommonCampaign.json";
             CookieCollection ccl = alimamacc.GetCookies(new Uri("http://alimama.com"));
             string tbtoken = ccl["_tb_token_"].Value;
-            string poststr = "campId="+campaignid+"&keeperid="+ keeperid + "&applyreason=%e5%be%ae%e5%8d%9a%e5%a4%a7%e5%8f%b7%e5%af%bc%e8%b4%ad%ef%bc%8cQQ%ef%bc%9a1145837517&t=" + HttpHelper1.GetTicks()+"&_tb_token_="+ tbtoken + "&pvid="+pv_id;
-            
-            string resulthtml = HttpHelper1.SendDataByPost(url,poststr,refer,ref alimamacc);
+            string poststr = "campId=" + campaignid + "&keeperid=" + keeperid + "&applyreason=%e5%be%ae%e5%8d%9a%e5%a4%a7%e5%8f%b7%e5%af%bc%e8%b4%ad%ef%bc%8cQQ%ef%bc%9a1145837517&t=" + HttpHelper1.GetTicks() + "&_tb_token_=" + tbtoken + "&pvid=" + pv_id;
+
+            string resulthtml = HttpHelper1.SendDataByPost(url, poststr, refer, ref alimamacc);
             return true;
         }
         /// <summary>
         /// 获取商品优惠券信息
         /// </summary>
-        public static string GetCouponInfo(string resulthtml,string itemurl,CookieContainer alimamacc)
+        public static string GetCouponInfo(string resulthtml, string itemurl, CookieContainer alimamacc)
         {
             string pv_id = "";
             HttpHelper1.GetStringInTwoKeyword(resulthtml, ref pv_id, "pvid\":\"", "\",\"docsfound", 0);
             string itemid = "";
-            HttpHelper1.GetStringInTwoKeyword(resulthtml, ref itemid, "auctionId\":",",\"", 0);
+            HttpHelper1.GetStringInTwoKeyword(resulthtml, ref itemid, "auctionId\":", ",\"", 0);
             CookieCollection ccl = alimamacc.GetCookies(new Uri("http://alimama.com"));
             string tbtoken = ccl["_tb_token_"].Value;
-            string url = "http://pub.alimama.com/common/code/getAuctionCode.json?auctionid=" + itemid + "&adzoneid=69828234&siteid=20546221&scenes=1&t=" + HttpHelper1.GetTicks() + "&_tb_token_=" + tbtoken + "&pvid=" + pv_id;
-            string result = HttpHelper1.SendDataByGET(url,ref alimamacc);
+            DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
+            string url = "http://pub.alimama.com/common/code/getAuctionCode.json?auctionid=" + itemid + "&adzoneid="+ deweiboaccount .Adzoneid+ "&siteid="+deweiboaccount.Siteid+"&scenes=1&t=" + HttpHelper1.GetTicks() + "&_tb_token_=" + tbtoken + "&pvid=" + pv_id;
+            string result = HttpHelper1.SendDataByGET(url, ref alimamacc);
             string shorturl = "";
-            HttpHelper1.GetStringInTwoKeyword(result,ref shorturl, "couponShortLinkUrl\":\"", "\",\"qrCodeUrl", 0);
+            HttpHelper1.GetStringInTwoKeyword(result, ref shorturl, "couponShortLinkUrl\":\"", "\",\"qrCodeUrl", 0);
             return shorturl;
         }
         /// <summary>
@@ -429,7 +442,7 @@ namespace Weibo.Common
             return result;
         }
 
-        
+
         /// <summary>
         /// 抓取完微博内容之后，截取想要的内容
         /// </summary>

@@ -347,9 +347,9 @@ namespace Weibo
                     {
                         int jiangeshij = Convert.ToInt32(this.nud_weiboJiange.Value);
                         AppenWeiboCmd("发布微博出错，错误信息：" + ex.Message);
-                        AppenWeiboCmd("间隔" + jiangeshij.ToString() + "分钟继续");
-                        isSendSuc = false;
-                        Thread.Sleep(jiangeshij * 60 * 1000);
+                        //AppenWeiboCmd("间隔" + jiangeshij.ToString() + "分钟继续");
+                        //isSendSuc = false;
+                        //Thread.Sleep(jiangeshij * 60 * 1000);
                     }
 
                     #region 微博发布后处理
@@ -360,8 +360,8 @@ namespace Weibo
                     accountnum++;
                     if (accountnum == DEWeiboAccounts.Count) continue;//如果是最后一个账号，则不间隔
 
-                    AppenWeiboCmd("[" + deweiboaccount.Nickname + "]发布完成!账号间 间隔2分钟");
-                    Thread.Sleep(2 * 60 * 1000);//账号间间隔2分钟
+                    AppenWeiboCmd("[" + deweiboaccount.Nickname + "]发布完成!账号间 间隔1分钟");
+                    Thread.Sleep(1 * 60 * 1000);//账号间间隔2分钟
                     #endregion
 
                 }//foreach账号
@@ -408,9 +408,9 @@ namespace Weibo
                     {
                         int jiangeshij = Convert.ToInt32(this.nud_weiboJiange.Value);
                         AppenWeiboCmd("发布微博出错，错误信息：" + ex.Message);
-                        AppenWeiboCmd("间隔" + jiangeshij.ToString() + "分钟继续");
+                        //AppenWeiboCmd("间隔" + jiangeshij.ToString() + "分钟继续");
                         isSendSuc = false;
-                        Thread.Sleep(jiangeshij * 60 * 1000);
+                        //Thread.Sleep(jiangeshij * 60 * 1000);
                     }
 
                     #region 微博发布后处理
@@ -909,7 +909,7 @@ namespace Weibo
                                 string links = "";//多链接以,分割
                                 int j = 1;
                                 string own_tbklinks = "";
-                                string couponlinks = "粉丝优惠购：";
+                                string couponlinks = "含优惠券：";
                                 bool isCoupon = false;
                                 #endregion
                                 int isHave = Convert.ToInt32(SQLiteHelper.ExecuteScalar("select count(*) from mblog where id=" + mid));
@@ -923,11 +923,14 @@ namespace Weibo
                                 string dirname = WeiboHandler.GetDirnameByMblogText(mblog.Text);
 
                                 #region 九宫格淘宝客处理
-                                if (comment.Data.Html.Contains("图1："))
+                                if (comment.Data.Html.Contains("P1：") || comment.Data.Html.Contains("图1："))
                                 {
                                     //评论包含淘宝客链接
                                     string tbklinks_html = "";
-                                    HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "图1：", "<!-- 评论图片的处理 -->", 0);
+                                    if (comment.Data.Html.Contains("P1："))
+                                        HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "P1：", "<!-- 评论图片的处理 -->", 0);
+                                    else if (comment.Data.Html.Contains("P1："))
+                                        HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "图1：", "<!-- 评论图片的处理 -->", 0);
                                     Hashtable tbklinks = new Hashtable();
                                     Regex reg = new Regex(@"[a-zA-z]+://[^\s]*");
                                     MatchCollection mc = reg.Matches(tbklinks_html);
@@ -948,8 +951,11 @@ namespace Weibo
                                         //throw;
                                     }
                                     int linknum = 1;
+                                    ArrayList templinkpool = new ArrayList();
                                     foreach (Match m in mc)
                                     {
+                                        if (templinkpool.Contains(m.Value)) continue;
+                                        templinkpool.Add(m.Value);
                                         AppenAlimamaCmd("转换链接" + linknum.ToString());
                                         linknum++;
                                         string weiboshortlink = m.Value.Replace("\"", "");
@@ -1003,7 +1009,7 @@ namespace Weibo
                                         //bdshorturl = bdshorturl.Replace("\\", "");//包装一层百度短网址，防屏蔽  1.16 加一层跳转之后，会被微博反垃圾提示危险网址
 
                                         string weiboShortlink = WeiboHandler.GetWeiboShorturl(own_tbklink);//微博短地址
-                                        own_tbklinks += "图" + j.ToString() + ":" + weiboShortlink + " ";
+
 
                                         double maxRate = 0;
                                         string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
@@ -1026,7 +1032,15 @@ namespace Weibo
                                             string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc);
                                             string couponweiboShortlink = WeiboHandler.GetWeiboShorturl(couponshorturl);//微博短地址
                                             couponlinks += "图" + j.ToString() + ":" + couponweiboShortlink + " ";
+                                            if (couponweiboShortlink != "")
+                                                own_tbklinks += "【P" + j.ToString() + "：" + couponweiboShortlink + "】 ";
+                                            else
+                                                own_tbklinks += "【P" + j.ToString() + "：" + weiboShortlink + "】 ";
                                             isCoupon = true;
+                                        }
+                                        else
+                                        {
+                                            own_tbklinks += "【P" + j.ToString() + "：" + weiboShortlink + "】 ";
                                         }
 
                                         j++;
@@ -1054,8 +1068,8 @@ namespace Weibo
                                             picnum++;
                                         }
                                         File.WriteAllText("temp/" + dirname + "/comment.txt", own_tbklinks);
-                                        if (isCoupon)
-                                            File.WriteAllText("temp/" + dirname + "/coupon.txt", couponlinks);
+                                        //if (isCoupon)
+                                        //    File.WriteAllText("temp/" + dirname + "/coupon.txt", couponlinks);
                                         File.WriteAllText("temp/" + dirname + "/id.txt", mblog.Id);
                                         AppenAlimamaCmd("抓取成功，微博正文：" + mblog.Text + ";ID：" + mblog.Id);
                                         try
@@ -1084,82 +1098,84 @@ namespace Weibo
                                     string tbklinks_html = "";
                                     if (alimamacc == null)
                                         alimamacc = Alimama.GetCookieContainer();
-                                    HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "领：", "<!-- 评论图片的处理 -->", 0);
+                                    if (!Alimama.TestLogin(alimamacc)) alimamacc = Alimama.Login();
+                                    HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "拍：", "<!-- 评论图片的处理 -->", 0);
                                     Hashtable tbklinks = new Hashtable();
                                     Regex reg = new Regex(@"[a-zA-z]+://[^\s]*");
                                     MatchCollection mc = reg.Matches(tbklinks_html);
-                                    int time = 1;
-                                    foreach (Match m in mc)
+
+                                    Match m = mc[0];
+
+                                    string weiboshortlink = m.Value.Replace("\"", "");
+                                    if (!weiboshortlink.StartsWith("http://t.cn")) continue;
+                                    //if (time == 1)
+                                    //{
+                                    //    //第一个链接为优惠券链接
+
+                                    //    //own_tbklinks = "领券：" + weiboshortlink + "  ";
+                                    //    time++;
+                                    //    continue;
+                                    //}
+
+                                    string tbrealitem = "";
+                                    string result = Alimama.GetItemResultWithWeiboShortUrl(weiboshortlink, alimamacc, ref tbrealitem);
+
+
+
+
+                                    double maxRate = 0;
+                                    string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
+                                    bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc, ref maxRate);//申请定向计划
+
+
+                                    //获取优惠券信息
+                                    if (searchresult.Contains("couponInfo\":\"无") || !searchresult.Contains("couponInfo"))
                                     {
-                                        string weiboshortlink = m.Value.Replace("\"", "");
-                                        if (!weiboshortlink.StartsWith("http://t.cn")) continue;
-                                        if (time == 1)
-                                        {
-                                            //第一个链接为优惠券链接
+                                        AppenAlimamaCmd("未包含优惠券信息，跳过");
+                                        goto FinishMblog;
+                                    }
+                                    string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc);
+                                    string couponweiboShortlink = WeiboHandler.GetWeiboShorturl(couponshorturl);//微博短地址
+                                    if (couponweiboShortlink == "") goto FinishMblog;
+                                    own_tbklinks += "【领券拍：" + couponweiboShortlink + "】                                         【粉丝专享优惠券合集：https://s.click.taobao.com/Gm9PZ3x】";
 
-                                            //own_tbklinks = "领券：" + weiboshortlink + "  ";
-                                            time++;
-                                            continue;
-                                        }
+                                    //DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
+                                    //string weiboShortlink = GetWeiboShortUrlByTbItem(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);
+                                    //if (weiboshortlink == "")
+                                    //{
+                                    //    continue;
+                                    //}
+                                    //own_tbklinks += "购买：" + weiboShortlink + "";
 
-                                        string tbrealitem = "";
-                                        string result = Alimama.GetItemResultWithWeiboShortUrl(weiboshortlink, alimamacc, ref tbrealitem);
+                                    //创建选品文件夹
+                                    try
+                                    {
+                                        if (!Directory.Exists("temp/" + dirname + "/"))
+                                            Directory.CreateDirectory("temp/" + dirname + "/");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        dirname = mblog.Id;
+                                        if (!Directory.Exists("temp/" + dirname + "/"))
+                                            Directory.CreateDirectory("temp/" + dirname + "/");
+                                        //throw;
+                                    }
+                                    //下载微博图片
+                                    int picnum = 1;
+                                    foreach (Pic pic in mblog.Pics)
+                                    {
+                                        string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + ".jpg";
+                                        AppenAlimamaCmd("下载图" + picnum.ToString());
+                                        HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpg", alimamacc);
+                                        picnum++;
+                                    }
 
-
-
-
-                                        double maxRate = 0;
-                                        string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
-                                        bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc, ref maxRate);//申请定向计划
-
-
-                                        //获取优惠券信息
-                                        if (searchresult.Contains("couponInfo\":\"无"))
-                                        {
-                                            AppenAlimamaCmd("未包含优惠券信息，跳过");
-                                            goto FinishMblog;
-                                        }
-                                        string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc);
-                                        string couponweiboShortlink = WeiboHandler.GetWeiboShorturl(couponshorturl);//微博短地址
-                                        own_tbklinks += "领券拍:" + couponweiboShortlink + " ";
-
-                                        //DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
-                                        //string weiboShortlink = GetWeiboShortUrlByTbItem(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);
-                                        //if (weiboshortlink == "")
-                                        //{
-                                        //    continue;
-                                        //}
-                                        //own_tbklinks += "购买：" + weiboShortlink + "";
-
-                                        //创建选品文件夹
-                                        try
-                                        {
-                                            if (!Directory.Exists("temp/" + dirname + "/"))
-                                                Directory.CreateDirectory("temp/" + dirname + "/");
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            dirname = mblog.Id;
-                                            if (!Directory.Exists("temp/" + dirname + "/"))
-                                                Directory.CreateDirectory("temp/" + dirname + "/");
-                                            //throw;
-                                        }
-                                        //下载微博图片
-                                        int picnum = 1;
-                                        foreach (Pic pic in mblog.Pics)
-                                        {
-                                            string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + ".jpg";
-                                            AppenAlimamaCmd("下载图" + picnum.ToString());
-                                            HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpg", alimamacc);
-                                            picnum++;
-                                        }
-                                    }//单个链接处理完成
                                     #endregion
                                     File.WriteAllText("temp/" + dirname + "/comment.txt", own_tbklinks);
                                     File.WriteAllText("temp/" + dirname + "/id.txt", mblog.Id);
                                     Directory.Move("temp/" + dirname, "待发布/" + dirname);
                                     AppenAlimamaCmd("抓取成功，微博正文：" + mblog.Text + ";ID：" + mblog.Id);
-                                }
+                                }//单个链接处理完成
                                 #endregion
                                 FinishMblog:
                                 int statu = SQLiteHelper.ExecuteNonQuery("insert into mblog(id,Source,Text,CreateAt,TbkLinks)values(@id,@Source,@Text,@CreateAt,@TbkLinks)", new[] {

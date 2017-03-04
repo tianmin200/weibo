@@ -639,7 +639,25 @@ namespace Weibo.Common
             
             string ss = "";
             //string html = HttpHelper1.GetHttpsHtml(url, "", ref ss);
+            CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
+            CookieCollection newccl = ccl;
+            for (int i = 0; i < newccl.Count; i++)
+            {
+                newccl[i].Domain = "weibo.cn";
+            }
+            CookieContainer newcc = new CookieContainer();
+            weibocc.Add(new Uri("http://weibo.cn"), newccl);
+
+
+
+            
             string html = HttpHelper1.SendDataByGET(url, ref weibocc);
+            
+            for (int i = 0; i < newccl.Count; i++)
+            {
+                newccl[i].Domain = "weibo.com";
+            }
+            weibocc.Add(newccl);
             if (html.Contains(""))
             {
                 html = html.Replace("page\":null", "page\":1");

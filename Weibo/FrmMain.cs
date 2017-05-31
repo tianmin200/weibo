@@ -94,8 +94,18 @@ namespace Weibo
                 //this.lblIsLogin_Alimama.ForeColor = Color.Red;
                 //this.lblIsLogin_Alimama.Text = "已登录";
                 alimamacc = Alimama.Login();
-                this.lblIsLogin_Alimama.ForeColor = Color.Red;
-                this.lblIsLogin_Alimama.Text = "已登录";
+
+                if (Alimama.TestLogin(alimamacc))
+                {
+                    this.lblIsLogin_Alimama.ForeColor = Color.Red;
+                    this.lblIsLogin_Alimama.Text = "已登录";
+                }
+                else
+                {
+                    this.lblIsLogin_Alimama.ForeColor = Color.Black;
+                    this.lblIsLogin_Alimama.Text = "未登录";
+                }
+                
 
             }
             else
@@ -205,11 +215,20 @@ namespace Weibo
                 AppenAlimamaCmd("开始提取选品库……");
 
 
-                if (this.lblIsLogin_Alimama.Text == "未登录")
+                if (alimamacc == null || !Alimama.TestLogin(alimamacc))
                 {
-                    MessageBox.Show("未登录");
-                    SetStartAlimamaBtnStatus(false);
-                    return;
+                    //if (alimamacc == null) alimamacc = new CookieContainer();
+                    AppenAlimamaCmd("未登录,开始模拟登陆阿里妈妈");
+                    //SetStartAlimamaBtnStatus(false);
+                    //return;
+                    alimamacc = Alimama.Login();
+                    if (Alimama.TestLogin(alimamacc)) AppenAlimamaCmd("登陆成功！");
+                    else
+                    {
+                        AppenAlimamaCmd("登陆失败，退出！");
+                        return;
+                    }
+                        
                 }
                 string json_xuanpinku = HttpHelper1.SendDataByGET(Alimama.url_xuanpinku, ref alimamacc);
                 while (json_xuanpinku.Contains("totalCount\":0"))
@@ -220,20 +239,27 @@ namespace Weibo
                     //SetStartAlimamaBtnStatus(false);
                     //return;
                 }
-                JSONObject jsonobj = JSONConvert.DeserializeObject(json_xuanpinku);
-                JSONObject datajson = (JSONObject)jsonobj["data"];
-                JSONArray array_xiaopinku = (JSONArray)datajson["result"];
+                object jsonobj1 = Newtonsoft.Json.JsonConvert.DeserializeObject(json_xuanpinku);
+                JObject jo = jsonobj1 as JObject;
+                
+                //JSONObject jsonobj = JSONConvert.DeserializeObject(json_xuanpinku);
+                //JSONObject datajson = (JSONObject)jsonobj["data"];
 
+                JToken datajson1 = (JToken)jo["data"];
+                JArray array_xiaopinku = (JArray)datajson1["result"];
+                
+                //JSONArray array_xiaopinku = null; //(JSONArray)datajson["result"];
+                
                 AppenAlimamaCmd("共找到" + array_xiaopinku.Count.ToString() + "个待发布选品库……");
                 for (int i = 0; i < array_xiaopinku.Count; i++)
                 {
                     AppenAlimamaCmd("处理第" + (i + 1).ToString() + "个选品库……");
-                    JSONObject obj_xuanpinku = (JSONObject)array_xiaopinku[i];
+                    JToken obj_xuanpinku = (JToken)array_xiaopinku[i];
                     string groupid = obj_xuanpinku["id"].ToString();//选品库ID
                     string groupName = obj_xuanpinku["title"].ToString();//选品库title
                     DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
                     string fileDownLoadUrl = "http://pub.alimama.com/favorites/item/export.json?adzoneId=" + deweiboaccount.Adzoneid + "&siteId=" + deweiboaccount.Siteid + "&groupId=" + groupid;//选品库Excel文件下载
-                    if (Directory.Exists("待发布/"))
+                    if (!Directory.Exists("待发布/"))
                         Directory.CreateDirectory("待发布");
                     string fileSaveName = "待发布/" + groupName + "/" + groupName + ".xls";//保存文件名
                     if (!Directory.Exists("待发布/" + groupName))
@@ -282,8 +308,8 @@ namespace Weibo
                 }
 
                 AppenAlimamaCmd("此次选品库处理完成！！！共" + array_xiaopinku.Count.ToString() + "个，成功：" + array_xiaopinku.Count.ToString() + "个！！！");
-                AppenAlimamaCmd("选品休息三十分钟！！！");
-                Thread.Sleep(30 * 60 * 1000);
+                AppenAlimamaCmd("选品休息10分钟！！！");
+                Thread.Sleep(10 * 60 * 1000);
             }
             //SetStartAlimamaBtnStatus(false);
         }

@@ -179,14 +179,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /e /r /y $(TargetDir)weibo.exe $(SolutionDir)weibo\bin\x86\淘客日常发布
-xcopy /e /r /y $(TargetDir)Weibo.Common.dll $(SolutionDir)weibo\bin\x86\淘客日常发布
-xcopy /e /r /y $(TargetDir)Weibo.Models.dll $(SolutionDir)weibo\bin\x86\淘客日常发布
-xcopy /e /r /y $(TargetDir)Weibo.Core.dll $(SolutionDir)weibo\bin\x86\淘客日常发布
-xcopy /e /r /y $(TargetDir)weibo.exe $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥
-xcopy /e /r /y $(TargetDir)Weibo.Common.dll $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥
-xcopy /e /r /y $(TargetDir)Weibo.Models.dll $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥
-xcopy /e /r /y $(TargetDir)Weibo.Core.dll $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

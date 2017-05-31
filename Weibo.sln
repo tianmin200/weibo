@@ -15,6 +15,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weibo.Core", "Weibo.Core\We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQSpace", "QQSpace\QQSpace.csproj", "{9F922B73-F059-41D3-A63B-DBF976E4145F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "obj", "obj", "{34712D7C-3291-4ACC-A679-77902C02F63C}"
+	ProjectSection(SolutionItems) = preProject
+		Weibo\bin\Debug\BigInteger.dll = Weibo\bin\Debug\BigInteger.dll
+		Weibo\bin\Debug\Interop.MSScriptControl.dll = Weibo\bin\Debug\Interop.MSScriptControl.dll
+		Weibo\bin\Debug\Newtonsoft.Json.dll = Weibo\bin\Debug\Newtonsoft.Json.dll
+		Weibo\bin\Debug\System.Data.SQLite.dll = Weibo\bin\Debug\System.Data.SQLite.dll
+		Weibo\bin\Debug\TopSdk.dll = Weibo\bin\Debug\TopSdk.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

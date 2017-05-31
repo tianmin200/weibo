@@ -57,18 +57,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.MSScriptControl">
-      <HintPath>C:\Users\Administrator\Desktop\程序\QQ空间登录\WindowsFormsApplication2\obj\Release\Interop.MSScriptControl.dll</HintPath>
+      <HintPath>..\Weibo\bin\Debug\Interop.MSScriptControl.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Weibo\bin\x86\Debug\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Weibo\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Weibo\bin\x86\Debug\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\Weibo\bin\Debug\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />

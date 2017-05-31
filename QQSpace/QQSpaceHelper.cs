@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MSScriptControl;
+
 using Microsoft.CSharp;
 using System.Text.RegularExpressions;
 using Weibo.Common;

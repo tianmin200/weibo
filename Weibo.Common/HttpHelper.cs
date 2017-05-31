@@ -511,6 +511,23 @@ namespace Weibo.Common
                 }
             }
         }
+
+        public static string GetRedirectUrl(string url)
+        {
+            string redirecturl = "";
+            Uri uri = new Uri(url);
+            var req = WebRequest.Create(uri) as HttpWebRequest;
+            req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36";
+            req.Accept = "*/*";
+            req.Method = "get";
+            req.Timeout = 30 * 1000;//超时设置30s 
+            req.Referer = "";
+            req.AllowAutoRedirect = true;
+            req.ContentType = "text/html; charset=GBK";
+            var res = req.GetResponse();
+            redirecturl = res.ResponseUri.ToString();
+            return redirecturl;
+        }
         //读取EXCEL的方法   (用范围区域读取数据)
         public static DataSet ExcelToDS(string Path)
         {

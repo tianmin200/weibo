@@ -146,7 +146,7 @@ namespace WeiboMaster
                                 //}
                                 double maxRate = 0;
                                 string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
-                                bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc,ref maxRate);//申请定向计划
+                                bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, ref alimamacc,ref maxRate);//申请定向计划
 
                                 //获取优惠券信息
                                 if (!searchresult.Contains("couponInfo\":\"无"))

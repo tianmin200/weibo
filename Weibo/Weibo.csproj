@@ -60,6 +60,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\x86\Debug\BigInteger.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.JScript" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\x86\Debug\Newtonsoft.Json.dll</HintPath>
@@ -98,6 +99,12 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmReadExcel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmReadExcel.Designer.cs">
+      <DependentUpon>FrmReadExcel.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmVcode.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +125,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmReadExcel.resx">
+      <DependentUpon>FrmReadExcel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmVcode.resx">
       <DependentUpon>FrmVcode.cs</DependentUpon>
@@ -176,15 +186,7 @@ xcopy /e /r /y $(TargetDir)Weibo.Core.dll $(SolutionDir)weibo\bin\x86\淘客日�
 xcopy /e /r /y $(TargetDir)weibo.exe $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥
 xcopy /e /r /y $(TargetDir)Weibo.Common.dll $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥
 xcopy /e /r /y $(TargetDir)Weibo.Models.dll $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥
-xcopy /e /r /y $(TargetDir)Weibo.Core.dll $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥
-xcopy /e /r /y $(TargetDir)weibo.exe $(SolutionDir)weibo\bin\x86\日系清新派
-xcopy /e /r /y $(TargetDir)Weibo.Common.dll $(SolutionDir)weibo\bin\x86\日系清新派
-xcopy /e /r /y $(TargetDir)Weibo.Models.dll $(SolutionDir)weibo\bin\x86\日系清新派
-xcopy /e /r /y $(TargetDir)Weibo.Core.dll $(SolutionDir)weibo\bin\x86\日系清新派
-xcopy /e /r /y $(TargetDir)weibo.exe $(SolutionDir)weibo\bin\x86\潮男品味指南
-xcopy /e /r /y $(TargetDir)Weibo.Common.dll $(SolutionDir)weibo\bin\x86\潮男品味指南
-xcopy /e /r /y $(TargetDir)Weibo.Models.dll $(SolutionDir)weibo\bin\x86\潮男品味指南
-xcopy /e /r /y $(TargetDir)Weibo.Core.dll $(SolutionDir)weibo\bin\x86\潮男品味指南</PostBuildEvent>
+xcopy /e /r /y $(TargetDir)Weibo.Core.dll $(SolutionDir)weibo\bin\x86\時尚潮男衣櫥</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

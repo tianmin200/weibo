@@ -57,7 +57,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.MSScriptControl">
-      <HintPath>C:\Users\Administrator\Desktop\QQ空间登录\WindowsFormsApplication2\obj\Release\Interop.MSScriptControl.dll</HintPath>
+      <HintPath>C:\Users\Administrator\Desktop\程序\QQ空间登录\WindowsFormsApplication2\obj\Release\Interop.MSScriptControl.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

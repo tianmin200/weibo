@@ -33,6 +33,7 @@ namespace Weibo
     {
 
         private Thread alimamaThread;
+        private Thread alimamaColThread;
         private Thread weiboThread;
         private CookieContainer alimamacc;
         private CookieContainer weibocc;
@@ -127,8 +128,8 @@ namespace Weibo
             ArrayList parms = new ArrayList();
             parms.Add("");
             parms.Add(1);
-            alimamaThread = new Thread(new ParameterizedThreadStart(StartGetXuanpinku));
-            alimamaThread.Start(parms);
+            alimamaColThread = new Thread(new ParameterizedThreadStart(StartGetXuanpinku));
+            alimamaColThread.Start(parms);
         }
 
         /// <summary>
@@ -139,20 +140,22 @@ namespace Weibo
         {
             if (isexe)
             {
-                this.btn_StartAlimama.Enabled = false;
+                //this.btn_StartAlimama.Enabled = false;
                 this.btn_col.Enabled = false;
                 this.btn_SearchShop.Enabled = false;
                 this.btn_NanzhuangCol.Enabled = false;
                 this.button5.Enabled = false;
+                this.btn_Coupon.Enabled = false;
                 this.btn_StopAlimama.Enabled = true;
             }
             else
             {
-                this.btn_StartAlimama.Enabled = true;
+                //this.btn_StartAlimama.Enabled = true;
                 this.btn_col.Enabled = true;
                 this.btn_SearchShop.Enabled = true;
                 this.btn_NanzhuangCol.Enabled = true;
                 this.button5.Enabled = true;
+                this.btn_Coupon.Enabled = true;
                 this.btn_StopAlimama.Enabled = false;
             }
         }
@@ -211,8 +214,8 @@ namespace Weibo
                 string json_xuanpinku = HttpHelper1.SendDataByGET(Alimama.url_xuanpinku, ref alimamacc);
                 while (json_xuanpinku.Contains("totalCount\":0"))
                 {
-                    AppenAlimamaCmd("共找到0个待发布选品库，该去阿里妈妈选品了!!!20分钟后再来！！！");
-                    Thread.Sleep(20 * 60 * 1000);
+                    AppenAlimamaCmd("共找到0个待发布选品库，该去阿里妈妈选品了!!!5分钟后再来！！！");
+                    Thread.Sleep(5 * 60 * 1000);
                     json_xuanpinku = HttpHelper1.SendDataByGET(Alimama.url_xuanpinku, ref alimamacc);
                     //SetStartAlimamaBtnStatus(false);
                     //return;
@@ -257,7 +260,7 @@ namespace Weibo
 
                             string link = dr[10].ToString();
                             string weiboShortlink = WeiboHandler.GetWeiboShorturl(link);//微博短地址
-                            comment += "图" + j.ToString() + ":" + weiboShortlink + " ";
+                            comment += "【图" + j.ToString() + ":" + weiboShortlink + "】";
                             string picresultpath = HttpHelper1.HttpDownloadFile(picurl, "待发布/" + groupName + "/" + j.ToString() + ".jpg", alimamacc);
                             if (picresultpath == null) continue;
                             j++;
@@ -334,8 +337,8 @@ namespace Weibo
                         DirectoryInfo TheFolder = new DirectoryInfo("待发布");
                         while (TheFolder.GetDirectories().Length == 0)
                         {
-                            AppenWeiboCmd("没有找到发布素材，等待10分钟！");
-                            Thread.Sleep(10 * 60 * 1000);
+                            AppenWeiboCmd("没有找到发布素材，等待3分钟！");
+                            Thread.Sleep(3 * 60 * 1000);
                         }
                         nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
                         #endregion
@@ -385,9 +388,10 @@ namespace Weibo
                 DirectoryInfo TheFolder = new DirectoryInfo("待发布");
                 while (TheFolder.GetDirectories().Length == 0)
                 {
-                    AppenWeiboCmd("没有找到发布素材，等待10分钟！");
-                    Thread.Sleep(10 * 60 * 1000);
+                    AppenWeiboCmd("没有找到发布素材，等待3分钟！");
+                    Thread.Sleep(3 * 60 * 1000);
                 }
+
                 nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
                 #endregion
                 foreach (DEWeiboAccount deweiboaccount in DEWeiboAccounts)
@@ -685,6 +689,8 @@ namespace Weibo
             string query = "马丁靴";
             TbkItemGetResponse rsp = Alimama.GetItemsWithQuery(query);
 
+            Alimama.GetTbkShortUrl("https://uland.taobao.com/coupon/edetail?activityId=cca299fffaee4c45bbfa541ac208dd16&pid=mm_122033678_24252915_81212616&itemId=547482547612&src=fklm_hltk&dx=1");
+            Alimama.GetTbkTaokouling("https://uland.taobao.com/coupon/edetail?activityId=cca299fffaee4c45bbfa541ac208dd16&pid=mm_122033678_24252915_81212616&itemId=547482547612&src=fklm_hltk&dx=1");
 
         }
 
@@ -772,6 +778,7 @@ namespace Weibo
                     deweiboaccount.St = st;
                     deweiboaccount.Userid = uid;
                     if (DEWeiboAccounts == null) DEWeiboAccounts = new ArrayList();
+
                     DEWeiboAccounts.Add(deweiboaccount);
                     lvi.SubItems.Add("已登录");
                     this.lvwWeiboAccountList.Items.Add(lvi);
@@ -790,14 +797,41 @@ namespace Weibo
 
                     var loginData = WeiboHandler.Login(preData, username, password, code);
                     weibocc = WeiboHandler.InitWeiboCookie(username, loginData.cookies);
+                    CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
+                    CookieCollection newccl = ccl;
+                    for (int i = 0; i < newccl.Count; i++)
+                    {
+                        newccl[i].Domain = "sina.com.cn";
+                    }
+                    CookieContainer newcc = new CookieContainer();
+                    weibocc.Add(new Uri("http://sina.com.cn"), newccl);
+
+
+                    string ssourl1 = "http://login.sina.com.cn/sso/login.php?url=http%3A%2F%2Fm.weibo.cn%2F&_rand=" + HttpHelper1.GetTicks() + ".3493&gateway=1&service=sinawap&entry=sinawap&useticket=1&returntype=META&sudaref=&_client_version=0.6.23";
+                    string ssoresult1 = HttpHelper1.SendDataByGET(ssourl1, ref weibocc);
+                    string ssourl2 = "";
+                    HttpHelper1.GetStringInTwoKeyword(ssoresult1, ref ssourl2, "arrURL\":[\"", "\"]", 0);
+                    ssourl2 = ssourl2.Replace(@"\/", "/");
+                    ssourl2 = ssourl2 + "&callback=sinaSSOController.doCrossDomainCallBack&scriptId=ssoscript0&client=ssologin.js(v1.4.19)&_=" + HttpHelper1.GetTicks();
+                    string ssoresult2 = HttpHelper1.SendDataByGET(ssourl2, ref weibocc);
+
+                    ccl = weibocc.GetCookies(new Uri("http://sina.com.cn"));
+                    newccl = ccl;
+                    for (int i = 0; i < newccl.Count; i++)
+                    {
+                        newccl[i].Domain = "weibo.cn";
+                    }
+                    newcc = new CookieContainer();
+                    weibocc.Add(new Uri("http://weibo.cn"), newccl);
                     string strresult = "";
+
                     bool isLogin = WeiboHandler.TestLogin(weibocc, ref strresult);
                     if (isLogin)
                     {
                         //登录成功保存Cookie
                         string userid = "";
                         HttpHelper1.GetStringInTwoKeyword(strresult, ref userid, "$CONFIG['uid']='", "';", 0);
-                        File.AppendAllText("weibocookie/" + username + ".txt", loginData.cookies);
+                        File.AppendAllText("weibocookie/" + username + ".txt", PostHelper.GetAllCookies(weibocc));
                         AppenWeiboCmd("账号 " + username + "登录成功！记录Cookie！！！");
                         DEWeiboAccount deweiboaccount = new DEWeiboAccount();
                         deweiboaccount.Username = username;
@@ -823,6 +857,16 @@ namespace Weibo
                     rownum++;
                 }
             }
+            if (DEWeiboAccounts.Count > 3)
+            {
+                ArrayList arry = new ArrayList();
+                foreach (DEWeiboAccount deweiboaccount in DEWeiboAccounts)
+                {
+                    if (deweiboaccount.Nickname != "时尚潮男衣橱")
+                        arry.Add(deweiboaccount);
+                }
+                DEWeiboAccounts = arry;
+            }
         }
 
         private void btn_StopAlimama_Click(object sender, EventArgs e)
@@ -831,6 +875,12 @@ namespace Weibo
             if (alimamaThread != null && alimamaThread.IsAlive)
             {
                 alimamaThread.Abort();
+                //SetStartAlimamaBtnStatus(false);
+                AppenAlimamaCmd("用户停止抓取任务...");
+            }
+            if (alimamaColThread != null && alimamaColThread.IsAlive)
+            {
+                alimamaColThread.Abort();
                 //SetStartAlimamaBtnStatus(false);
                 AppenAlimamaCmd("用户停止读取选品库任务...");
             }
@@ -897,7 +947,7 @@ namespace Weibo
                         {
                             #region 目标微博处理
                             string url = urltemp + i.ToString();
-                            MblogData mbloglist = WeiboHandler.GetMblogsWithUrl(url, weibocc);
+                            MblogData mbloglist = WeiboHandler.GetMblogsWithUrl(url, ref weibocc);
 
                             foreach (Card card in mbloglist.Cards)
                             {
@@ -911,6 +961,7 @@ namespace Weibo
                                 string own_tbklinks = "";
                                 string couponlinks = "含优惠券：";
                                 bool isCoupon = false;
+                                string titles = "";
                                 #endregion
                                 int isHave = Convert.ToInt32(SQLiteHelper.ExecuteScalar("select count(*) from mblog where id=" + mid));
                                 if (isHave > 0)
@@ -929,29 +980,19 @@ namespace Weibo
                                     string tbklinks_html = "";
                                     if (comment.Data.Html.Contains("P1："))
                                         HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "P1：", "<!-- 评论图片的处理 -->", 0);
-                                    else if (comment.Data.Html.Contains("P1："))
+                                    else if (comment.Data.Html.Contains("图1："))
                                         HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "图1：", "<!-- 评论图片的处理 -->", 0);
                                     Hashtable tbklinks = new Hashtable();
                                     Regex reg = new Regex(@"[a-zA-z]+://[^\s]*");
                                     MatchCollection mc = reg.Matches(tbklinks_html);
-                                    //创建选品文件夹
-                                    try
-                                    {
-                                        if (!Directory.Exists("temp/"))
-                                            Directory.CreateDirectory("temp");
-                                        if (!Directory.Exists("temp/" + dirname + "/"))
-                                            Directory.CreateDirectory("temp/" + dirname + "/");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        dirname = mblog.Id;
-                                        if (!Directory.Exists("temp/" + dirname + "/"))
-                                            Directory.CreateDirectory("temp/" + dirname + "/");
 
-                                        //throw;
-                                    }
                                     int linknum = 1;
                                     ArrayList templinkpool = new ArrayList();
+                                    ArrayList tempFirstImg = new ArrayList();
+                                    Hashtable prices = new Hashtable();
+                                    string brand = "";
+                                    Hashtable quan = new Hashtable();
+                                    ArrayList itemids = new ArrayList();
                                     foreach (Match m in mc)
                                     {
                                         if (templinkpool.Contains(m.Value)) continue;
@@ -963,7 +1004,45 @@ namespace Weibo
                                         links = links + weiboshortlink + ",";
 
                                         string tbrealitem = "";
+
                                         string result = Alimama.GetItemResultWithWeiboShortUrl(weiboshortlink, alimamacc, ref tbrealitem);
+                                        string firstimgurl = "";
+                                        if (brand == "")
+                                        {
+                                            if (result.Contains("-淘宝网"))
+                                            {
+                                                HttpHelper1.GetStringInTwoKeyword(result, ref brand, "shopName         : '", "',", 0);
+                                                brand = Regex.Unescape(brand);
+
+
+                                            }
+                                            else if (result.Contains("-tmall.com天猫"))
+                                            {
+                                                HttpHelper1.GetStringInTwoKeyword(result, ref brand, "<strong>", "</strong></a>", 0);
+                                                brand = Regex.Unescape(brand);
+
+                                            }
+                                        }
+                                        if (result.Contains("-淘宝网"))
+                                        {
+
+                                            HttpHelper1.GetStringInTwoKeyword(result, ref firstimgurl, "auctionImages    : [\"", "\"", 0);
+                                        }
+                                        else if (result.Contains("-tmall.com天猫"))
+                                        {
+                                            HttpHelper1.GetStringInTwoKeyword(result, ref firstimgurl, "<img id=\"J_ImgBooth\" alt=", "data-hasZoom", 0);
+                                            HttpHelper1.GetStringInTwoKeyword(firstimgurl, ref firstimgurl, "src=\"", "\"", 0);
+                                            //firstimgurl = "http:" + firstimgurl;
+                                            firstimgurl = firstimgurl.Replace("430x430", "800x800");
+                                        }
+                                        if (!tempFirstImg.Contains(firstimgurl) && !comment.Data.Html.Contains("【"))
+                                            tempFirstImg.Add("http:" + firstimgurl);
+                                        //string title = "";
+                                        //HttpHelper1.GetStringInTwoKeyword(result, ref title, "<title>", "</title>", 0);
+                                        //title = title.Replace("-淘宝网", "");
+                                        //title = title.Replace("-tmall.com天猫", "");
+                                        //title = Microsoft.JScript.GlobalObject.unescape(title);
+                                        //titles += title + " ";
 
                                         if (tbrealitem.Contains("http://ai.taobao.com"))
                                         {
@@ -978,8 +1057,9 @@ namespace Weibo
                                         }
                                         if (alimamacc == null)
                                             alimamacc = Alimama.GetCookieContainer();
-
+                                        //if (!Alimama.TestLogin(alimamacc)) alimamacc = Alimama.Login();
                                         DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
+                                        /**
                                         string own_tbklink = Alimama.GetTbkLink(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);//把淘宝客链接更换为自己链接       
                                         if (own_tbklink == "" || own_tbklink == "链接不支持转化")
                                         {
@@ -1003,110 +1083,264 @@ namespace Weibo
                                                 AppenAlimamaCmd("阿里妈妈重新登录失败，停止抓取！");
                                                 return;
                                             }
+                                            //own_tbklink = Alimama.GetTbkLink(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);//把淘宝客链接更换为自己链接       
 
                                         }
+                                        **/
                                         //string bdshorturl = HttpHelper1.GetBdShortUrl(own_tbklink);
                                         //bdshorturl = bdshorturl.Replace("\\", "");//包装一层百度短网址，防屏蔽  1.16 加一层跳转之后，会被微博反垃圾提示危险网址
 
-                                        string weiboShortlink = WeiboHandler.GetWeiboShorturl(own_tbklink);//微博短地址
+                                        string weiboShortlink = "";// WeiboHandler.GetWeiboShorturl(own_tbklink);//微博短地址
 
 
                                         double maxRate = 0;
                                         string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
-                                        bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc, ref maxRate);//申请定向计划
-                                                                                                                             //if (maxRate == 0)
-                                                                                                                             //{
-                                                                                                                             //    string temprate = "";
-                                                                                                                             //    HttpHelper1.GetStringInTwoKeyword(searchresult,ref temprate, "tkRate\":",",",0);
-                                                                                                                             //    maxRate = Convert.ToDouble(temprate);
-                                                                                                                             //}
-                                                                                                                             //if (maxRate < 10)
-                                                                                                                             //{
-                                                                                                                             //    AppenAlimamaCmd("提成过低，舍弃！");
-                                                                                                                             //    goto FinishMblog;//如果提成小于15%，放弃该条微博，开始处理下一条
-                                                                                                                             //}
+                                        if (searchresult.Contains("参数错误") || searchresult.Contains("NORESULT"))
+                                        {
+                                            AppenAlimamaCmd("未找到淘客链接！");
+                                            int staresult = SQLiteHelper.ExecuteNonQuery("insert into mblog(id,Source,Text,CreateAt,TbkLinks)values(@id,@Source,@Text,@CreateAt,@TbkLinks)", new[] {
+                                                    mblog.Id,
+                                                    mblog.Source,
+                                                    mblog.Text,
+                                                    mblog.CreatedAt,
+                                                    own_tbklinks
+                                                 });
+                                            break;//没有淘宝客链接，当前内容不可用，直接退出循环
+                                        }
+                                        else if (searchresult.Contains("访问受限"))
+                                        {
+                                            AppenAlimamaCmd("访问受限，暂停2分钟");
 
-                                        //获取优惠券信息
-                                        if (!searchresult.Contains("couponInfo\":\"无"))
-                                        {
-                                            string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc);
-                                            string couponweiboShortlink = WeiboHandler.GetWeiboShorturl(couponshorturl);//微博短地址
-                                            couponlinks += "图" + j.ToString() + ":" + couponweiboShortlink + " ";
-                                            if (couponweiboShortlink != "")
-                                                own_tbklinks += "【P" + j.ToString() + "：" + couponweiboShortlink + "】 ";
-                                            else
-                                                own_tbklinks += "【P" + j.ToString() + "：" + weiboShortlink + "】 ";
-                                            isCoupon = true;
+                                            Thread.Sleep(2 * 60 * 1000);
+                                            searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
                                         }
-                                        else
-                                        {
-                                            own_tbklinks += "【P" + j.ToString() + "：" + weiboShortlink + "】 ";
-                                        }
+                                        string price = "";
+
+                                        HttpHelper1.GetStringInTwoKeyword(searchresult, ref price, "zkPrice\":", ",\"", 0);
+                                        prices.Add(j.ToString(), price);
+                                        bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, ref alimamacc, ref maxRate);//申请定向计划
+                                                                                                                                 //在申请定向计划过程中，检查登录情况
+                                                                                                                                 //if (maxRate == 0)
+                                                                                                                                 //{
+                                                                                                                                 //    string temprate = "";
+                                                                                                                                 //    HttpHelper1.GetStringInTwoKeyword(searchresult,ref temprate, "tkRate\":",",",0);
+                                                                                                                                 //    maxRate = Convert.ToDouble(temprate);
+                                                                                                                                 //}
+                                                                                                                                 //if (maxRate < 10)
+                                                                                                                                 //{
+                                                                                                                                 //    AppenAlimamaCmd("提成过低，舍弃！");
+                                                                                                                                 //    goto FinishMblog;//如果提成小于15%，放弃该条微博，开始处理下一条
+                                                                                                                                 //}
+                                                                                                                                 //string tbkshortlink = Alimama.GetTbkLink(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);//把淘宝客链接更换为自己链接       
+                                                                                                                                 //获取优惠券信息
+                                                                                                                                 //if(false)//5.25更新Tim：先放弃优惠券，
+                                                                                                                                 ////if (!searchresult.Contains("couponInfo\":\"无"))//如果有优惠券，组织链接
+                                                                                                                                 //{
+                                                                                                                                 //   //tbkshortlink = "";
+                                                                                                                                 //    string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc, ref tbkshortlink);
+
+                                        //    string couponweiboShortlink = WeiboHandler.GetWeiboShorturl(couponshorturl);//微博短地址
+                                        //    couponlinks += "图" + j.ToString() + ":" + couponweiboShortlink + " ";
+                                        //    if (couponweiboShortlink != "")
+                                        //    {
+                                        //        own_tbklinks += "【图" + j.ToString() + "：" + couponweiboShortlink + "】 ";
+                                        //        string couponamount = "";
+                                        //        HttpHelper1.GetStringInTwoKeyword(searchresult, ref couponamount, "couponAmount\":", ",\"", 0);
+                                        //        quan.Add(j.ToString(), couponamount);
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        weiboShortlink = WeiboHandler.GetWeiboShorturl(tbkshortlink);//微博短地址
+                                        //        own_tbklinks += "【图" + j.ToString() + "：" + weiboShortlink + "】 ";
+                                        //    }
+
+                                        //    isCoupon = true;
+                                        //}
+                                        //else//如果没有优惠券，组织链接
+                                        //{
+                                        //tbkshortlink = "";
+
+                                        //Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc, ref tbkshortlink);//通过搜索拿推广链接
+                                        //string pid = "mm_122033678_21722872_72686368";
+                                        //string otherpid = "";
+                                        //HttpHelper1.GetStringInTwoKeyword(tbrealitem, ref otherpid, "ali_trackid=2:", ":", 0);
+                                        //string tbkshortlink = tbrealitem.Replace(otherpid, pid);
+                                        //tbkshortlink = Alimama.GetTbkShortUrl(tbkshortlink);
+
+                                        //05.30 最新解决方案，先加入选品库，再抓取选品库
+                                        string id = "";
+                                        HttpHelper1.GetStringInTwoKeyword(tbrealitem, ref id, "id=", "&", 0);
+                                        itemids.Add(id);
+                                        //weiboShortlink = WeiboHandler.GetWeiboShorturl(tbkshortlink);//微博短地址
+                                        //own_tbklinks += "【图" + j.ToString() + "：" + weiboShortlink + "】 ";
+                                        //}
 
                                         j++;
-
+                                        //AppenAlimamaCmd("休息5秒！");
+                                        //Thread.Sleep(5 * 1000);
                                     }//单个链接处理完成
-                                    if (j == 10)//只有九图才添加comment.txt
+                                    if (j < 10) continue;
+                                    //创建选品文件夹
+                                    try
                                     {
-                                        //直接下载微博配图，截掉水印
-                                        int picnum = 1;
-                                        foreach (Pic pic in mblog.Pics)
+                                        if (!Directory.Exists("temp/"))
+                                            Directory.CreateDirectory("temp");
+                                        dirname = HttpHelper1.NoHTML(dirname);
+                                        dirname = dirname.Replace("吼我", "留言");
+                                        if (dirname.Contains("先赞") && brand != "")
                                         {
-                                            AppenAlimamaCmd("下载图" + picnum.ToString());
-                                            string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + ".jpg";
-                                            string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + ".jpg";
-                                            HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpgtemp", alimamacc);
-                                            Image img = Image.FromFile(savepicurl + "temp");
-
-                                            //截取水印
-                                            Bitmap bitmap = new Bitmap(img);
-                                            bitmap = ImageHelper.Cut(bitmap, 0, 0, img.Width, img.Height - 20);
-                                            bitmap.Save(savepicurl);
-                                            bitmap.Dispose();
-                                            img.Dispose();
-                                            File.Delete(savepicurl + "temp");
-                                            picnum++;
+                                            if (brand.Length >= 4)
+                                                dirname = brand.Substring(0, 4);
+                                            else
+                                                dirname = "【" + brand + "】" + dirname;
                                         }
-                                        File.WriteAllText("temp/" + dirname + "/comment.txt", own_tbklinks);
-                                        //if (isCoupon)
-                                        //    File.WriteAllText("temp/" + dirname + "/coupon.txt", couponlinks);
-                                        File.WriteAllText("temp/" + dirname + "/id.txt", mblog.Id);
-                                        AppenAlimamaCmd("抓取成功，微博正文：" + mblog.Text + ";ID：" + mblog.Id);
-                                        try
-                                        {
-                                            //如果文件夹重名，先删除老的文件夹
-                                            if (Directory.Exists("待发布/" + dirname))
-                                                Directory.Delete("待发布/" + dirname, true);
-                                            Directory.Move("temp/" + dirname, "待发布/" + dirname);//下載完成放入待发布库
-                                        }
-                                        catch (Exception)
-                                        {
+                                        //if (!Directory.Exists("temp/" + dirname + "/"))
+                                        //    Directory.CreateDirectory("temp/" + dirname + "/");
 
-                                        }
-
+                                        string groupid = Alimama.CreatXuanpinku(dirname, ref alimamacc);
+                                        Alimama.AddItemToXuanpinku(groupid, itemids, ref alimamacc);
+                                        AppenAlimamaCmd("休息5秒！");
+                                        Thread.Sleep(5 * 1000);
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        dirname = mblog.Id;
+                                        if (!Directory.Exists("temp/" + dirname + "/"))
+                                            Directory.CreateDirectory("temp/" + dirname + "/");
+
+                                        //throw;
+                                    }
+
+                                    //if (j == 10)//只有九图才添加comment.txt
+                                    //{
+                                    //    if (tempFirstImg.Count == 0)
+                                    //    {
+                                    //        #region 直接下载微博配图，截掉水印
+                                    //        int picnum = 1;
+                                    //        foreach (Pic pic in mblog.Pics)
+                                    //        {
+                                    //            AppenAlimamaCmd("下载图" + picnum.ToString());
+                                    //            string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + ".jpg";
+                                    //            string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + ".jpg";
+                                    //            HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpgtemp", alimamacc);
+                                    //            Image img = Image.FromFile(savepicurl + "temp");
+
+                                    //            //截取水印
+                                    //            Bitmap bitmap = new Bitmap(img);
+                                    //            bitmap = ImageHelper.Cut(bitmap, 0, 0, img.Width, img.Height - 20);
+                                    //            if (quan.ContainsKey(picnum))
+                                    //            {
+                                    //                //加水印
+                                    //                string couponamount = quan[picnum.ToString()].ToString();
+                                    //                if (couponamount != "")
+                                    //                {
+                                    //                    Image wateredImg = ImageHelper.WaterMark(bitmap, "有券￥" + couponamount + "|链接戳评论", new Font("微软雅黑", 8), Brushes.Orange, Brushes.White);
+                                    //                    wateredImg.Save(savepicurl);
+                                    //                }
+                                    //                else
+                                    //                {
+                                    //                    Image wateredImg = ImageHelper.WaterMark(bitmap, "链接戳评论", new Font("微软雅黑", 8), Brushes.Orange, Brushes.White);
+                                    //                    wateredImg.Save(savepicurl);
+                                    //                }
+                                    //            }
+
+
+                                    //            bitmap.Save(savepicurl);
+                                    //            bitmap.Dispose();
+                                    //            img.Dispose();
+                                    //            File.Delete(savepicurl + "temp");
+                                    //            picnum++;
+
+                                    //        }
+                                    //        #endregion
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        #region 下载淘宝商品第一张图片
+                                    //        int picnum = 1;
+                                    //        foreach (string picurl in tempFirstImg)
+                                    //        {
+                                    //            AppenAlimamaCmd("下载图" + picnum.ToString());
+                                    //            string savepicurl = "temp/" + dirname + "/" + picnum.ToString() + ".jpg";
+
+                                    //            HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpgtemp", alimamacc);
+                                    //            Image img = Image.FromFile(savepicurl + "temp");
+
+                                    //            //截取水印
+                                    //            Bitmap bitmap = new Bitmap(img);
+                                    //            if (quan.ContainsKey(picnum.ToString()))
+                                    //            {
+                                    //                //加水印
+                                    //                string couponamount = quan[picnum.ToString()].ToString();
+                                    //                if (couponamount != "")
+                                    //                {
+                                    //                    Image wateredImg = ImageHelper.WaterMark(bitmap, "领￥" + couponamount + "元券|链接戳评论", new Font("微软雅黑", 16), Brushes.Orange, Brushes.White);
+                                    //                    bitmap = new Bitmap(wateredImg);
+                                    //                }
+                                    //                else
+                                    //                {
+                                    //                    Image wateredImg = ImageHelper.WaterMark(bitmap, "链接戳评论", new Font("微软雅黑", 16), Brushes.Orange, Brushes.White);
+                                    //                    bitmap = new Bitmap(wateredImg);
+                                    //                }
+                                    //            }
+                                    //            bitmap.Save(savepicurl);
+                                    //            bitmap.Dispose();
+                                    //            img.Dispose();
+                                    //            File.Delete(savepicurl + "temp");
+                                    //            picnum++;
+
+                                    //        }
+                                    //        #endregion
+                                    //    }
+
+                                    //    File.WriteAllText("temp/" + dirname + "/comment.txt", own_tbklinks);
+                                    //    //if (isCoupon)
+                                    //    //couponlinks = "更多内部优惠券，添加券叔VX：woshiquanshu  （我是券叔全拼）";
+                                    //    couponlinks = "【综合优惠卷：http://t.cn/RabZRYt】  进微信群享券叔专属服务，先添加券叔VX：woshiquanshu  （我是券叔全拼）";
+                                    //    File.WriteAllText("temp/" + dirname + "/coupon.txt", couponlinks);
+                                    //    File.WriteAllText("temp/" + dirname + "/id.txt", mblog.Id);
+                                    //    AppenAlimamaCmd("抓取成功，微博正文：" + mblog.Text + ";ID：" + mblog.Id);
+                                    //    try
+                                    //    {
+                                    //        //如果文件夹重名，先删除老的文件夹
+                                    //        if (Directory.Exists("待发布/" + dirname))
+                                    //            Directory.Delete("待发布/" + dirname, true);
+                                    //        Directory.Move("temp/" + dirname, "待发布/" + dirname);//下載完成放入待发布库
+                                    //    }
+                                    //    catch (Exception)
+                                    //    {
+
+                                    //    }
+
+                                    //}
 
 
                                 }
                                 #endregion
-                                #region 优惠券淘宝客处理 舍棄
+                                #region 优惠券淘宝客处理 
                                 if (comment.Data.Html.Contains("领："))
                                 {
                                     //评论包含淘宝客链接
                                     #region 处理单个链接
                                     AppenAlimamaCmd("抓取博文：" + dirname);
                                     string tbklinks_html = "";
+                                    string coupinlinks_html = "";
                                     if (alimamacc == null)
                                         alimamacc = Alimama.GetCookieContainer();
-                                    if (!Alimama.TestLogin(alimamacc)) alimamacc = Alimama.Login();
+                                    //if (!Alimama.TestLogin(alimamacc)) alimamacc = Alimama.Login();
                                     HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "拍：", "<!-- 评论图片的处理 -->", 0);
+                                    HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref coupinlinks_html, "领：", "拍：", 0);
                                     Hashtable tbklinks = new Hashtable();
                                     Regex reg = new Regex(@"[a-zA-z]+://[^\s]*");
                                     MatchCollection mc = reg.Matches(tbklinks_html);
 
-                                    Match m = mc[0];
+                                    Match tbklink_m = mc[0];
 
-                                    string weiboshortlink = m.Value.Replace("\"", "");
+                                    MatchCollection mc1 = reg.Matches(coupinlinks_html);
+                                    Match couponlink_m = mc1[0];
+
+
+                                    string weiboshortlink = tbklink_m.Value.Replace("\"", "");
                                     if (!weiboshortlink.StartsWith("http://t.cn")) continue;
                                     //if (time == 1)
                                     //{
@@ -1121,23 +1355,38 @@ namespace Weibo
                                     string result = Alimama.GetItemResultWithWeiboShortUrl(weiboshortlink, alimamacc, ref tbrealitem);
 
 
+                                    string couponurl = couponlink_m.Value.Replace("\"", "");
+                                    //result = Alimama.GetItemResultWithWeiboShortUrl(couponlink_m.Value.Replace("\"", ""), alimamacc, ref coupontbrealitem);
+                                    string coupontbrealitem = HttpHelper1.GetRedirectUrl(couponurl);
+                                    coupontbrealitem = coupontbrealitem + " ";
 
+                                    string activityId = "";
+                                    HttpHelper1.GetStringInTwoKeyword(coupontbrealitem, ref activityId, "activityId=", " ", 0);
+                                    string itemid = "";
+                                    HttpHelper1.GetStringInTwoKeyword(tbrealitem, ref itemid, "id=", "&ali", 0);
 
+                                    string couponshorturl = "https://uland.taobao.com/coupon/edetail?activityId=" + activityId + "&pid=mm_10852338_20116380_70602305&itemId=" + itemid + "&src=fklm_cjtk&dx=1";
                                     double maxRate = 0;
                                     string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
-                                    bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc, ref maxRate);//申请定向计划
+                                    bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, ref alimamacc, ref maxRate);//申请定向计划
+                                    //在申请定向计划过程中，检查登录情况
+
+                                    string tbkshortlink = "";
+                                    couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc, ref tbkshortlink);
+
 
 
                                     //获取优惠券信息
-                                    if (searchresult.Contains("couponInfo\":\"无") || !searchresult.Contains("couponInfo"))
-                                    {
-                                        AppenAlimamaCmd("未包含优惠券信息，跳过");
-                                        goto FinishMblog;
-                                    }
-                                    string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc);
+                                    //if (searchresult.Contains("couponInfo\":\"无") || !searchresult.Contains("couponInfo"))
+                                    //{
+                                    //    AppenAlimamaCmd("未包含优惠券信息，跳过");
+                                    //    goto FinishMblog;
+                                    //}
+                                    //string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc);
                                     string couponweiboShortlink = WeiboHandler.GetWeiboShorturl(couponshorturl);//微博短地址
                                     if (couponweiboShortlink == "") goto FinishMblog;
-                                    own_tbklinks += "【领券拍：" + couponweiboShortlink + "】                                         【粉丝专享优惠券合集：https://s.click.taobao.com/Gm9PZ3x】";
+                                    //own_tbklinks += "【领券拍：" + couponweiboShortlink + "】                                         【粉丝专享优惠券合集：https://s.click.taobao.com/Gm9PZ3x】";
+                                    own_tbklinks += "【领券拍：" + couponweiboShortlink + "】                                         【找更多优惠券请加券叔VX：woshiquanshu】";
 
                                     //DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
                                     //string weiboShortlink = GetWeiboShortUrlByTbItem(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);
@@ -1150,8 +1399,14 @@ namespace Weibo
                                     //创建选品文件夹
                                     try
                                     {
+                                        if (!Directory.Exists("temp/"))
+                                            Directory.CreateDirectory("temp");
+                                        dirname = HttpHelper1.NoHTML(dirname);
+                                        dirname = dirname.Replace("吼我", "留言");
+                                        //dirname += "  找更多优惠券请加扣扣群：227678538";
                                         if (!Directory.Exists("temp/" + dirname + "/"))
                                             Directory.CreateDirectory("temp/" + dirname + "/");
+
                                     }
                                     catch (Exception ex)
                                     {
@@ -1172,6 +1427,111 @@ namespace Weibo
 
                                     #endregion
                                     File.WriteAllText("temp/" + dirname + "/comment.txt", own_tbklinks);
+                                    File.WriteAllText("temp/" + dirname + "/id.txt", mblog.Id);
+                                    Directory.Move("temp/" + dirname, "待发布/" + dirname);
+                                    AppenAlimamaCmd("抓取成功，微博正文：" + mblog.Text + ";ID：" + mblog.Id);
+                                }//单个链接处理完成
+                                #endregion
+                                #region 优惠券淘宝客处理
+                                if (comment.Data.Html.Contains("领券后"))
+                                {
+                                    //评论包含淘宝客链接
+                                    #region 处理单个链接
+                                    AppenAlimamaCmd("抓取博文：" + dirname);
+                                    string tbklinks_html = "";
+
+                                    if (alimamacc == null)
+                                        alimamacc = Alimama.GetCookieContainer();
+                                    //if (!Alimama.TestLogin(alimamacc)) alimamacc = Alimama.Login();
+                                    HttpHelper1.GetStringInTwoKeyword(comment.Data.Html, ref tbklinks_html, "拍：", "<!-- 评论图片的处理 -->", 0);
+
+                                    Hashtable tbklinks = new Hashtable();
+                                    Regex reg = new Regex(@"[a-zA-z]+://[^\s]*");
+                                    MatchCollection mc = reg.Matches(tbklinks_html);
+
+                                    Match tbklink_m = mc[0];
+
+
+
+                                    string weiboshortlink = tbklink_m.Value.Replace("\"", "");
+                                    if (!weiboshortlink.StartsWith("http://t.cn")) continue;
+
+
+                                    string tbrealitem = "";
+                                    string result = Alimama.GetItemResultWithWeiboShortUrl(weiboshortlink, alimamacc, ref tbrealitem);
+
+                                    string couponshorturl = result.Replace("mm_121273017_21804091_72826039", "mm_10852338_20116380_70602305");
+
+                                    string coupondetailurl = result.Replace("https://uland.taobao.com/coupon/edetail", "https://uland.taobao.com/cp/coupon");
+                                    string result1 = HttpHelper1.SendDataByGET(coupondetailurl, ref alimamacc);
+                                    string clickurl = "";
+                                    HttpHelper1.GetStringInTwoKeyword(result1, ref clickurl, "clickUrl\":\"", "\"", 0);
+                                    clickurl = "http:" + clickurl;
+                                    result = Alimama.GetItemResultWithWeiboShortUrl(clickurl, alimamacc, ref tbrealitem);
+
+
+                                    double maxRate = 0;
+                                    string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
+                                    bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, ref alimamacc, ref maxRate);//申请定向计划
+                                    //在申请定向计划过程中，检查登录情况
+
+                                    //string tbkshortlink = "";
+                                    //couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc, ref tbkshortlink);
+
+
+
+                                    //获取优惠券信息
+                                    //if (searchresult.Contains("couponInfo\":\"无") || !searchresult.Contains("couponInfo"))
+                                    //{
+                                    //    AppenAlimamaCmd("未包含优惠券信息，跳过");
+                                    //    goto FinishMblog;
+                                    //}
+                                    //string couponshorturl = Alimama.GetCouponInfo(searchresult, tbrealitem, alimamacc);
+                                    string couponweiboShortlink = WeiboHandler.GetWeiboShorturl(couponshorturl);//微博短地址
+                                    if (couponweiboShortlink == "") goto FinishMblog;
+                                    //own_tbklinks += "【领券拍：" + couponweiboShortlink + "】                                         【粉丝专享优惠券合集：https://s.click.taobao.com/Gm9PZ3x】";
+                                    own_tbklinks += "【领券拍：" + couponweiboShortlink + "】                                         【找更多优惠券请加券叔VX：woshiquanshu】";
+
+                                    //DEWeiboAccount deweiboaccount = WeiboHandler.GetOneAccount();
+                                    //string weiboShortlink = GetWeiboShortUrlByTbItem(tbrealitem, deweiboaccount.Siteid, deweiboaccount.Adzoneid, alimamacc);
+                                    //if (weiboshortlink == "")
+                                    //{
+                                    //    continue;
+                                    //}
+                                    //own_tbklinks += "购买：" + weiboShortlink + "";
+
+                                    //创建选品文件夹
+                                    try
+                                    {
+                                        if (!Directory.Exists("temp/"))
+                                            Directory.CreateDirectory("temp");
+                                        dirname = HttpHelper1.NoHTML(dirname);
+                                        dirname = dirname.Replace("吼我", "留言");
+                                        //dirname += "  找更多优惠券请加扣扣群：227678538";
+                                        if (!Directory.Exists("temp/" + dirname + "/"))
+                                            Directory.CreateDirectory("temp/" + dirname + "/");
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        dirname = mblog.Id;
+                                        if (!Directory.Exists("temp/" + dirname + "/"))
+                                            Directory.CreateDirectory("temp/" + dirname + "/");
+                                        //throw;
+                                    }
+                                    //下载微博图片
+                                    int picnum = 1;
+                                    foreach (Pic pic in mblog.Pics)
+                                    {
+                                        string picurl = "http://wx2.sinaimg.cn/large/" + pic.Pid + ".jpg";
+                                        AppenAlimamaCmd("下载图" + picnum.ToString());
+                                        HttpHelper1.HttpDownloadFile(picurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpg", alimamacc);
+                                        picnum++;
+                                    }
+
+                                    #endregion
+                                    File.WriteAllText("temp/" + dirname + "/comment.txt", own_tbklinks);
+
                                     File.WriteAllText("temp/" + dirname + "/id.txt", mblog.Id);
                                     Directory.Move("temp/" + dirname, "待发布/" + dirname);
                                     AppenAlimamaCmd("抓取成功，微博正文：" + mblog.Text + ";ID：" + mblog.Id);
@@ -1463,7 +1823,7 @@ namespace Weibo
                 }
                 string[] shops = File.ReadAllLines("config/shop.txt");
                 AppenAlimamaCmd("开始抓取店铺热销单品作为选品库，此次共需处理" + shops.Length.ToString() + "个店铺");
-                int[] randomNums = GetRandomNum(shops.Length, 0, shops.Length);
+                int[] randomNums = FrmMain.GetRandomNum(shops.Length, 0, shops.Length);
                 foreach (int randomNum in randomNums)
                 {
                     try
@@ -1542,7 +1902,7 @@ namespace Weibo
                 string searchresult = Alimama.SearchItem(itemlink, alimamacc);
                 //申请定向计划
                 double maxRate = 0;
-                bool isSuc = Alimama.ApplyCampaign(searchresult, itemlink, alimamacc, ref maxRate);
+                bool isSuc = Alimama.ApplyCampaign(searchresult, itemlink, ref alimamacc, ref maxRate);
 
                 //获取优惠券信息
                 if (!searchresult.Contains("couponInfo\":\"无"))
@@ -1566,7 +1926,7 @@ namespace Weibo
         }
 
 
-        public int[] GetRandomNum(int Number, int minNum, int maxNum)
+        public static int[] GetRandomNum(int Number, int minNum, int maxNum)
         {
             int j;
             int[] b = new int[Number];
@@ -1739,7 +2099,7 @@ namespace Weibo
                                         //bdshorturl = bdshorturl.Replace("\\", "");//包装一层百度短网址，防屏蔽  1.16 加一层跳转之后，会被微博反垃圾提示危险网址
                                         double maxRate = 0;
                                         string searchresult = Alimama.SearchItem(tbrealitem, alimamacc);
-                                        bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, alimamacc, ref maxRate);//申请定向计划
+                                        bool isSuc = Alimama.ApplyCampaign(searchresult, tbrealitem, ref alimamacc, ref maxRate);//申请定向计划
 
                                         //获取优惠券信息
                                         if (!searchresult.Contains("couponInfo\":\"无"))
@@ -2031,8 +2391,8 @@ namespace Weibo
                     DirectoryInfo TheFolder = new DirectoryInfo("待发布");
                     while (TheFolder.GetDirectories().Length == 0)
                     {
-                        AppenWeiboCmd("没有找到发布素材，等待10分钟！");
-                        Thread.Sleep(10 * 60 * 1000);
+                        AppenWeiboCmd("没有找到发布素材，等待3分钟！");
+                        Thread.Sleep(3 * 60 * 1000);
                     }
                     DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
                     try
@@ -2183,12 +2543,12 @@ namespace Weibo
                 string ouid = "";
                 #endregion
                 DirectoryInfo TheFolder = new DirectoryInfo("待发布");
-                while (TheFolder.GetDirectories().Length == 0)
-                {
-                    AppenWeiboCmd("没有找到发布素材，等待10分钟！");
-                    Thread.Sleep(10 * 60 * 1000);
-                }
-                //DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
+                //while (TheFolder.GetDirectories().Length == 0)
+                //{
+                //    AppenWeiboCmd("没有找到发布素材，等待3分钟！");
+                //    Thread.Sleep(3 * 60 * 1000);
+                //}
+                ////DirectoryInfo nextFolder = TheFolder.GetDirectories()[0];//发布选品库第一条
                 DirectoryInfo nextFolder = new DirectoryInfo(nextFolderPath);
                 try
                 {
@@ -2226,13 +2586,13 @@ namespace Weibo
 
                     AppenWeiboCmd("共找到待发布素材 " + TheFolder.GetDirectories().Length.ToString() + "个");
                     //遍历文件夹，上传九图，组成图片ID参数
-                    while (TheFolder.GetDirectories().Length == 0)
-                    {
-                        AppenWeiboCmd("暂时没有待发布素材，等待10分钟");
-                        Thread.Sleep(10 * 60 * 1000);
+                    //while (TheFolder.GetDirectories().Length == 0)
+                    //{
+                    //    AppenWeiboCmd("暂时没有待发布素材，等待10分钟");
+                    //    Thread.Sleep(10 * 60 * 1000);
 
-                        TheFolder = new DirectoryInfo("待发布");
-                    }
+                    //    TheFolder = new DirectoryInfo("待发布");
+                    //}
 
 
                     string picids = "";
@@ -2414,6 +2774,237 @@ namespace Weibo
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btn_ColFromExl_Click(object sender, EventArgs e)
+        {
+            FrmReadExcel frmreadexcel = new FrmReadExcel();
+            frmreadexcel.ShowDialog();
+        }
+
+        private void btn_Coupon_Click(object sender, EventArgs e)
+        {
+            //抓取 quan.m.fqapps.com 内容
+            ArrayList parms = new ArrayList();
+            parms.Add("");
+            parms.Add(1);
+            alimamaThread = new Thread(new ParameterizedThreadStart(StartColCoupon));
+            alimamaThread.Start(parms);
+        }
+        public void StartColCoupon(object obj)
+        {
+            while (true)
+            {
+                CookieContainer cc = new CookieContainer();
+                SetStartAlimamaBtnStatus(true);
+
+                //string hulilogin_url = "http://sell.fqapps.com/login";
+                //string poststr = "phone=13581639092&password=tianmin200&authcode=";
+                //string refer = "http://sell.fqapps.com/login";
+                //string result = HttpHelper1.SendDataByPost(hulilogin_url, poststr,refer, ref cc);
+                int pagenum = Convert.ToInt32(this.nud_Pages.Value);
+                #region 抓取优惠券
+                for (int page = 1; page < pagenum + 1; page++)
+                {
+                    #region 初始化信息
+                    AppenAlimamaCmd("开始抓取第" + page.ToString() + "页优惠券内容");
+                    string[] urls = File.ReadAllLines(("config/colcoupon.txt"));
+                    #endregion
+                    foreach (string urltemp in urls)
+                    {
+                        string itemlist_url = urltemp.Replace("{page}", page.ToString());// "https://quanshu.m.fqapps.com/index/index/p/8/type/0/cat/1/sort/8";
+                        string itemresult = HttpHelper1.SendDataByGET(itemlist_url, ref cc);
+                        string itemlistdiv = "";
+                        HttpHelper1.GetStringInTwoKeyword(itemresult, ref itemlistdiv, "<!-- 全部商品列表开始 -->", "<!-- 全部商品列表结束 -->", 0);
+
+                        Regex reg = new Regex("data-id=\"[0-9]*\" data-p");
+                        MatchCollection mc = reg.Matches(itemlistdiv);
+                        foreach (Match m in mc)
+                        {
+                            try
+                            {
+                                AppenAlimamaCmd("处理链接");
+                                string tbkurl = "";
+                                string title = "";
+                                string taotoken = "";
+                                string picurl = "";
+                                string tuijianyu = "";
+                                string youhuiquan = "";
+                                string yuanjia = "";
+                                string quanhou = "";
+                                string commentstr = "领券拍：";
+                                string itemid = m.Value.Replace("data-id=\"", "").Replace("\" data-p", "");
+
+                                int isHave = Convert.ToInt32(SQLiteHelper.ExecuteScalar("select count(*) from mblog where id=" + itemid));
+                                if (isHave > 0)
+                                {
+
+                                    AppenAlimamaCmd("链接发布过，跳过");
+                                    AppenAlimamaCmd("————————");
+                                    continue;//如果数据已存在，则跳过
+                                }
+
+
+                                string itemdetailurl = "https://quanshu.m.fqapps.com/index/details/id/" + itemid;
+                                string itemdetailresult = HttpHelper1.SendDataByGET(itemdetailurl, ref cc);
+
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref tbkurl, "/openbrowser/index.html?link=", "\">", 0);
+                                tbkurl = HttpUtility.UrlDecode(tbkurl);
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref title, "var title = '", "';", 0);
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref taotoken, "<span id=\"copy_key_ios\">", "</span>", 0);
+
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref picurl, "imgUrl: \"", "\"", 0);
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref tuijianyu, "<div class=\"am-margin-top-xs\">", "</div>", 0);
+                                tuijianyu = tuijianyu.Trim();
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref youhuiquan, "【优惠券】 ", "元\\n【券后价】", 0);
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref yuanjia, "在售价：", "</del>", 0);
+                                HttpHelper1.GetStringInTwoKeyword(itemdetailresult, ref quanhou, "【券后价】 ", "元\\n';", 0);
+
+                                string weiboshorturl = WeiboHandler.GetWeiboShorturl(tbkurl);
+
+                                string dirname = "【￥" + quanhou + "】" + title + "%0A" + "【推荐理由】" + tuijianyu;
+                                if (!Directory.Exists("temp/" + dirname + "/"))
+                                    Directory.CreateDirectory("temp/" + dirname + "/");
+
+                                #region 下载图片
+                                string coupondetailurl = tbkurl.Replace("https://uland.taobao.com/coupon/edetail", "https://uland.taobao.com/cp/coupon");
+                                string result1 = HttpHelper1.SendDataByGET(coupondetailurl, ref cc);
+                                string clickurl = "";
+                                HttpHelper1.GetStringInTwoKeyword(result1, ref clickurl, "clickUrl\":\"", "\"", 0);
+                                clickurl = "http:" + clickurl;
+                                string tbrealitem = "";
+                                string tempresult = Alimama.GetItemResultWithWeiboShortUrl(clickurl, alimamacc, ref tbrealitem);
+                                string firstimgurl = "";
+                                if (tempresult.Contains("-淘宝网"))
+                                {
+
+                                    HttpHelper1.GetStringInTwoKeyword(tempresult, ref firstimgurl, "auctionImages    : [\"", "\"]", 0);
+                                    firstimgurl = firstimgurl.Replace("\"", "");
+                                    string[] picurls = firstimgurl.Split(',');
+                                    //string savepicurl = "temp/" + dirname + "/1.jpg";
+                                    //HttpHelper1.HttpDownloadFile(firstimgurl, "temp/" + dirname + "/1.jpg", cc);
+                                    int picnum = 1;
+
+                                    foreach (string imgurl in picurls)
+                                    {
+                                        AppenAlimamaCmd("下载图片" + picnum.ToString());
+
+                                        string imgurl1 = "http:" + imgurl;
+                                        HttpHelper1.HttpDownloadFile(imgurl1, "temp/" + dirname + "/" + picnum.ToString() + ".jpg", cc);
+                                        picnum++;
+                                    }
+                                }
+                                else if (tempresult.Contains("-tmall.com天猫"))
+                                {
+                                    //AppenAlimamaCmd("下载图片1");
+                                    HttpHelper1.GetStringInTwoKeyword(tempresult, ref firstimgurl, "<img id=\"J_ImgBooth\" alt=", "data-hasZoom", 0);
+                                    HttpHelper1.GetStringInTwoKeyword(firstimgurl, ref firstimgurl, "src=\"", "\"", 0);
+                                    //firstimgurl = "http:" + firstimgurl;
+                                    //firstimgurl = "http:" + firstimgurl.Replace("430x430", "800x800");
+
+                                    //string savepicurl = "temp/" + dirname + "/1.jpg";
+                                    //HttpHelper1.HttpDownloadFile(firstimgurl, "temp/" + dirname + "/1.jpg", cc);
+                                    int picnum = 1;
+                                    Regex reg2 = new Regex("<img src=\"//img.alicdn.com/.*\" /></a>");
+                                    MatchCollection mc2 = reg2.Matches(tempresult);
+                                    foreach (Match m2 in mc2)
+                                    {
+                                        AppenAlimamaCmd("下载图片" + picnum.ToString());
+                                        string imgurl = m2.Value;
+                                        imgurl = "http:" + imgurl.Replace("60x60", "800x800").Replace("<img src=\"", "").Replace("\" /></a>", "");
+                                        HttpHelper1.HttpDownloadFile(imgurl, "temp/" + dirname + "/" + picnum.ToString() + ".jpg", cc);
+                                        picnum++;
+                                    }
+
+
+                                }
+                                //AppenAlimamaCmd("下载图片1");
+                                //string savepicurl = "temp/" + dirname + "/1.jpg";
+                                //HttpHelper1.HttpDownloadFile(picurl, savepicurl, cc);
+
+                                #endregion
+
+                                #region 添加评论
+                                commentstr += weiboshorturl;
+                                File.WriteAllText("temp/" + dirname + "/comment.txt", commentstr);
+                                #endregion
+
+                                //如果文件夹重名，先删除老的文件夹
+                                if (Directory.Exists("待发布/" + dirname))
+                                    Directory.Delete("待发布/" + dirname, true);
+                                Directory.Move("temp/" + dirname, "待发布/" + dirname);//下載完成放入待发布库
+
+                                int staresult = SQLiteHelper.ExecuteNonQuery("insert into mblog(id,Source,Text,CreateAt,TbkLinks)values(@id,@Source,@Text,@CreateAt,@TbkLinks)", new[] {
+                                                    itemid,
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    tbkurl
+                                                 });
+
+                                AppenAlimamaCmd("链接处理完成，等待5s");
+                                AppenAlimamaCmd("————————");
+                                Thread.Sleep(5 * 1000);
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                continue;
+                            }
+                        }
+                    }
+                }
+                #endregion
+                #region 抓取后处理
+                int alimamajiange = Convert.ToInt32(this.nud_alimamajiange.Value);
+                AppenAlimamaCmd("此次抓取完毕，等待" + alimamajiange.ToString() + "分钟");
+                Thread.Sleep(alimamajiange * 60 * 1000);
+                #endregion
+            }
+        }
+
+        private void btn_refresh_Click(object sender, EventArgs e)
+        {
+            this.webBrowser_alimama.Navigate(new Uri("https://login.taobao.com/member/login.jhtml?style=mini&newMini2=false&from=alimama&redirectURL=http%3A%2F%2Fwww.alimama.com"));
+        }
+
+        private void webBrowser_alimama_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            //HtmlDocument htmldoc = this.webBrowser_alimama.Document;
+            //HtmlElement element = htmldoc.GetElementById("J_SubmitQuick");
+            //HtmlElement div = htmldoc.GetElementById("J_QuickLogin");
+            //HtmlElement form = div.All[1];
+
+            //if (element == null) return;
+            //if (element.InnerText == "登 录")
+            //{
+            //    //获取Cookie
+            //    CookieContainer myCookieContainer = new CookieContainer();
+            //    string cookieStr = CookieReader.GetGlobalCookies(webBrowser_alimama.Document.Url.AbsoluteUri);
+            //    string domain = "alimama.com";
+
+            //    //string domian = "alimama.com";
+            //    //File.AppendAllText("cookie.txt", UserName + "\t" + cookieStr + "\r\n");//记录异常账号，下一次不再重复访问
+            //    if (File.Exists("config/alimamacookie.txt"))
+            //        File.Delete("config/alimamacookie.txt");
+            //    File.AppendAllText("config/alimamacookie.txt", cookieStr);//1.8 修改只记录阿里妈妈登陆cookie
+            //    CookieCollection ccl = CookieHelper.GetCookieCollectionByString(cookieStr, domain);
+            //    myCookieContainer.Add(ccl);
+            //    alimamacc = myCookieContainer;
+            //    bool b = Alimama.TestLogin(alimamacc);
+            //}
+            //form.InvokeMember("submit");
+        }
+
+        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void 清空ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.contextMenuStrip1.SourceControl.Text = "";
         }
     }
 }

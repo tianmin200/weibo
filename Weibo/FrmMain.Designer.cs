@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btn_ColFromExl = new System.Windows.Forms.Button();
             this.btn_LoginTest = new System.Windows.Forms.Button();
             this.btn_col = new System.Windows.Forms.Button();
             this.txtAlimamaCmd = new System.Windows.Forms.RichTextBox();
-            this.button2 = new System.Windows.Forms.Button();
             this.rbtn_Manual = new System.Windows.Forms.RadioButton();
             this.btn_StopAlimama = new System.Windows.Forms.Button();
             this.btn_StartAlimama = new System.Windows.Forms.Button();
@@ -48,10 +48,12 @@
             this.txt_SingelWeibo = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.btn_Coupon = new System.Windows.Forms.Button();
             this.btn_SearchShop = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.nud_alimamajiange = new System.Windows.Forms.NumericUpDown();
+            this.button2 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.btn_NanzhuangCol = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -64,19 +66,21 @@
             this.button1 = new System.Windows.Forms.Button();
             this.btnAddweibo = new System.Windows.Forms.Button();
             this.btnLogin_weibo = new System.Windows.Forms.Button();
-            this.btn_StartWeibo = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.cbox_IsmutiAccount = new System.Windows.Forms.CheckBox();
             this.btn_SignelWeibo = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.nud_yanchi = new System.Windows.Forms.NumericUpDown();
             this.btn_StopWeibo = new System.Windows.Forms.Button();
+            this.btn_StartWeibo = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btn_sendTuwen = new System.Windows.Forms.Button();
             this.nud_weiboJiange = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btn_refresh = new System.Windows.Forms.Button();
             this.webBrowser_alimama = new System.Windows.Forms.WebBrowser();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btn_ConfigLoginAlimama = new System.Windows.Forms.Button();
@@ -87,6 +91,8 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timer_KeepAlimamaAlive = new System.Windows.Forms.Timer(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.清空ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lvwWeiboAccountList = new LogAnalytics.SortableListView();
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -94,7 +100,6 @@
             this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cbox_IsmutiAccount = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -106,6 +111,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_yanchi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_weiboJiange)).BeginInit();
             this.tabPage3.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -124,10 +130,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btn_ColFromExl);
             this.tabPage1.Controls.Add(this.btn_LoginTest);
             this.tabPage1.Controls.Add(this.btn_col);
             this.tabPage1.Controls.Add(this.txtAlimamaCmd);
-            this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.rbtn_Manual);
             this.tabPage1.Controls.Add(this.btn_StopAlimama);
             this.tabPage1.Controls.Add(this.btn_StartAlimama);
@@ -145,9 +151,19 @@
             this.tabPage1.Text = "淘宝联盟选品库";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // btn_ColFromExl
+            // 
+            this.btn_ColFromExl.Location = new System.Drawing.Point(41, 152);
+            this.btn_ColFromExl.Name = "btn_ColFromExl";
+            this.btn_ColFromExl.Size = new System.Drawing.Size(110, 23);
+            this.btn_ColFromExl.TabIndex = 22;
+            this.btn_ColFromExl.Text = "读取选品库Excel";
+            this.btn_ColFromExl.UseVisualStyleBackColor = true;
+            this.btn_ColFromExl.Click += new System.EventHandler(this.btn_ColFromExl_Click);
+            // 
             // btn_LoginTest
             // 
-            this.btn_LoginTest.Location = new System.Drawing.Point(41, 149);
+            this.btn_LoginTest.Location = new System.Drawing.Point(41, 123);
             this.btn_LoginTest.Name = "btn_LoginTest";
             this.btn_LoginTest.Size = new System.Drawing.Size(75, 23);
             this.btn_LoginTest.TabIndex = 21;
@@ -171,6 +187,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtAlimamaCmd.BackColor = System.Drawing.SystemColors.ControlText;
             this.txtAlimamaCmd.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtAlimamaCmd.ContextMenuStrip = this.contextMenuStrip1;
             this.txtAlimamaCmd.ForeColor = System.Drawing.Color.SpringGreen;
             this.txtAlimamaCmd.Location = new System.Drawing.Point(3, 288);
             this.txtAlimamaCmd.Name = "txtAlimamaCmd";
@@ -179,16 +196,6 @@
             this.txtAlimamaCmd.TabIndex = 11;
             this.txtAlimamaCmd.Text = "";
             this.txtAlimamaCmd.TextChanged += new System.EventHandler(this.txtAlimamaCmd_TextChanged);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(371, 112);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "APITest";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // rbtn_Manual
             // 
@@ -299,10 +306,12 @@
             // panel4
             // 
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.btn_Coupon);
             this.panel4.Controls.Add(this.btn_SearchShop);
             this.panel4.Controls.Add(this.label7);
             this.panel4.Controls.Add(this.label6);
             this.panel4.Controls.Add(this.nud_alimamajiange);
+            this.panel4.Controls.Add(this.button2);
             this.panel4.Controls.Add(this.button5);
             this.panel4.Controls.Add(this.btn_NanzhuangCol);
             this.panel4.Controls.Add(this.label5);
@@ -314,13 +323,23 @@
             this.panel4.Size = new System.Drawing.Size(304, 199);
             this.panel4.TabIndex = 8;
             // 
+            // btn_Coupon
+            // 
+            this.btn_Coupon.Location = new System.Drawing.Point(103, 168);
+            this.btn_Coupon.Name = "btn_Coupon";
+            this.btn_Coupon.Size = new System.Drawing.Size(75, 23);
+            this.btn_Coupon.TabIndex = 21;
+            this.btn_Coupon.Text = "优惠券抓取";
+            this.btn_Coupon.UseVisualStyleBackColor = true;
+            this.btn_Coupon.Click += new System.EventHandler(this.btn_Coupon_Click);
+            // 
             // btn_SearchShop
             // 
-            this.btn_SearchShop.Location = new System.Drawing.Point(103, 134);
+            this.btn_SearchShop.Location = new System.Drawing.Point(190, 96);
             this.btn_SearchShop.Name = "btn_SearchShop";
-            this.btn_SearchShop.Size = new System.Drawing.Size(122, 23);
+            this.btn_SearchShop.Size = new System.Drawing.Size(75, 23);
             this.btn_SearchShop.TabIndex = 20;
-            this.btn_SearchShop.Text = "店铺搜索抓取";
+            this.btn_SearchShop.Text = "店铺抓取";
             this.btn_SearchShop.UseVisualStyleBackColor = true;
             this.btn_SearchShop.Click += new System.EventHandler(this.btn_KeywordSearchTest_Click);
             // 
@@ -345,6 +364,11 @@
             // nud_alimamajiange
             // 
             this.nud_alimamajiange.Location = new System.Drawing.Point(31, 136);
+            this.nud_alimamajiange.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
             this.nud_alimamajiange.Name = "nud_alimamajiange";
             this.nud_alimamajiange.Size = new System.Drawing.Size(36, 21);
             this.nud_alimamajiange.TabIndex = 17;
@@ -354,9 +378,19 @@
             0,
             0});
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(190, 168);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "APITest";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(190, 168);
+            this.button5.Location = new System.Drawing.Point(190, 136);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 12;
@@ -366,7 +400,7 @@
             // 
             // btn_NanzhuangCol
             // 
-            this.btn_NanzhuangCol.Location = new System.Drawing.Point(103, 168);
+            this.btn_NanzhuangCol.Location = new System.Drawing.Point(103, 136);
             this.btn_NanzhuangCol.Name = "btn_NanzhuangCol";
             this.btn_NanzhuangCol.Size = new System.Drawing.Size(75, 23);
             this.btn_NanzhuangCol.TabIndex = 12;
@@ -448,6 +482,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtWeiboCmd.BackColor = System.Drawing.SystemColors.ControlText;
             this.txtWeiboCmd.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtWeiboCmd.ContextMenuStrip = this.contextMenuStrip1;
             this.txtWeiboCmd.ForeColor = System.Drawing.Color.SpringGreen;
             this.txtWeiboCmd.Location = new System.Drawing.Point(3, 284);
             this.txtWeiboCmd.Name = "txtWeiboCmd";
@@ -486,16 +521,6 @@
             this.btnLogin_weibo.UseVisualStyleBackColor = true;
             this.btnLogin_weibo.Click += new System.EventHandler(this.btnLogin_weibo_Click);
             // 
-            // btn_StartWeibo
-            // 
-            this.btn_StartWeibo.Location = new System.Drawing.Point(117, 37);
-            this.btn_StartWeibo.Name = "btn_StartWeibo";
-            this.btn_StartWeibo.Size = new System.Drawing.Size(93, 23);
-            this.btn_StartWeibo.TabIndex = 7;
-            this.btn_StartWeibo.Text = "发布淘客微博";
-            this.btn_StartWeibo.UseVisualStyleBackColor = true;
-            this.btn_StartWeibo.Click += new System.EventHandler(this.btn_StartWeibo_Click);
-            // 
             // panel2
             // 
             this.panel2.Location = new System.Drawing.Point(19, 6);
@@ -520,6 +545,16 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(315, 96);
             this.panel3.TabIndex = 19;
+            // 
+            // cbox_IsmutiAccount
+            // 
+            this.cbox_IsmutiAccount.AutoSize = true;
+            this.cbox_IsmutiAccount.Location = new System.Drawing.Point(117, 14);
+            this.cbox_IsmutiAccount.Name = "cbox_IsmutiAccount";
+            this.cbox_IsmutiAccount.Size = new System.Drawing.Size(102, 16);
+            this.cbox_IsmutiAccount.TabIndex = 21;
+            this.cbox_IsmutiAccount.Text = "多账号-单素材";
+            this.cbox_IsmutiAccount.UseVisualStyleBackColor = true;
             // 
             // btn_SignelWeibo
             // 
@@ -572,6 +607,16 @@
             this.btn_StopWeibo.UseVisualStyleBackColor = true;
             this.btn_StopWeibo.Click += new System.EventHandler(this.btn_StopWeibo_Click);
             // 
+            // btn_StartWeibo
+            // 
+            this.btn_StartWeibo.Location = new System.Drawing.Point(117, 37);
+            this.btn_StartWeibo.Name = "btn_StartWeibo";
+            this.btn_StartWeibo.Size = new System.Drawing.Size(93, 23);
+            this.btn_StartWeibo.TabIndex = 7;
+            this.btn_StartWeibo.Text = "发布淘客微博";
+            this.btn_StartWeibo.UseVisualStyleBackColor = true;
+            this.btn_StartWeibo.Click += new System.EventHandler(this.btn_StartWeibo_Click);
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -619,6 +664,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.btn_refresh);
             this.tabPage3.Controls.Add(this.webBrowser_alimama);
             this.tabPage3.Controls.Add(this.richTextBox1);
             this.tabPage3.Controls.Add(this.btn_ConfigLoginAlimama);
@@ -630,32 +676,43 @@
             this.tabPage3.Text = "浏览器";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // btn_refresh
+            // 
+            this.btn_refresh.Location = new System.Drawing.Point(54, 336);
+            this.btn_refresh.Name = "btn_refresh";
+            this.btn_refresh.Size = new System.Drawing.Size(75, 23);
+            this.btn_refresh.TabIndex = 4;
+            this.btn_refresh.Text = "刷新";
+            this.btn_refresh.UseVisualStyleBackColor = true;
+            this.btn_refresh.Click += new System.EventHandler(this.btn_refresh_Click);
+            // 
             // webBrowser_alimama
             // 
             this.webBrowser_alimama.Location = new System.Drawing.Point(8, 6);
             this.webBrowser_alimama.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser_alimama.Name = "webBrowser_alimama";
             this.webBrowser_alimama.ScriptErrorsSuppressed = true;
-            this.webBrowser_alimama.Size = new System.Drawing.Size(437, 364);
+            this.webBrowser_alimama.Size = new System.Drawing.Size(484, 306);
             this.webBrowser_alimama.TabIndex = 3;
-            this.webBrowser_alimama.Url = new System.Uri("http://www.alimama.com", System.UriKind.Absolute);
+            this.webBrowser_alimama.Url = new System.Uri("https://login.taobao.com/member/login.jhtml?style=mini&newMini2=false&from=alimam" +
+        "a&redirectURL=http%3A%2F%2Fwww.alimama.com", System.UriKind.Absolute);
             // 
             // richTextBox1
             // 
             this.richTextBox1.Location = new System.Drawing.Point(36, 37);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(430, 346);
+            this.richTextBox1.Size = new System.Drawing.Size(285, 173);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // btn_ConfigLoginAlimama
             // 
-            this.btn_ConfigLoginAlimama.Location = new System.Drawing.Point(383, 37);
+            this.btn_ConfigLoginAlimama.Location = new System.Drawing.Point(226, 327);
             this.btn_ConfigLoginAlimama.Name = "btn_ConfigLoginAlimama";
-            this.btn_ConfigLoginAlimama.Size = new System.Drawing.Size(266, 62);
+            this.btn_ConfigLoginAlimama.Size = new System.Drawing.Size(154, 40);
             this.btn_ConfigLoginAlimama.TabIndex = 1;
-            this.btn_ConfigLoginAlimama.Text = "登录完成";
+            this.btn_ConfigLoginAlimama.Text = "已经登录";
             this.btn_ConfigLoginAlimama.UseVisualStyleBackColor = true;
             this.btn_ConfigLoginAlimama.Click += new System.EventHandler(this.btn_ConfigLoginAlimama_Click);
             // 
@@ -686,6 +743,22 @@
             // 
             this.timer_KeepAlimamaAlive.Interval = 900000;
             this.timer_KeepAlimamaAlive.Tick += new System.EventHandler(this.timer_KeepAlimamaAlive_Tick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.清空ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStrip1.Text = "清空日志";
+            this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip1_ItemClicked);
+            // 
+            // 清空ToolStripMenuItem
+            // 
+            this.清空ToolStripMenuItem.Name = "清空ToolStripMenuItem";
+            this.清空ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.清空ToolStripMenuItem.Text = "清空";
+            this.清空ToolStripMenuItem.Click += new System.EventHandler(this.清空ToolStripMenuItem_Click);
             // 
             // lvwWeiboAccountList
             // 
@@ -735,16 +808,6 @@
             // 
             this.columnHeader16.Text = "";
             // 
-            // cbox_IsmutiAccount
-            // 
-            this.cbox_IsmutiAccount.AutoSize = true;
-            this.cbox_IsmutiAccount.Location = new System.Drawing.Point(117, 14);
-            this.cbox_IsmutiAccount.Name = "cbox_IsmutiAccount";
-            this.cbox_IsmutiAccount.Size = new System.Drawing.Size(102, 16);
-            this.cbox_IsmutiAccount.TabIndex = 21;
-            this.cbox_IsmutiAccount.Text = "多账号-单素材";
-            this.cbox_IsmutiAccount.UseVisualStyleBackColor = true;
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -772,6 +835,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_yanchi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_weiboJiange)).EndInit();
             this.tabPage3.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -842,6 +906,11 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.WebBrowser webBrowser_alimama;
         private System.Windows.Forms.CheckBox cbox_IsmutiAccount;
+        private System.Windows.Forms.Button btn_ColFromExl;
+        private System.Windows.Forms.Button btn_Coupon;
+        private System.Windows.Forms.Button btn_refresh;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 清空ToolStripMenuItem;
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-
+using System;
 namespace Weibo.Core
 {
     public class ImageHelper
@@ -73,6 +73,149 @@ namespace Weibo.Core
             {
                 return null;
             }
+        }
+
+        public static Image WaterMark(Image image, string text, Font font, Brush backgroundColor, Brush fontColor, ImagePosition position = ImagePosition.RigthBottom)
+        {
+            Bitmap bit = null;
+            Graphics g = null;
+            if (image == null)
+            {
+                return null;
+            }
+            try
+            {
+                bit = new Bitmap(image.Width, image.Height, PixelFormat.Format24bppRgb);
+                bit.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+                g = Graphics.FromImage(bit);
+                g.Clear(Color.White);
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.DrawImage(image, new Rectangle(0, 0, image.Width, image.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel);
+                SizeF size = g.MeasureString(text, font);
+                float waterWidth = size.Width + 10;
+                float waterHeight = size.Height + 8;
+                float xPosOfWaterMark;
+                float yPosOfWaterMark;
+                switch (position)
+                {
+                    case ImagePosition.BottomMiddle:
+                        xPosOfWaterMark = bit.Width / 2;
+                        yPosOfWaterMark = bit.Height - waterHeight - 10;
+                        break;
+                    case ImagePosition.Center:
+                        xPosOfWaterMark = bit.Width / 2;
+                        yPosOfWaterMark = bit.Height / 2;
+                        break;
+                    case ImagePosition.LeftBottom:
+                        xPosOfWaterMark = waterWidth;
+                        yPosOfWaterMark = bit.Height - waterHeight - 10;
+                        break;
+                    case ImagePosition.LeftTop:
+                        xPosOfWaterMark = waterWidth / 2;
+                        yPosOfWaterMark = waterHeight / 2;
+                        break;
+                    case ImagePosition.RightTop:
+                        xPosOfWaterMark = bit.Width - waterWidth - 10;
+                        yPosOfWaterMark = waterHeight;
+                        break;
+                    case ImagePosition.RigthBottom:
+                        xPosOfWaterMark = bit.Width - waterWidth - 10;
+                        yPosOfWaterMark = bit.Height - waterHeight - 10;
+                        break;
+                    case ImagePosition.TopMiddle:
+                        xPosOfWaterMark = bit.Width / 2;
+                        yPosOfWaterMark = waterWidth;
+                        break;
+                    default:
+                        xPosOfWaterMark = waterWidth;
+                        yPosOfWaterMark = bit.Height - waterHeight - 10;
+                        break;
+                }
+                g.FillRoundedRectangle(backgroundColor, new Rectangle((int)xPosOfWaterMark, (int)yPosOfWaterMark, (int)waterWidth, (int)waterHeight), (int)waterHeight / 2);
+                g.DrawString(text, font, fontColor, xPosOfWaterMark + 5, yPosOfWaterMark + 4);
+                return bit;
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                if (g != null)
+                {
+                    g.Dispose();
+                }
+            }
+        }
+    }
+    public enum ImagePosition
+    {
+        LeftTop,
+        LeftBottom,
+        RightTop,
+        RigthBottom,
+        TopMiddle,
+        BottomMiddle,
+        Center
+    }
+    public static class RoundedRectangle
+    {
+        public static void DrawRoundedRectangle(this Graphics graphics, Pen pen, Rectangle bounds, int cornerRadius)
+        {
+            if (graphics == null)
+            {
+                throw new ArgumentNullException("graphics");
+            }
+            if (pen == null)
+            {
+                throw new ArgumentNullException("pen");
+            }
+            using (GraphicsPath path = RoundedRect(bounds, cornerRadius))
+            {
+                graphics.DrawPath(pen, path);
+            }
+        }
+
+        public static void FillRoundedRectangle(this Graphics graphics, Brush brush, Rectangle bounds, int cornerRadius)
+        {
+            if (graphics == null)
+            {
+                throw new ArgumentNullException("graphics");
+            }
+            if (brush == null)
+            {
+                throw new ArgumentNullException("brush");
+            }
+            using (GraphicsPath path = RoundedRect(bounds, cornerRadius))
+            {
+                graphics.FillPath(brush, path);
+            }
+        }
+
+        internal static GraphicsPath RoundedRect(Rectangle bounds, int radius)
+        {
+            int diameter = radius * 2;
+            Size size = new Size(diameter, diameter);
+            Rectangle arc = new Rectangle(bounds.Location, size);
+            GraphicsPath path = new GraphicsPath();
+            if (radius == 0)
+            {
+                path.AddRectangle(bounds);
+                return path;
+            }
+            // top left arc  
+            path.AddArc(arc, 180, 90);
+            // top right arc  
+            arc.X = bounds.Right - diameter;
+            path.AddArc(arc, 270, 90);
+            // bottom right arc  
+            arc.Y = bounds.Bottom - diameter;
+            path.AddArc(arc, 0, 90);
+            // bottom left arc 
+            arc.X = bounds.Left;
+            path.AddArc(arc, 90, 90);
+            path.CloseFigure();
+            return path;
         }
     }
 }

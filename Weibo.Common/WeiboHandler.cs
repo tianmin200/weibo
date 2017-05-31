@@ -34,19 +34,37 @@ namespace Weibo.Common
 
         public static string SendWeiboFromM(string weibotext,string picids,string refer,DEWeiboAccount deweiboaccount,CookieContainer weibocc)
         {
-            string url = "http://m.weibo.cn/mblogDeal/addAMblog";
+            string url = "https://m.weibo.cn/mblogDeal/addAMblog";
             picids = picids.Replace("%20","%2C");
-            refer = "http://m.weibo.cn/mblog";
+            refer = "https://m.weibo.cn/mblog";
+
+            
             CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
             CookieCollection newccl = ccl;
             for (int i = 0; i < newccl.Count; i++)
             {
-                newccl[i].Domain = "weibo.cn";
+                newccl[i].Domain = "sina.com.cn";
             }
             CookieContainer newcc = new CookieContainer();
+            weibocc.Add(new Uri("http://sina.com.cn"), newccl);
+
+
+            string ssourl1 = "http://login.sina.com.cn/sso/login.php?url=http%3A%2F%2Fm.weibo.cn%2F&_rand=" + HttpHelper1.GetTicks() + ".3493&gateway=1&service=sinawap&entry=sinawap&useticket=1&returntype=META&sudaref=&_client_version=0.6.23";
+            string ssoresult1 = HttpHelper1.SendDataByGET(ssourl1, ref weibocc);
+            string ssourl2 = "";
+            HttpHelper1.GetStringInTwoKeyword(ssoresult1, ref ssourl2, "arrURL\":[\"", "\"]",0);
+            ssourl2 = ssourl2.Replace(@"\/", "/");
+            ssourl2 = ssourl2 + "&callback=sinaSSOController.doCrossDomainCallBack&scriptId=ssoscript0&client=ssologin.js(v1.4.19)&_="+HttpHelper1.GetTicks();
+            string ssoresult2 = HttpHelper1.SendDataByGET(ssourl2, ref weibocc);
+
+            ccl = weibocc.GetCookies(new Uri("http://sina.com.cn"));
+            newccl = ccl;
+            for (int i = 0; i < newccl.Count; i++)
+            {
+                newccl[i].Domain = "weibo.cn";
+            }
+            newcc = new CookieContainer();
             weibocc.Add(new Uri("http://weibo.cn"), newccl);
-            
-            
 
             string poststr = "content="+HttpUtility.UrlEncode(weibotext)+"&picId="+picids+"&annotations=&st="+ deweiboaccount.St;
             string result = HttpHelper1.SendDataByPost(url,poststr,refer,ref weibocc);
@@ -252,7 +270,9 @@ namespace Weibo.Common
 
             //PC端发布微博
             string posturl = "http://www.weibo.com/aj/mblog/add?ajwvr=6&__rnd=" + ticks;
-            string poststr = "location=v6_content_home&text=" + System.Web.HttpUtility.UrlEncode(weibotext) + "&appkey=&style_type=1&pic_id=" + picids + "&pdetail=&gif_ids=&rank=0&rankid=&module=stissue&pub_source=main_&pub_type=dialog&_t=0";
+            string encodeweibotext = System.Web.HttpUtility.UrlEncode(weibotext);
+            encodeweibotext = encodeweibotext.Replace("%250A", "%0A");
+            string poststr = "location=v6_content_home&text=" + encodeweibotext + "&appkey=&style_type=1&pic_id=" + picids + "&pdetail=&gif_ids=&rank=0&rankid=&module=stissue&pub_source=main_&pub_type=dialog&_t=0";
 
             poststr = poststr.Replace("+", "%20");
 
@@ -275,9 +295,9 @@ namespace Weibo.Common
 
         public static string GetSTFromM(CookieContainer cc)
         {
-            string url = "http://m.weibo.com";
+            string url = "http://m.weibo.cn";
 
-            CookieCollection ccl = cc.GetCookies(new Uri("http://weibo.com"));
+            CookieCollection ccl = cc.GetCookies(new Uri("http://weibo.cn"));
             CookieCollection newccl = ccl;
             for (int i = 0; i < newccl.Count; i++)
             {
@@ -421,6 +441,7 @@ namespace Weibo.Common
                 if (responseData != null)
                 {
                     responseData.cookies = PostHelper.GetAllCookies(post.Cookies);
+                    CookieContainer weibocc = post.Cookies;
                     return responseData;
                 }
             }
@@ -481,6 +502,33 @@ namespace Weibo.Common
                 
                 if (isLogin)
                 {
+                    CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
+                    CookieCollection newccl = ccl;
+                    for (int i = 0; i < newccl.Count; i++)
+                    {
+                        newccl[i].Domain = "sina.com.cn";
+                    }
+                    CookieContainer newcc = new CookieContainer();
+                    weibocc.Add(new Uri("http://sina.com.cn"), newccl);
+
+
+                    string ssourl1 = "http://login.sina.com.cn/sso/login.php?url=http%3A%2F%2Fm.weibo.cn%2F&_rand=" + HttpHelper1.GetTicks() + ".3493&gateway=1&service=sinawap&entry=sinawap&useticket=1&returntype=META&sudaref=&_client_version=0.6.23";
+                    string ssoresult1 = HttpHelper1.SendDataByGET(ssourl1, ref weibocc);
+                    string ssourl2 = "";
+                    HttpHelper1.GetStringInTwoKeyword(ssoresult1, ref ssourl2, "arrURL\":[\"", "\"]", 0);
+                    ssourl2 = ssourl2.Replace(@"\/", "/");
+                    ssourl2 = ssourl2 + "&callback=sinaSSOController.doCrossDomainCallBack&scriptId=ssoscript0&client=ssologin.js(v1.4.19)&_=" + HttpHelper1.GetTicks();
+                    string ssoresult2 = HttpHelper1.SendDataByGET(ssourl2, ref weibocc);
+
+                    ccl = weibocc.GetCookies(new Uri("http://sina.com.cn"));
+                    newccl = ccl;
+                    for (int i = 0; i < newccl.Count; i++)
+                    {
+                        newccl[i].Domain = "weibo.cn";
+                    }
+                    newcc = new CookieContainer();
+                    weibocc.Add(new Uri("http://weibo.cn"), newccl);
+
                     //登录成功保存Cookie
                     File.AppendAllText("weibocookie/" + username + ".txt", loginData.cookies);
                     return weibocc;
@@ -639,6 +687,59 @@ namespace Weibo.Common
             
             string ss = "";
             //string html = HttpHelper1.GetHttpsHtml(url, "", ref ss);
+
+            CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
+            CookieCollection newccl = ccl;
+
+            string html = HttpHelper1.SendDataByGET(url, ref weibocc);
+            if (html.Length < 1000)
+            {
+                
+                for (int i = 0; i < newccl.Count; i++)
+                {
+                    newccl[i].Domain = "sina.com.cn";
+                }
+                CookieContainer newcc = new CookieContainer();
+                weibocc.Add(new Uri("http://sina.com.cn"), newccl);
+
+
+                string ssourl1 = "http://login.sina.com.cn/sso/login.php?url=http%3A%2F%2Fm.weibo.cn%2F&_rand=" + HttpHelper1.GetTicks() + ".3493&gateway=1&service=sinawap&entry=sinawap&useticket=1&returntype=META&sudaref=&_client_version=0.6.23";
+                string ssoresult1 = HttpHelper1.SendDataByGET(ssourl1, ref weibocc);
+                string ssourl2 = "";
+                HttpHelper1.GetStringInTwoKeyword(ssoresult1, ref ssourl2, "arrURL\":[\"", "\"]", 0);
+                ssourl2 = ssourl2.Replace(@"\/", "/");
+                ssourl2 = ssourl2 + "&callback=sinaSSOController.doCrossDomainCallBack&scriptId=ssoscript0&client=ssologin.js(v1.4.19)&_=" + HttpHelper1.GetTicks();
+                string ssoresult2 = HttpHelper1.SendDataByGET(ssourl2, ref weibocc);
+
+                ccl = weibocc.GetCookies(new Uri("http://sina.com.cn"));
+                newccl = ccl;
+                for (int i = 0; i < newccl.Count; i++)
+                {
+                    newccl[i].Domain = "weibo.cn";
+                }
+                newcc = new CookieContainer();
+                weibocc.Add(new Uri("http://weibo.cn"), newccl);
+                html = HttpHelper1.SendDataByGET(url, ref weibocc);
+
+            }
+            for (int i = 0; i < newccl.Count; i++)
+            {
+                newccl[i].Domain = "weibo.com";
+            }
+            weibocc.Add(newccl);
+            if (html.Contains(""))
+            {
+                html = html.Replace("page\":null", "page\":1");
+            }
+            MblogData mbloglist = Newtonsoft.Json.JsonConvert.DeserializeObject<MblogData>(html);
+            return mbloglist;
+        }
+        public static MblogData GetMblogsWithUrl(string url,ref CookieContainer weibocc)
+        {
+
+            string ss = "";
+            //string html = HttpHelper1.GetHttpsHtml(url, "", ref ss);
+
             CookieCollection ccl = weibocc.GetCookies(new Uri("http://weibo.com"));
             CookieCollection newccl = ccl;
             for (int i = 0; i < newccl.Count; i++)
@@ -648,11 +749,37 @@ namespace Weibo.Common
             CookieContainer newcc = new CookieContainer();
             weibocc.Add(new Uri("http://weibo.cn"), newccl);
 
-
-
-            
             string html = HttpHelper1.SendDataByGET(url, ref weibocc);
-            
+            if (html.Length < 1000)
+            {
+
+                for (int i = 0; i < newccl.Count; i++)
+                {
+                    newccl[i].Domain = "sina.com.cn";
+                }
+                newcc = new CookieContainer();
+                weibocc.Add(new Uri("http://sina.com.cn"), newccl);
+
+
+                string ssourl1 = "http://login.sina.com.cn/sso/login.php?url=http%3A%2F%2Fm.weibo.cn%2F&_rand=" + HttpHelper1.GetTicks() + ".3493&gateway=1&service=sinawap&entry=sinawap&useticket=1&returntype=META&sudaref=&_client_version=0.6.23";
+                string ssoresult1 = HttpHelper1.SendDataByGET(ssourl1, ref weibocc);
+                string ssourl2 = "";
+                HttpHelper1.GetStringInTwoKeyword(ssoresult1, ref ssourl2, "arrURL\":[\"", "\"]", 0);
+                ssourl2 = ssourl2.Replace(@"\/", "/");
+                ssourl2 = ssourl2 + "&callback=sinaSSOController.doCrossDomainCallBack&scriptId=ssoscript0&client=ssologin.js(v1.4.19)&_=" + HttpHelper1.GetTicks();
+                string ssoresult2 = HttpHelper1.SendDataByGET(ssourl2, ref weibocc);
+
+                ccl = weibocc.GetCookies(new Uri("http://sina.com.cn"));
+                newccl = ccl;
+                for (int i = 0; i < newccl.Count; i++)
+                {
+                    newccl[i].Domain = "weibo.cn";
+                }
+                newcc = new CookieContainer();
+                weibocc.Add(new Uri("http://weibo.cn"), newccl);
+                html = HttpHelper1.SendDataByGET(url, ref weibocc);
+
+            }
             for (int i = 0; i < newccl.Count; i++)
             {
                 newccl[i].Domain = "weibo.com";
